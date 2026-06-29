@@ -1,0 +1,40 @@
+---
+name: hail-bean-verify
+description: Bootstrap and run bean verification from a hail delivery via verify band. Use for orchestration and process-test beans in any project.
+---
+
+# Hail-driven bean verify
+
+Use when a hail (or band prompt) assigns bean verification.
+
+## Bootstrap checklist
+
+1. **Find the beans repo** — the directory containing `.beans/`.
+2. **`git -C <beans-repo>` pull --rebase** — sync state.
+3. **`beans list --tag=unverified`** or `beans show <id>`.
+4. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
+5. Verify the bean per `prompts/commands/verify.md`.
+6. If pass: `beans update <id> --remove-tag=unverified`
+7. If fail: return to `in-progress`.
+
+## Handoff payload contract (for determinism)
+
+When the worker hails this verify band, expect (and validate) at minimum in the params/payload:
+
+- bean-id
+- repo
+- summary
+- what-done (array)
+- commit
+- submitter-crew
+- submitter-session
+
+Use these to drive the verification without relying on free-text in the prompt. If the payload is missing required fields, fail early or request clarification via plan band.
+
+## Incoming hail data
+
+The incoming hail should have :bean-id (and other project-specific data) in the params.
+
+Use the bean id to look up the bean and review it against the acceptance criteria.
+
+Hail back to the plan band (if specified in data) if clarification from planner is needed.
