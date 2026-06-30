@@ -19,3 +19,7 @@ Use when hailed via orchistration-plan band.
 Receive plan hail → research → create/update beans → if ready for work, hail work band with structured params (see contract below).
 
 When hailing the work band, pass the bean-id (and other relevant project data) in the params so the target band template can use {{bean-id}} and the worker skill gets the id.
+
+## Notifications
+
+Send a notification via `notification-comm` (using comm_send) when creating a bean or handing off to work, e.g. "Created bean <id> and hailing work."

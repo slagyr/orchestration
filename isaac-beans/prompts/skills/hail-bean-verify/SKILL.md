@@ -38,3 +38,13 @@ The incoming hail should have :bean-id (and other project-specific data) in the 
 Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail / return-to-same-session instructions in the bean body).
 
 Hail back to the plan band (if specified in data) if clarification from planner is needed. On fail per bean instructions, target the work session using work-hail + submitter-session or explicit session name.
+
+## Notifications
+
+Send updates to the `notification-comm` (via `comm_send` tool) at key points:
+
+- On starting review of the bean.
+- On pass: announce "Verification passed for bean <id>".
+- On fail: announce the failure reason before handing back.
+
+Include the bean-id in the message.

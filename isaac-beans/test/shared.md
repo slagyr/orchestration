@@ -75,6 +75,8 @@ It is **not** a test framework script (no Cucumber). It is a manual verification
 
 Run the checks roughly in this order and report **pass/fail + specific evidence** (e.g. commit hash + message, `beans show` output, transcript excerpt with surrounding context, `ls` output) for each.
 
+**Critical for repeated runs of any test:** Always create a *brand new* bean with a unique ID for this execution of the test. Do not reuse old bean IDs (e.g. orchestration-lrlu) or inspect prior test data. Include a run timestamp or unique suffix in the bean title. Verify freshness in the Pre-When checks below.
+
 Terminology note (for all checks):
 - Role homes / sessions / bands: `orchistration-*` and `/Users/zane/agents/orchistration/{plan,work,verify}`.
 - Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
@@ -97,9 +99,10 @@ Terminology note (for all checks):
   - Bands in use are `orchistration-plan` / `orchistration-work` / `orchistration-verify` (not any `isaac-*`).
   - Grep session metadata or early transcript lines for confirmation.
 
-- Confirm the bean was created and the orchestration repo clone for plan side exists (beans commands run from a clone of the orchestration repo, e.g. `cd /Users/zane/agents/orchistration/plan/orchestration` or the active clone):
-  - `beans show <new-bean-id>` shows status `todo` and the title/body contains the expected description for the test.
-  - `git log --oneline -- .beans/<new-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows the creation commit.
+- Confirm a *brand new* bean was created specifically for *this run of the test* (do not reuse any previous bean ID such as orchestration-lrlu, orchestration-43d1, etc. — check `beans list` or git before creation to ensure the ID is fresh):
+  - In the plan clone, explicitly run `beans create` with a unique title (e.g. including "run-YYYY-MM-DD-HHMM" or a one-time ID). Record the new ID.
+  - `beans show <fresh-bean-id>` (after creation) shows status `todo` and the title/body contains the run-specific description.
+  - `git log --oneline -- .beans/<fresh-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows a fresh creation commit with *no prior history* for this ID.
   - `ls /Users/zane/agents/orchistration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
 
 - Confirm the orchestration-specific prompts/config are the ones active for these sessions (evidence will appear in transcripts; optionally inspect the Isaac root used by the crews):
