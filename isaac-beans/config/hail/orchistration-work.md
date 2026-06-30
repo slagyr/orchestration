@@ -1,7 +1,7 @@
 ---
 crew: scrapper
 session-tags:
-  - :isaac
+  - :orchestration
 reach: :one
 ---
 

@@ -1,7 +1,7 @@
 ---
 crew: prowl
 session-tags:
-  - :isaac
+  - :orchestration
 reach: :one
 ---
 
