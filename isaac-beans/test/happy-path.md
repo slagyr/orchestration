@@ -1,6 +1,8 @@
 # Happy Path Test for Orchestration
 
-## Remote Access
+See `shared.md` for the common **Remote Access**, **Installation / Deployment**, **Given**, and shared Pre-When verification sections.
+
+## When
 
 All verification steps execute against the live remote target system (zanebot).
 
@@ -56,17 +58,6 @@ Before the Given state can be true, the custom hail bands and prompts must be in
 
 3. After install, restart/reload the relevant sessions or daemons on the target so new skills, commands, and hail bands are loaded.
 
-See `isaac-beans/install.sh` for details and the exact remote commands.
-
-## Given
-- All of the config files and prompts have been installed in the Isaac root.
-- The directory /Users/zane/agents/orchistration/plan exists.
-- The directory /Users/zane/agents/orchistration/work exists.
-- The directory /Users/zane/agents/orchistration/verify exists.
-- An orchistration-plan session exists with crew prowl and cwd /Users/zane/agents/orchistration/plan.
-- An orchistration-work session exists with crew scrapper and cwd /Users/zane/agents/orchistration/work.
-- An orchistration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchistration/verify.
-
 ## When
 - A new bean is created in the orchestration project. The bean is meant to be a no-op that is a no operation bean.
 - A hail is sent to the orchistration work band with the id of the bean that was just created.
@@ -95,29 +86,7 @@ Terminology note (for all checks):
 - Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
 - Session tag used: `:orchestration`.
 
-### Pre-When checks (confirm setup before the hail to work)
-- Confirm the three role home directories exist on the target machine:
-  - `ls /Users/zane/agents/orchistration/plan`
-  - `ls /Users/zane/agents/orchistration/work`
-  - `ls /Users/zane/agents/orchistration/verify`
-
-- Confirm the three sessions exist with correct crew and cwd (via session listing tools, transcript listings, or inspecting the relevant Isaac session metadata):
-  - orchistration-plan → crew=prowl, cwd=/Users/zane/agents/orchistration/plan
-  - orchistration-work → crew=scrapper, cwd=/Users/zane/agents/orchistration/work
-  - orchistration-verify → crew=perceptor, cwd=/Users/zane/agents/orchistration/verify
-
-- (Required) Confirm session tags and naming isolation:
-  - Sessions carry the `:orchestration` tag (from band frontmatter).
-  - Bands in use are `orchistration-plan` / `orchistration-work` / `orchistration-verify` (not any `isaac-*`).
-  - Grep session metadata or early transcript lines for confirmation.
-
-- Confirm the bean was created and the orchestration repo clone for plan side exists (beans commands run from a clone of the orchestration repo, e.g. `cd /Users/zane/agents/orchistration/plan/orchestration` or the active clone):
-  - `beans show <new-bean-id>` shows status `todo` and the title/body contains "no-op that is a no operation bean".
-  - `git log --oneline -- .beans/<new-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows the creation commit.
-  - `ls /Users/zane/agents/orchistration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
-
-- Confirm the orchestration-specific prompts/config are the ones active for these sessions (evidence will appear in transcripts; optionally inspect the Isaac root used by the crews):
-  - `prompts/skills/hail-bean-*/SKILL.md` and `config/hail/orchistration-*.md` (the versions from the isaac-beans deployment) are the ones referenced/loaded.
+See `shared.md` for the common Pre-When checks (adapted per test for the specific bean title/description).
 
 ### During/After "When" (the hail to orchistration-work band)
 - Confirm the orchistration-work session (scrapper) received and processed the hail. Primary evidence is the session transcript/log for the relevant turn (hail data is injected into the prompt context):
