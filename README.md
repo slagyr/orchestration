@@ -8,7 +8,9 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
   - `config/hail/` — band definitions (`orchistration-plan`, `orchistration-work`, `orchistration-verify`)
   - `prompts/commands/` and `prompts/skills/` — the `plan`/`work`/`verify` commands and the `hail-bean-*` skills
   - `install.sh` — the installer (see below)
+- `test/shared.md` — common sections used by all tests (Remote Access, Installation, Given, Pre-When checklist skeleton)
 - `test/happy-path.md` — the executable happy-path test specification (Given/When/Then + agent verification checklist)
+- `test/verify-fail.md` — the verify-fail scenario: first verification fails and returns to the *same* worker session; worker re-tags unverified; second verification passes and completes the bean.
 - `.beans.yml` — bean tracker config for this project itself (prefix `orchestration-`)
 
 ## Quick start (install on target)
@@ -29,11 +31,11 @@ The installer:
 
 After installing, reload the Isaac sessions/crews that use the `orchistration-*` bands so the new prompts and hail configuration are active.
 
-## Running the happy path test
+## Running the tests
 
-See `isaac-beans/test/happy-path.md`.
+See `isaac-beans/test/shared.md` (common setup) + `isaac-beans/test/happy-path.md` (happy path) and `isaac-beans/test/verify-fail.md` (failure + retry on same worker session).
 
-All verification commands run against the remote (or local) target using the host/user from `.env`. The checklist tells the agent exactly how to construct the ssh target and what evidence to collect.
+All verification commands run against the remote (or local) target using the host/user from `.env`. The checklists tell the agent exactly how to construct the ssh target and what evidence to collect.
 
 ## Notes
 

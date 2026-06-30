@@ -1,0 +1,106 @@
+## Remote Access
+
+All verification steps execute against the live remote target system (zanebot).
+
+- Real connection details are in the git-ignored `.env` at the root of the orchestration checkout (the directory containing `isaac-beans/` and `.beans.yml`). See `.env.example` (committed) for the expected format:
+
+  ```
+  host: <tailnet or hostname>
+  user: zane
+  ```
+
+- **Never commit the real hostname (or the `.env` file itself) to git / github.**
+
+- `cd` to the root of your local orchestration checkout (the dir with `.env`, `.beans.yml`, and `isaac-beans/`) before starting.
+
+- The agent (or human) running the verification reads `.env` locally to reach the target.
+
+- Construct the target (example parsing, adjust for your shell):
+
+  ```sh
+  HOST=$(grep '^host:' .env | cut -d: -f2 | xargs)
+  USER=$(grep '^user:' .env | cut -d: -f2 | xargs)
+  TARGET="$USER@$HOST"
+  ```
+
+- Execute the checks on the remote. All `ls`, `beans`, `git`, transcript inspection, etc. below are performed via SSH (or equivalent):
+
+  ```sh
+  ssh "$TARGET" 'ls /Users/zane/agents/orchistration/plan'
+  ssh "$TARGET" 'cd /Users/zane/agents/orchistration/work/orchestration && beans show <id> && git log --oneline .beans/<id>--*.md'
+  ```
+
+  (For long-running or complex inspection, you may scp files or use other remote tools, but ssh + quoted command is the baseline.)
+
+- In any committed examples, comments, or public discussion, use placeholder hosts such as `zane@orchestration-test.example.com`.
+
+## Installation / Deployment
+
+Before the Given state can be true, the custom hail bands and prompts must be installed into the Isaac root on the target.
+
+1. Ensure `.env` exists at the orchestration checkout root (see `.env.example`).
+
+2. Run the installer (it uses the same `.env`):
+
+   ```sh
+   cd /path/to/orchestration
+   ./isaac-beans/install.sh
+   ```
+
+   - Use `./isaac-beans/install.sh --dry-run` (or `-n`) to preview.
+   - The script supports local installs (when `host: localhost` or similar) and remote via ssh using the same `$TARGET` pattern as verification.
+   - It copies the directories (overwriting existing files, but never deleting anything else):
+     - `isaac-beans/config/` → `~/.isaac/config/`
+     - `isaac-beans/prompts/` → `~/.isaac/prompts/`
+
+3. After install, restart/reload the relevant sessions or daemons on the target so new skills, commands, and hail bands are loaded.
+
+See `isaac-beans/install.sh` for details and the exact remote commands.
+
+## Given
+
+- All of the config files and prompts have been installed in the Isaac root.
+- The directory /Users/zane/agents/orchistration/plan exists.
+- The directory /Users/zane/agents/orchistration/work exists.
+- The directory /Users/zane/agents/orchistration/verify exists.
+- An orchistration-plan session exists with crew prowl and cwd /Users/zane/agents/orchistration/plan.
+- An orchistration-work session exists with crew scrapper and cwd /Users/zane/agents/orchistration/work.
+- An orchistration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchistration/verify.
+
+## Verification Procedure Intro (common)
+
+**First** establish remote access using the instructions in the "Remote Access" section above (read `.env`, construct `$TARGET`). All commands below (`ls`, `beans`, `git`, transcript inspection, etc.) are executed on the remote target via `ssh "$TARGET" '...' ` (or equivalent).
+
+It is **not** a test framework script (no Cucumber). It is a manual verification procedure the agent should follow using `beans`, `git`, session transcripts/logs, `ls`, and hail data as rendered inside transcripts.
+
+Run the checks roughly in this order and report **pass/fail + specific evidence** (e.g. commit hash + message, `beans show` output, transcript excerpt with surrounding context, `ls` output) for each.
+
+Terminology note (for all checks):
+- Role homes / sessions / bands: `orchistration-*` and `/Users/zane/agents/orchistration/{plan,work,verify}`.
+- Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
+- Session tag used: `:orchestration`.
+
+### Pre-When checks (confirm setup before the hail to work)
+
+- Confirm the three role home directories exist on the target machine:
+  - `ls /Users/zane/agents/orchistration/plan`
+  - `ls /Users/zane/agents/orchistration/work`
+  - `ls /Users/zane/agents/orchistration/verify`
+
+- Confirm the three sessions exist with correct crew and cwd (via session listing tools, transcript listings, or inspecting the relevant Isaac session metadata):
+  - orchistration-plan → crew=prowl, cwd=/Users/zane/agents/orchistration/plan
+  - orchistration-work → crew=scrapper, cwd=/Users/zane/agents/orchistration/work
+  - orchistration-verify → crew=perceptor, cwd=/Users/zane/agents/orchistration/verify
+
+- (Required) Confirm session tags and naming isolation:
+  - Sessions carry the `:orchestration` tag (from band frontmatter).
+  - Bands in use are `orchistration-plan` / `orchistration-work` / `orchistration-verify` (not any `isaac-*`).
+  - Grep session metadata or early transcript lines for confirmation.
+
+- Confirm the bean was created and the orchestration repo clone for plan side exists (beans commands run from a clone of the orchestration repo, e.g. `cd /Users/zane/agents/orchistration/plan/orchestration` or the active clone):
+  - `beans show <new-bean-id>` shows status `todo` and the title/body contains the expected description for the test.
+  - `git log --oneline -- .beans/<new-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows the creation commit.
+  - `ls /Users/zane/agents/orchistration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
+
+- Confirm the orchestration-specific prompts/config are the ones active for these sessions (evidence will appear in transcripts; optionally inspect the Isaac root used by the crews):
+  - `prompts/skills/hail-bean-*/SKILL.md` and `config/hail/orchistration-*.md` (the versions from the isaac-beans deployment) are the ones referenced/loaded.

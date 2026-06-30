@@ -7,7 +7,7 @@ reach: :one
 
 bean-repo: git@github.com:slagyr/orchestration.git
 bean: {{bean-id}}
-notification-comm: {:id :discord :channel "isaac"}
+notification-comm: {:id :discord :channel "pub"}
 work-hail: "orchistration-work"
 verify-hail: "orchistration-verify"
 

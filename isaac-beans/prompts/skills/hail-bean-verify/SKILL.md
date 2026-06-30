@@ -15,7 +15,7 @@ Use when a hail (or band prompt) assigns bean verification.
 4. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
 5. Verify the bean per `prompts/commands/verify.md`.
 6. If pass: `beans update <id> --remove-tag=unverified`
-7. If fail: return to `in-progress`.
+7. If fail: return to `in-progress`. If the bean body instructs to return to the original worker (e.g. "send back to the same session 'orchistration-work'"), hail to the work-hail band (targeting the submitter-session if available in incoming data or as instructed). On subsequent passes, complete.
 
 ## Handoff payload contract (for determinism)
 
@@ -29,12 +29,12 @@ When the worker hails this verify band, expect (and validate) at minimum in the 
 - submitter-crew
 - submitter-session
 
-Use these to drive the verification without relying on free-text in the prompt. If the payload is missing required fields, fail early or request clarification via plan band.
+Use these to drive the verification without relying on free-text in the prompt. If the payload is missing required fields, fail early or request clarification via plan band. On fail, use submitter-session (or explicit instructions in bean) to target return hails to the original worker session when the bean specifies "same session".
 
 ## Incoming hail data
 
 The incoming hail should have :bean-id (and other project-specific data) in the params.
 
-Use the bean id to look up the bean and review it against the acceptance criteria.
+Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail / return-to-same-session instructions in the bean body).
 
-Hail back to the plan band (if specified in data) if clarification from planner is needed.
+Hail back to the plan band (if specified in data) if clarification from planner is needed. On fail per bean instructions, target the work session using work-hail + submitter-session or explicit session name.
