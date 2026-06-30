@@ -58,13 +58,17 @@ When the bean body says **process test**, **no-op**, or **orchestration smoke**
 
 ## Notifications
 
-At key milestones, send a concise progress update to the `notification-comm` (use the `comm_send` tool, typically with comm="discord" and the channel from the notification-comm data, or the slot id):
+At key milestones, send a concise progress update using `comm_send`:
+
+- comm: the :id from notification-comm (e.g. "discord")
+- content: progress text with bean id
+- discord.target: the :channel from notification-comm (e.g. "pub" -- it supports name or snowflake ID)
 
 - After claiming the bean.
 - After appending observations (include summary).
 - Before/when handing off (include what was done).
 
-Example: comm_send with content like "Claimed bean {{bean-id}} for work (no-op process test)."
+Example: comm_send with comm="discord" content="Claimed bean {{bean-id}} for work (no-op process test)." "discord.target"="pub"
 
 ## Hand off to verify
 

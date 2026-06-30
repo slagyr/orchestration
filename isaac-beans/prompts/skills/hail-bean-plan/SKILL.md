@@ -22,4 +22,8 @@ When hailing the work band, pass the bean-id (and other relevant project data) i
 
 ## Notifications
 
-Send a notification via `notification-comm` (using comm_send) when creating a bean or handing off to work, e.g. "Created bean <id> and hailing work."
+Send using `comm_send`:
+
+- comm: :id from notification-comm ("discord")
+- content: "Created bean <id> and hailing work."
+- discord.target: :channel from notification-comm ("pub")

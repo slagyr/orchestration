@@ -41,10 +41,14 @@ Hail back to the plan band (if specified in data) if clarification from planner 
 
 ## Notifications
 
-Send updates to the `notification-comm` (via `comm_send` tool) at key points:
+Send updates using `comm_send` at key points:
 
-- On starting review of the bean.
-- On pass: announce "Verification passed for bean <id>".
-- On fail: announce the failure reason before handing back.
+- comm: the :id from notification-comm (e.g. "discord")
+- content: progress with bean id
+- discord.target: the :channel from notification-comm (e.g. "pub")
 
-Include the bean-id in the message.
+- On starting review.
+- On pass: "Verification passed for bean <id>".
+- On fail: the failure reason.
+
+Include the bean-id.
