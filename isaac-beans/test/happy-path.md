@@ -68,7 +68,7 @@ See `isaac-beans/install.sh` for details and the exact remote commands.
 - An orchistration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchistration/verify.
 
 ## When
-- A new bean is created in the orchestration project. The bean is meant to be a Noah app that is a no operation bean.
+- A new bean is created in the orchestration project. The bean is meant to be a no-op that is a no operation bean.
 - A hail is sent to the orchistration work band with the id of the bean that was just created.
 
 ## Then
@@ -112,7 +112,7 @@ Terminology note (for all checks):
   - Grep session metadata or early transcript lines for confirmation.
 
 - Confirm the bean was created and the orchestration repo clone for plan side exists (beans commands run from a clone of the orchestration repo, e.g. `cd /Users/zane/agents/orchistration/plan/orchestration` or the active clone):
-  - `beans show <new-bean-id>` shows status `todo` and the title/body contains "Noah app that is a no operation bean".
+  - `beans show <new-bean-id>` shows status `todo` and the title/body contains "no-op that is a no operation bean".
   - `git log --oneline -- .beans/<new-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows the creation commit.
   - `ls /Users/zane/agents/orchistration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
 
