@@ -6,13 +6,13 @@ The sections below are specific to this test.
 
 ## When
 
-- A new bean is created in the orchestration project. The bean is meant to be a no-op that is a no operation bean. The bean body explicitly instructs the verifier:
+- **Create a brand new bean** (never reuse IDs from previous runs). In the plan clone, run a `beans create` with a unique title including a run timestamp (e.g. "no-op verify-fail bean (run-YYYY-MM-DD-HHMM)"), and include the explicit first-fail instructions in the body:
 
   ```
   Fail the first verification. Append a clear failure note and send the bean back (hail to the work band) specifically to the same session 'orchistration-work' that performed the initial work. On the second verification, pass the bean and complete it (remove unverified tag, set status completed).
   ```
 
-- A hail is sent to the orchistration work band with the id of the bean that was just created.
+- A hail is sent to the orchistration work band with the id of the (just-created fresh) bean.
 
 ## Then
 
@@ -31,6 +31,8 @@ The sections below are specific to this test.
 This section turns the abstract "Then" statements into a concrete, ordered list of actions an agent can execute to verify the verify-fail scenario on the live system.
 
 **First** establish remote access using the instructions in the "Remote Access" section above (read `.env`, construct `$TARGET`). All commands below (`ls`, `beans`, `git`, transcript inspection, etc.) are executed on the remote target via `ssh "$TARGET" '...' ` (or equivalent).
+
+**Important:** Every time you run this test, create a *completely new* bean with a fresh ID. Never reuse a bean ID or look up previous test beans. Use a unique run identifier in the title (see the When section).
 
 It is **not** a test framework script (no Cucumber). It is a manual verification procedure the agent should follow using `beans`, `git`, session transcripts/logs, `ls`, and hail data as rendered inside transcripts.
 
@@ -51,6 +53,7 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
   - The bean-id (and other data) arrived via params (visible in the rendered hail data or how the agent used it). No reliance on a top-level "payload" field.
   - Evidence the hail-bean-work skill + work command were followed: bootstrap checklist steps (find beans repo containing `.beans/`, `git -C <clone> pull --rebase`, `beans show`, claim via `beans update --status=in-progress` + commit/push, etc.).
   - Turn explicitly recognized the bean as process test / no-op (from body) and followed the minimal path (no TDD / spec runs required). The first-fail instruction was noted for handoff.
+- In the (first) work session transcript, confirm `comm_send` was used with the `notification-comm` (to #pub) for claim/observations/handoff announcements. Messages visible in Discord #pub.
 
 - Verify the bean state changed after the first work turn (run from a clone of the orchestration repo that has done `git pull`):
   - `beans show <id>` reports status `in-progress` and includes the `unverified` tag.
@@ -68,6 +71,7 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
   - Evidence of sending to the verify-hail band ("orchistration-verify" or the value from data).
   - The sent params contain at least `:bean-id` (plus any other project data as allowed).
   - Note any thread-id or correlation value for later matching.
+  - Confirm notification sent to #pub announcing handoff (comm_send evidence + channel message).
 
 - Confirm the first orchistration-verify session (perceptor) processed a turn:
   - Transcript shows a turn with crew "perceptor".
@@ -75,6 +79,7 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
   - The verify transcript's incoming hail context shows `:bean-id` (and other data) present in params.
   - The turn fails per bean instructions: bean updated to `in-progress` (unverified tag removed), `## Verification failed` note appended with reason (e.g. "per first-fail instruction in bean body"), committed.
   - Evidence of handoff back: hail sent to the work band specifically targeting session 'orchistration-work' (same session as initial work).
+  - In the verify transcript, confirm `comm_send` to notification-comm (#pub) announcing the failure and return.
 
 - Verify the bean state after first verify fail (via `beans show` and git history from appropriate clone):
   - `beans show <id>` reports status `in-progress` (no `unverified` tag).
@@ -88,6 +93,7 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
   - Transcript shows incoming data from the verify handoff (bean-id, failure note reference).
   - Evidence the hail-bean-work skill + work command were followed again: re-bootstrap, `beans show`, update to tag `unverified` again + commit/push.
   - Turn notes the first-fail result and re-tags for second verification pass.
+- Confirm `comm_send` to #pub in this second work turn transcript (e.g. re-processing after failure).
 
 - Verify the bean state after the second work turn:
   - `beans show <id>` reports status `in-progress` and includes the `unverified` tag (re-applied).
@@ -97,12 +103,14 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
 - Confirm handoff hail from the second work turn to the orchistration-verify band:
   - Evidence in the (same) work session transcript of sending to verify-hail with `:bean-id`.
   - Params include `:bean-id`.
+  - Confirm notification to #pub for second handoff (via comm_send).
 
 - Confirm the second orchistration-verify session (perceptor) processed a turn:
   - Transcript shows a (second) turn with crew "perceptor" (may be same or continued session context).
   - Evidence of hail-bean-verify skill: pull, review (now passes per bean instruction on second attempt), state update.
   - The verify transcript shows `:bean-id` and reference to prior failure note.
   - No early failure; proceeds to pass.
+  - Confirm `comm_send` to #pub announcing verification pass and completion (in transcript and Discord #pub).
 
 - Verify final bean state (via `beans show <id>` from any pulled clone of the orchestration repo + git history on the bean file):
   - `beans show <id>` reports status `completed` with no `unverified` tag.
@@ -125,6 +133,7 @@ See `shared.md` for the common Pre-When checks (adapted per test for the specifi
 - Chronology is correct: first work → first verify fail + return hail → second work (same session) → second verify pass (observable via transcript ordering, log timestamps, or git commit dates on the bean file).
 - Evidence of "same session" for the two worker turns (session id continuity in transcripts/metadata).
 - The bean instructions were followed: explicit first-fail + targeted return to 'orchistration-work', then pass on second.
+- Notifications: transcripts for both work turns and both verify turns show `comm_send` using notification-comm to #pub (e.g. claim, fail announcement, re-tag, pass); messages appear in Discord #pub.
 
 Report the results for every checklist item above with concrete evidence (full `beans show` output excerpts, `git log --oneline -S status -- .beans/<id>--*.md` or `git show <hash>`, transcript excerpts with context around the hail data and actions, `ls` listings, same-session evidence from session ids, etc.). If any step cannot be verified with the available tools/logs/access, explicitly note what is missing and how the check was approximated.
 

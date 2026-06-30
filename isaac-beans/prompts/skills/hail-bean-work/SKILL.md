@@ -56,6 +56,16 @@ When the bean body says **process test**, **no-op**, or **orchestration smoke**
   3. Create follow-up beans for gaps found.
   4. `beans update <id> --tag=unverified` + push.
 
+## Notifications
+
+At key milestones, send a concise progress update to the `notification-comm` (use the `comm_send` tool, typically with comm="discord" and the channel from the notification-comm data, or the slot id):
+
+- After claiming the bean.
+- After appending observations (include summary).
+- Before/when handing off (include what was done).
+
+Example: comm_send with content like "Claimed bean {{bean-id}} for work (no-op process test)."
+
 ## Hand off to verify
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.

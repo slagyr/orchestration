@@ -35,6 +35,8 @@ After installing, reload the Isaac sessions/crews that use the `orchistration-*`
 
 See `isaac-beans/test/shared.md` (common setup) + `isaac-beans/test/happy-path.md` (happy path) and `isaac-beans/test/verify-fail.md` (failure + retry on same worker session).
 
+**Important:** Every run of these tests must create a *brand new* bean (with a unique ID and run timestamp in the title). Never reuse old test beans.
+
 All verification commands run against the remote (or local) target using the host/user from `.env`. The checklists tell the agent exactly how to construct the ssh target and what evidence to collect.
 
 ## Notes
