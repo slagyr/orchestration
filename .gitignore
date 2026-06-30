@@ -1,0 +1,8 @@
+# Real connection details for the target (zanebot etc.)
+# Never commit this file.
+.env
+
+# Any other local secrets or temp files
+*.local
+.env.local
+

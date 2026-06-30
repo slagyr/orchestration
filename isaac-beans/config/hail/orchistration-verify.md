@@ -1,7 +1,7 @@
 ---
 crew: perceptor
 session-tags:
-  - :isaac
+  - :orchestration
 reach: :one
 ---
 
