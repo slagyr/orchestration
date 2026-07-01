@@ -59,6 +59,6 @@ Use 🧠/📋 for planner actions, 🟢 for positive adjustments.
 
 - Send comm_send to the notification-comm (discord "pub") with content in at-a-glance format: `{{bean-id}} 🆘 **prowl** human help needed (short synopsis)`
 
-- Additionally send imessage: comm_send with comm="imessage" content="🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: orchestration-{{bean-id}}\nFrom: **prowl**\n\n[short synopsis]\n\n👉 Check Discord #pub for full details." imessage.target="micahmartin@mac.com" imessage.service="iMessage"
+- Additionally send imessage: comm_send with comm="imessage" content="🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: {{bean-id}}\nFrom: **prowl**\n\n[short synopsis]\n\n👉 Check Discord #pub for full details." imessage.target="micahmartin@mac.com" imessage.service="iMessage"
 
 - Use the synopsis from the hail instructions or bean body. Make the iMessage visually clear with emojis, newlines, and structure.
