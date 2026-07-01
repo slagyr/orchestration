@@ -1,11 +1,11 @@
 ---
 # orchestration-q445
 title: plan-review conflict loop (run-2026-07-01-1351)
-status: todo
+status: in-progress
 type: task
 priority: normal
 created_at: 2026-07-01T20:51:56Z
-updated_at: 2026-07-01T20:51:56Z
+updated_at: 2026-07-01T20:54:03Z
 ---
 
 This is a fresh process test bean for the plan-review orchestration flow.
