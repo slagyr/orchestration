@@ -73,8 +73,35 @@ Example: comm_send with comm="discord" content="Claimed bean {{bean-id}} for wor
 ## Hand off to verify
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.
-- Use the `hail-send` tool to target the verify band (specified in the incoming hail data).
-- Pass at least :bean-id in the params (the project-specific data from this hail can be included as needed).
+- Use the `hail-send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
+- For normal band handoff:
+  - band: the verify band name from the incoming data (e.g. value of verify-hail)
+  - params: include at minimum :bean-id, and to support exact returns later also include submitter-crew, submitter-session (this current session's id/name), thread_id, notification-comm, plan-hail, verify-hail, etc.
+  Example:
+    {"band": "orchistration-verify", "params": {"bean-id": "{{bean-id}}", "bean-repo": "...", "notification-comm": {...}, "submitter-session": "<your-current-session>", "submitter-crew": "scrapper", "thread_id": "<correlation>"}}
 - Verifier pulls the beans repo root before reviewing.
 
-The bean-specific information (like the id) travels in the hail parameters to the next band. The details of what was done live in the bean body and the prompt context.
+## Hand off to planner (e.g. on requirements conflict)
+
+- When the bean cannot satisfy verifier standards (per failure note or your judgement), or per explicit bean instructions:
+  - Keep status in-progress (or as appropriate), append observations about the conflict.
+  - Use hail-send (flat snake_case) to the plan-hail value from incoming data.
+  - Include submitter info so planner (or subsequent steps) can return precisely to *this exact session*.
+  - Provide "prompt" with full explanation if needed.
+  Example:
+    {"band": "orchistration-plan", "params": {"bean-id": "{{bean-id}}", ..., "submitter-session": "<this-session-id>", "thread_id": "..."}, "prompt": "Conflict detected on bean {{bean-id}}: [summary from verifier note and requirements]. Returning for planner adjustment. Previous context on this exact worker session."}
+- The planner will adjust (e.g. add unblock note) and hand back to this exact session.
+
+## Handoffs to exact sessions (returns / loops, preserving context)
+
+To return a bean to the *same prior worker or verifier session* that has context:
+- Prefer direct session targeting over band+tags: use top-level "session": "<exact-target-session-id>" (the id comes from "submitter-session" in the *incoming* hail data for that leg, or your current session context).
+- Since no band template is used, you **must** supply a "prompt" field with a complete explanation: situation, bean-id, summary of prior work/notes/failure, what the recipient should do next, and any unblock notes.
+- Always also pass key data in "params" (bean-id etc.) and thread_id for correlation.
+- Example direct-to-session return:
+  {"session": "<exact-orchistration-work-session-id-from-submitter>", "params": {"bean-id": "{{bean-id}}", "notification-comm": {...}}, "prompt": "Returning bean {{bean-id}} to you (exact same session) because [reason, e.g. planner unblocked it]. [Prior notes summary]. Please continue: [next step from instructions].", "thread_id": "<the-id>"}
+- Use comm_send before/after.
+
+The hail system provides incoming context (including submitter info when passed by previous step). For best results, the delivery should also inject your current session id directly into the prompt you receive.
+
+The bean-specific information travels in params or the explicit prompt you supply. The details of what was done live in the bean body.
