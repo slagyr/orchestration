@@ -4,8 +4,10 @@ title: plan-review conflict loop (run-2026-07-01-1351)
 status: in-progress
 type: task
 priority: normal
+tags:
+    - unverified
 created_at: 2026-07-01T20:51:56Z
-updated_at: 2026-07-01T20:54:03Z
+updated_at: 2026-07-01T20:54:47Z
 ---
 
 This is a fresh process test bean for the plan-review orchestration flow.
@@ -33,3 +35,12 @@ Always use flat snake_case keys for hail-send (no "frequencies" wrapper). Pass n
 6. Verifier: On receipt of the unblocked bean, approve it. Remove unverified tag, set status completed. Append verification pass note.
 
 This is explicitly a process test / no-op for orchestration flow validation.
+
+## Process Observations
+
+- Trusted hail `1db33ae6` carried bean-id `orchestration-q445`; work proceeded against that exact bean.
+- Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md` and `prompts/commands/work.md`.
+- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchistration/work/orchestration-1db33ae6` with `.beans/` present.
+- This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the worker pass.
+- The bean body requires exact-session returns through worker → verifier → worker → planner → worker → verifier, so this first worker handoff includes submitter-session and thread correlation for the return path.
+- Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
