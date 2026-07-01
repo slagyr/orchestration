@@ -23,6 +23,7 @@ For exact-session returns (to preserve context): target the specific session id 
 
 - After claim: `{{bean-id}} 🟢 **scrapper** claimed (short-slug)`
 - After observations: `{{bean-id}} 📝 **scrapper** appended observations (short-slug)`
-- Before handoff: `{{bean-id}} ➡️ **scrapper** handed off to verify`
+- Before handoff to verify: `{{bean-id}} ➡️ **scrapper** handed off to verify`
+- Before handoff to planner (on conflict): `{{bean-id}} ➡️ **scrapper** handed off to planner (plan-review-loop)`
 
-Use these exact strings.
+Use these exact strings. (The model must choose based on which band it is hailing to.)

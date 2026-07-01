@@ -24,3 +24,7 @@ For returns to exact prior worker session: use the submitter session id and prov
 - Before handoff: `{{bean-id}} ➡️ **prowl** handed back to worker`
 
 Use these exact strings.
+
+If unable to resolve the issue, notify human help needed:
+- Discord pub: `{{bean-id}} 🆘 **prowl** human help needed (synopsis)`
+- Additionally imessage to micahmartin@mac.com with similar synopsis.
