@@ -50,3 +50,5 @@ HEAD: c0d782e6c2b0252959dba6522f65c7bd710a27a7
 Working tree: clean
 
 Conflict required by plan-review loop: the current bean state cannot satisfy verifier standards until planner adds the unblock note. Returning to the exact worker session for the next step in the loop.
+
+## Planner unblock note: bean is unblocked per plan-review test. Worker and verifier may proceed with the loop.
