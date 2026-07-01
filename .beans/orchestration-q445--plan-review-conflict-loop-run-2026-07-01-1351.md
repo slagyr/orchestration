@@ -4,8 +4,10 @@ title: plan-review conflict loop (run-2026-07-01-1351)
 status: in-progress
 type: task
 priority: normal
+tags:
+    - unverified
 created_at: 2026-07-01T20:51:56Z
-updated_at: 2026-07-01T20:55:59Z
+updated_at: 2026-07-01T21:00:29Z
 ---
 
 This is a fresh process test bean for the plan-review orchestration flow.
@@ -43,6 +45,7 @@ This is explicitly a process test / no-op for orchestration flow validation.
 - The bean body requires exact-session returns through worker → verifier → worker → planner → worker → verifier, so this first worker handoff includes submitter-session and thread correlation for the return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
 - Received verifier conflict hail `98652035` on thread `1db33ae6`; per bean instruction, worker cannot resolve this at worker level and must escalate to planner with exact-session return info preserved.
+- Received planner return hail `b8a5d98e` on thread `1db33ae6`; planner added the required unblock note, so this same worker session is now re-handing the bean to verifier for the expected passing review.
 
 ## Verification failed
 
