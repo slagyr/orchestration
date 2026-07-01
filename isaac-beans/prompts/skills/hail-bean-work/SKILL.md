@@ -74,13 +74,14 @@ Examples:
 - `orchestration-25e4` 🟢 **scrapper** claimed (no-op-process-test-run-...)
 - `orchestration-25e4` 📝 **scrapper** appended observations (no-op-process-test-run-...)
 - `orchestration-25e4` ➡️ **scrapper** handed off to verify
+- `orchestration-25e4` ➡️ **scrapper** handed off to planner (plan-review-loop)
 - `orchestration-25e4` 🧠 **prowl** received for plan
 - `orchestration-25e4` ✏️ **prowl** added unblock note
 
 Use:
 - 🟢 for positive/complete/claim
 - 📝 for observations/edit
-- ➡️ for handoff
+- ➡️ for handoff (to verify or to planner)
 - 👁️ or 🔍 for verify start/review
 - ❌ for fail
 - 🟢 or ✅ for pass
@@ -94,7 +95,8 @@ Use:
 
 For claim: "orchestration-xxx 🟢 **scrapper** claimed (short-slug)"
 For observations: "orchestration-xxx 📝 **scrapper** appended observations (short-slug)"
-For handoff: "orchestration-xxx ➡️ **scrapper** handed off to verify"
+For handoff to verify: "orchestration-xxx ➡️ **scrapper** handed off to verify"
+For handoff to planner: "orchestration-xxx ➡️ **scrapper** handed off to planner (plan-review-loop)"
 
 Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
 
@@ -113,6 +115,7 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
 
 - When the bean cannot satisfy verifier standards (per failure note or your judgement), or per explicit bean instructions:
   - Keep status in-progress (or as appropriate), append observations about the conflict.
+  - Send comm_send with content exactly: "orchestration-xxx ➡️ **scrapper** handed off to planner (plan-review-loop)"
   - Use hail-send (flat snake_case) to the plan-hail value from incoming data.
   - Include submitter info so planner (or subsequent steps) can return precisely to *this exact session*.
   - Provide "prompt" with full explanation if needed.

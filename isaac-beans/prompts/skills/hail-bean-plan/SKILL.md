@@ -54,3 +54,11 @@ Examples:
 - `orchestration-25e4` ➡️ **prowl** handed back to worker
 
 Use 🧠/📋 for planner actions, 🟢 for positive adjustments.
+
+## If unable to resolve - notify human
+
+- Send comm_send to the notification-comm (discord "pub") with content in at-a-glance format: `{{bean-id}} 🆘 **prowl** human help needed (short synopsis)`
+
+- Additionally send imessage: comm_send with comm="imessage" content="Human help needed on bean {{bean-id}}: [short synopsis]. Check Discord #pub." imessage.target="micahmartin@mac.com" imessage.service="iMessage"
+
+- Use the synopsis from the hail instructions or bean body.

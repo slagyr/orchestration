@@ -34,7 +34,7 @@ After installing, reload the Isaac sessions/crews that use the `orchistration-*`
 
 ## Running the tests
 
-See `isaac-beans/test/shared.md` (common setup) + `isaac-beans/test/happy-path.md` (happy path) and `isaac-beans/test/verify-fail.md` (failure + retry on same worker session).
+See `isaac-beans/test/shared.md` (common setup) + `isaac-beans/test/happy-path.md` (happy path), `isaac-beans/test/verify-fail.md` (failure + retry), `isaac-beans/test/plan-review.md` (planner conflict loop with exact-session returns), and `isaac-beans/test/human-needed.md` (planner unable to resolve -> human escalation via discord + imessage).
 
 **Important:** Every run of these tests must create a *brand new* bean (with a unique ID and run timestamp in the title). Never reuse old test beans.
 
