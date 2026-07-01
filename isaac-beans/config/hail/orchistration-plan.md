@@ -27,4 +27,4 @@ Use these exact strings.
 
 If unable to resolve the issue, notify human help needed:
 - Discord pub: `{{bean-id}} 🆘 **prowl** human help needed (synopsis)`
-- Additionally imessage to micahmartin@mac.com with similar synopsis.
+- Additionally imessage to micahmartin@mac.com with a visually clear message using emojis and structure (e.g. starting with 🆘, bean ID, crew, synopsis, and call to #pub).

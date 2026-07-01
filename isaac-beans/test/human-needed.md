@@ -20,7 +20,7 @@ Follow the sequence exactly:
 2. Verifier: return to exact worker session...
 3. Worker: hand off to planner...
 4. Planner: You are unable to resolve the issue. Human intervention is required.
-5-6. Send discord 🆘 and imessage to micahmartin@mac.com with short synopsis.
+5-6. Send discord 🆘 and a visually spiced-up imessage (with emojis + structure) to micahmartin@mac.com.
 
 ... (full body as written in the test bean for g2zf)'
   ```
@@ -34,6 +34,16 @@ Follow the sequence exactly:
 - Worker → verifier → exact worker → planner.
 - Planner cannot resolve, appends human note, commits/pushes (no return to worker).
 - Discord receives: `orchestration-XXXX 🆘 **prowl** human help needed (short synopsis)`
-- iMessage sent to micahmartin@mac.com with matching content.
+- iMessage sent to micahmartin@mac.com with visually stimulating content, e.g.:
+  ```
+  🆘🚨 HUMAN HELP NEEDED 🚨🆘
+
+  Bean: orchestration-XXXX
+  From: **prowl**
+
+  [short synopsis]
+
+  👉 Check Discord #pub for full details.
+  ```
 - Bean ends in-progress.
 - Correct exact-session targeting and at-a-glance comms used throughout.
