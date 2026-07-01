@@ -37,3 +37,9 @@ This is explicitly a process test / no-op for human-needed flow validation.
 - The bean body requires exact-session returns through worker → verifier → worker → planner, with human escalation after planner; this first worker handoff includes submitter-session and thread correlation for that return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
 - Received verifier return hail `411bdf1e` on thread `87f75ea0`; per bean instruction, this exact worker session must now escalate the unresolved conflict to planner with full context and preserved return routing.
+- Planner reviewed the conflict and determined it cannot be resolved at planner level; human intervention is required to decide feature priority.
+- Exact-session follow-up context is preserved for any post-decision return: submitter-session `orchistration-work`, submitter-crew `scrapper`, thread `87f75ea0`.
+
+## Human needed
+
+Requirements conflict on feature priority; needs human decision.
