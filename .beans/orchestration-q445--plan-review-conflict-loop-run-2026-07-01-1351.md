@@ -42,8 +42,7 @@ This is explicitly a process test / no-op for orchestration flow validation.
 - This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the worker pass.
 - The bean body requires exact-session returns through worker → verifier → worker → planner → worker → verifier, so this first worker handoff includes submitter-session and thread correlation for the return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
-
-
+- Received verifier conflict hail `98652035` on thread `1db33ae6`; per bean instruction, worker cannot resolve this at worker level and must escalate to planner with exact-session return info preserved.
 
 ## Verification failed
 
