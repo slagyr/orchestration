@@ -28,8 +28,11 @@ When the worker hails this verify band, expect (and validate) at minimum in the 
 - commit
 - submitter-crew
 - submitter-session
+- thread_id (for correlation)
 
 Use these to drive the verification without relying on free-text in the prompt. If the payload is missing required fields, fail early or request clarification via plan band. On fail, use submitter-session (or explicit instructions in bean) to target return hails to the original worker session when the bean specifies "same session".
+
+When handing off yourself (to work or plan on fail/clarification), pass submitter info forward.
 
 ## Incoming hail data
 
@@ -37,7 +40,9 @@ The incoming hail should have :bean-id (and other project-specific data) in the 
 
 Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail / return-to-same-session instructions in the bean body).
 
-Hail back to the plan band (if specified in data) if clarification from planner is needed. On fail per bean instructions, target the work session using work-hail + submitter-session or explicit session name.
+For returns to exact prior sessions (no band template), compose a full "prompt" in the hail-send that explains the situation + bean-id + notes, and target using "session": <the submitter-session id>.
+
+Hail back to the plan band (if specified in data) if clarification from planner is needed. On fail per bean instructions, target the work session using direct "session" frequencies (or work-hail + submitter-session) + explanatory prompt.
 
 ## Notifications
 
