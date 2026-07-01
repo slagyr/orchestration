@@ -36,8 +36,21 @@ When hailing the work band normally (not return), pass the bean-id (and other re
 
 ## Notifications
 
-Send using `comm_send`:
+Send using `comm_send` at key points (claim/adjust/handoff):
 
 - comm: :id from notification-comm ("discord")
-- content: "Adjusted bean <id> and hailing work." (or appropriate)
+- content: use the "at-a-glance" format
 - discord.target: :channel from notification-comm ("pub")
+
+**Recommended format** (ID first for recognition, emoji, bold crew, action + slug):
+
+```
+{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug}})
+```
+
+Examples:
+- `orchestration-25e4` 🧠 **prowl** received conflict
+- `orchestration-25e4` ✏️ **prowl** added unblock note
+- `orchestration-25e4` ➡️ **prowl** handed back to worker
+
+Use 🧠/📋 for planner actions, 🟢 for positive adjustments.

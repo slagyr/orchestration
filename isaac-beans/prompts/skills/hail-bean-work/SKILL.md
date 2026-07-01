@@ -61,14 +61,42 @@ When the bean body says **process test**, **no-op**, or **orchestration smoke**
 At key milestones, send a concise progress update using `comm_send`:
 
 - comm: the :id from notification-comm (e.g. "discord")
-- content: progress text with bean id
+- content: use the "at-a-glance" format below for easy scanning in #pub
 - discord.target: the :channel from notification-comm (e.g. "pub" -- it supports name or snowflake ID)
+
+**Recommended "at-a-glance" format** (ID first, emoji for status/good-bad, bold crew, short action + context slug from title):
+
+```
+{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug-from-title}})
+```
+
+Examples:
+- `orchestration-25e4` 🟢 **scrapper** claimed (no-op-process-test-run-...)
+- `orchestration-25e4` 📝 **scrapper** appended observations (no-op-process-test-run-...)
+- `orchestration-25e4` ➡️ **scrapper** handed off to verify
+- `orchestration-25e4` 🧠 **prowl** received for plan
+- `orchestration-25e4` ✏️ **prowl** added unblock note
+
+Use:
+- 🟢 for positive/complete/claim
+- 📝 for observations/edit
+- ➡️ for handoff
+- 👁️ or 🔍 for verify start/review
+- ❌ for fail
+- 🟢 or ✅ for pass
+- 🧠 or 📋 for planner
 
 - After claiming the bean.
 - After appending observations (include summary).
 - Before/when handing off (include what was done).
 
-Example: comm_send with comm="discord" content="Claimed bean {{bean-id}} for work (no-op process test)." "discord.target"="pub"
+**ALWAYS use exactly this format for content (ID first for recognition, emoji for status, **crew** bold, short action + slug):**
+
+For claim: "orchestration-xxx 🟢 **scrapper** claimed (short-slug)"
+For observations: "orchestration-xxx 📝 **scrapper** appended observations (short-slug)"
+For handoff: "orchestration-xxx ➡️ **scrapper** handed off to verify"
+
+Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
 
 ## Hand off to verify
 

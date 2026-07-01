@@ -66,7 +66,10 @@ Before the Given state can be true, the custom hail bands and prompts must be in
     --body "This is a fresh process test / no-op bean for verifying the orchestration happy path on this specific run. Perform only the work described; append observations if process test."
   ```
   Record the new bean ID (e.g. orchestration-abcd). Confirm it did not exist before by checking `beans list` or git history for the ID.
-- A hail is sent to the orchistration work band with the id of the (just-created) bean.
+- A hail is sent to the orchistration work band with the id of the (just-created) bean. Example (use exact map for --params to avoid parse issues):
+  ```sh
+  isaac hail send --band orchistration-work --params '{:bean-id "orchestration-abcd"}'
+  ```
 
 ## Then
 - A turn on the orchistration-work session should have been run with the crew scrapper.
