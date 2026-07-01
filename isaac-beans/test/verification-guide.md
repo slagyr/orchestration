@@ -46,7 +46,7 @@ Look for:
 - Confirm sent messages match the exact at-a-glance strings from the skills.
 
 ## iMessage Notifications (for human-needed)
-- Look for the `comm_send` tool call in the plan transcript with `comm="imessage"`, `imessage.target="micahmartin@mac.com"`, and matching content.
+- Look for the `comm_send` tool call in the plan transcript with `comm="imessage"`, `imessage.target="micahmartin@mac.com"`, and content that is visually stimulating (emojis like 🆘🚨, structure with newlines, bean ID, crew, synopsis, and call to action).
 - The actual delivery is observed outside the system (e.g. received message).
 
 ---
@@ -112,7 +112,17 @@ Sequence:
 5. Planner appends `## Human needed` note + synopsis to bean, commits/pushes from plan clone.
 6. No handback to worker.
 7. Discord: `orchestration-XXXX 🆘 **prowl** human help needed (short synopsis)`
-8. iMessage: comm_send with `comm="imessage"`, target `micahmartin@mac.com`, matching content with synopsis.
+8. iMessage: comm_send with `comm="imessage"`, target `micahmartin@mac.com`, content like:
+   ```
+   🆘🚨 HUMAN HELP NEEDED 🚨🆘
+
+   Bean: orchestration-g2zf
+   From: **prowl**
+
+   Requirements conflict on feature priority; needs human decision.
+
+   👉 Check Discord #pub for full details.
+   ```
 
 Evidence:
 - Planner transcript shows the two comm_send calls (discord + imessage) with exact format.

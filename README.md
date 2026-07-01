@@ -72,3 +72,4 @@ See also `test/shared.md` for verification steps.
 ## Related
 
 - The hail bands and skills are intentionally project-agnostic so they can be reused for orchestration of any bean-hosting project.
+  See `isaac-beans/REUSE.md` for the full setup instructions and requirements when applying this to a new project.
