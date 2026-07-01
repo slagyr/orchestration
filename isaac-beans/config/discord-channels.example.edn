@@ -1,0 +1,28 @@
+;; Reference for :discord/channels entries needed for comm_send name resolution.
+;; Copy/merge the relevant parts into the target's ~/.isaac/config/isaac.edn
+;; under :comms :discord.
+;;
+;; The orchistration-* hail bands (and skills) use notification-comm channel "pub".
+;; comm_send with discord.target="pub" (a name) requires this lookup table.
+;;
+;; Format:
+;;   "SNOWFLAKE_AS_STRING" {:name "friendly-name" :crew "..." :session "..." ...}
+;;
+;; Current known mappings (as of 2026-06-30):
+{
+ "1471612995535900712" {:name "pub"}
+ "1471611820048519304" {:name "general"}
+ "1471622305510723745" {:name "pontification"}
+ "1471680593497554998" {:name "braids"}
+ "1471680595196117033" {:name "zane-setup"}
+ "1472349516098175052" {:name "debate-club"}
+ "1472510111850434590" {:name "fireside"}
+ "1472667753080160308" {:name "zaap"}
+ "1473155162217648334" {:name "tristan-zane"}
+ "1473856032353685535" {:name "sms"}
+ "1474479111685800109" {:name "taxes"}
+ "1475541565173661912" {:name "cfii"}
+ "1476813011925598343" {:name "orchestrator"}
+ "1491164414794272848" {:crew "tempest", :session "discord-tempest", :name "tempest"}
+ "1520092609312194772" {:crew "marvin", :session "discord-isaac", :name "isaac"}
+}
