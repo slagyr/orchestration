@@ -9,9 +9,9 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
   - `config/discord-channels.example.edn` — reference for the `:discord/channels` map (name ↔ snowflake) required for `comm_send` with channel *names* like "pub"
   - `prompts/commands/` and `prompts/skills/` — the `plan`/`work`/`verify` commands and the `hail-bean-*` skills
   - `install.sh` — the installer (see below)
-- `test/shared.md` — common sections used by all tests (Remote Access, Installation, Given, Pre-When checklist skeleton)
-- `test/happy-path.md` — the executable happy-path test specification (Given/When/Then + agent verification checklist)
-- `test/verify-fail.md` — the verify-fail scenario: first verification fails and returns to the *same* worker session; worker re-tags unverified; second verification passes and completes the bean.
+- `test/shared.md` — common setup (Remote Access, Installation, Given, Pre-When)
+- `test/verification-guide.md` — verification procedure, evidence patterns, terminology, and detailed checks
+- `test/happy-path.md`, `verify-fail.md`, `plan-review.md`, `human-needed.md` — the executable test specifications (slim Given/When/Then)
 - `.beans.yml` — bean tracker config for this project itself (prefix `orchestration-`)
 
 ## Quick start (install on target)
@@ -34,11 +34,14 @@ After installing, reload the Isaac sessions/crews that use the `orchistration-*`
 
 ## Running the tests
 
-See `isaac-beans/test/shared.md` (common setup) + `isaac-beans/test/happy-path.md` (happy path), `isaac-beans/test/verify-fail.md` (failure + retry), `isaac-beans/test/plan-review.md` (planner conflict loop with exact-session returns), and `isaac-beans/test/human-needed.md` (planner unable to resolve -> human escalation via discord + imessage).
+See:
+- `isaac-beans/test/shared.md` — setup
+- `isaac-beans/test/verification-guide.md` — how to verify (evidence, patterns)
+- The individual test files (`happy-path.md`, `verify-fail.md`, `plan-review.md`, `human-needed.md`) for the slim Given/When/Then scenarios.
 
-**Important:** Every run of these tests must create a *brand new* bean (with a unique ID and run timestamp in the title). Never reuse old test beans.
+**Important:** Every run must use a *brand new* bean (unique ID + timestamp in title).
 
-All verification commands run against the remote (or local) target using the host/user from `.env`. The checklists tell the agent exactly how to construct the ssh target and what evidence to collect.
+All verification uses the remote (or local) target from `.env`. Detailed evidence collection lives in the verification guide.
 
 ## Notes
 

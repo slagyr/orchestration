@@ -1,3 +1,5 @@
+See `verification-guide.md` for verification procedure and evidence rules.
+
 ## Remote Access
 
 All verification steps execute against the live remote target system (zanebot).
@@ -67,22 +69,9 @@ See `isaac-beans/install.sh` for details and the exact remote commands.
 - An orchistration-work session exists with crew scrapper and cwd /Users/zane/agents/orchistration/work.
 - An orchistration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchistration/verify.
 
-## Verification Procedure Intro (common)
+## Pre-When checks (confirm setup before the hail to work)
 
-**First** establish remote access using the instructions in the "Remote Access" section above (read `.env`, construct `$TARGET`). All commands below (`ls`, `beans`, `git`, transcript inspection, etc.) are executed on the remote target via `ssh "$TARGET" '...' ` (or equivalent).
-
-It is **not** a test framework script (no Cucumber). It is a manual verification procedure the agent should follow using `beans`, `git`, session transcripts/logs, `ls`, and hail data as rendered inside transcripts.
-
-Run the checks roughly in this order and report **pass/fail + specific evidence** (e.g. commit hash + message, `beans show` output, transcript excerpt with surrounding context, `ls` output) for each.
-
-**Critical for repeated runs of any test:** Always create a *brand new* bean with a unique ID for this execution of the test. Do not reuse old bean IDs (e.g. orchestration-lrlu) or inspect prior test data. Include a run timestamp or unique suffix in the bean title. Verify freshness in the Pre-When checks below.
-
-Terminology note (for all checks):
-- Role homes / sessions / bands: `orchistration-*` and `/Users/zane/agents/orchistration/{plan,work,verify}`.
-- Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
-- Session tag used: `:orchestration`.
-
-### Pre-When checks (confirm setup before the hail to work)
+See `verification-guide.md` for the full verification procedure, evidence patterns, terminology, and reporting rules. The sections below focus on concrete pre-run confirmation steps.
 
 - Confirm the three role home directories exist on the target machine:
   - `ls /Users/zane/agents/orchistration/plan`
