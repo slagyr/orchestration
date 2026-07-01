@@ -75,7 +75,7 @@ Use exact same sessions for returns so context is preserved. For handoffs back t
 
 When hailing directly to a session (no band template), you must provide a "prompt" that fully explains the situation, includes the bean-id, summarizes prior work/notes on this bean, and tells the recipient what to do next. Also pass bean-id (and other data) in "params".
 
-Always use flat snake_case keys for hail-send (no "frequencies" wrapper). Pass notification-comm for pub updates. Use thread_id for correlation where available. Send comm_send to "pub" at every milestone (claim, handoff, return, adjust, complete).
+Always use flat snake_case keys for hail-send (no "frequencies" wrapper). Pass notification-comm for pub updates. Use thread_id for correlation where available. Send comm_send to "pub" at every milestone using the at-a-glance format from the hail-bean-* skills: `{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug}})` for quick recognition (ID first, emoji status, bold crew/stage, context slug).
 
 1. Worker (scrapper): Claim the bean (in-progress + unverified tag), append initial ## Process Observations. Hand off to verifier using direct session targeting if possible or the verify band, including submitter-crew, submitter-session (this session), thread_id, bean-id, etc.
 

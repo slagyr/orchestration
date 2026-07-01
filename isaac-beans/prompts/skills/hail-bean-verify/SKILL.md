@@ -49,11 +49,27 @@ Hail back to the plan band (if specified in data) if clarification from planner 
 Send updates using `comm_send` at key points:
 
 - comm: the :id from notification-comm (e.g. "discord")
-- content: progress with bean id
+- content: use the "at-a-glance" format below
 - discord.target: the :channel from notification-comm (e.g. "pub")
 
-- On starting review.
-- On pass: "Verification passed for bean <id>".
-- On fail: the failure reason.
+**Recommended "at-a-glance" format** (ID first, emoji for status, bold crew, action):
 
-Include the bean-id.
+```
+{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug}})
+```
+
+Examples:
+- `orchestration-25e4` 👁️ **perceptor** verification started
+- `orchestration-25e4` 🟢 **perceptor** verification passed
+- `orchestration-25e4` ❌ **perceptor** verification failed (reason...)
+
+- On starting review.
+- On pass: use the format above.
+- On fail: use the format above with failure reason.
+
+**ALWAYS use exactly this format for content:**
+
+"orchestration-xxx 👁️ **perceptor** verification started"
+"orchestration-xxx 🟢 **perceptor** verification passed"
+
+Include the bean-id and use emojis for quick good/bad recognition.

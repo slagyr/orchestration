@@ -18,3 +18,11 @@ The incoming hail should have :bean-id in params. Review the bean and hand off a
 For exact returns to a prior session: use direct "session" key in hail-send (from submitter info) and supply a "prompt" with explanation + bean-id (no template).
 
 If pass, remove unverified tag; if fail, return to in-progress with notes. Pass submitter info forward on your handoffs.
+
+**Notifications to pub (use exactly this format for comm_send content):**
+
+- On starting review: `{{bean-id}} 👁️ **perceptor** verification started`
+- On pass: `{{bean-id}} 🟢 **perceptor** verification passed`
+- On fail: `{{bean-id}} ❌ **perceptor** verification failed (reason...)`
+
+Use these exact strings.

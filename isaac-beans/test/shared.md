@@ -50,7 +50,7 @@ Before the Given state can be true, the custom hail bands and prompts must be in
    - Use `./isaac-beans/install.sh --dry-run` (or `-n`) to preview.
    - The script supports local installs (when `host: localhost` or similar) and remote via ssh using the same `$TARGET` pattern as verification.
    - It copies the directories (overwriting existing files, but never deleting anything else):
-     - `isaac-beans/config/` → `~/.isaac/config/`
+     - `isaac-beans/config/` → `~/.isaac/config/`   (includes hail bands + `discord-channels.example.edn` reference)
      - `isaac-beans/prompts/` → `~/.isaac/prompts/`
 
 3. After install, restart/reload the relevant sessions or daemons on the target so new skills, commands, and hail bands are loaded.
@@ -107,3 +107,10 @@ Terminology note (for all checks):
 
 - Confirm the orchestration-specific prompts/config are the ones active for these sessions (evidence will appear in transcripts; optionally inspect the Isaac root used by the crews):
   - `prompts/skills/hail-bean-*/SKILL.md` and `config/hail/orchistration-*.md` (the versions from the isaac-beans deployment) are the ones referenced/loaded.
+
+- **Discord comm channels for name-based notifications** (required so `comm_send` with `notification-comm` "pub" succeeds via reverse lookup to snowflake):
+  - `ssh "$TARGET" 'grep -A 30 ":discord/channels" ~/.isaac/config/isaac.edn'`
+  - Must include an entry for "pub" (e.g. `"SNOWFLAKE" {:name "pub" ...}`) plus the known ones:
+    - "1491164414794272848" name "tempest"
+    - "1520092609312194772" name "isaac"
+  - If "pub" is absent, name resolution will fail with snowflake coercion errors even though the code supports names. Add it to `~/.isaac/config/isaac.edn` on the target (then reload relevant sessions).

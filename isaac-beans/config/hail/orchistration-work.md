@@ -18,3 +18,11 @@ If a conflict is found (bean cannot satisfy standards), hand off to the plan-hai
 Perform only the work described; append observations if process test.
 
 For exact-session returns (to preserve context): target the specific session id (from submitter info or your context) using the "session" key + provide a full prompt explaining the handoff + bean-id.
+
+**Notifications to pub (use exactly this format for comm_send content, ID first, emoji, **crew**, short action + slug from title):**
+
+- After claim: `{{bean-id}} 🟢 **scrapper** claimed (short-slug)`
+- After observations: `{{bean-id}} 📝 **scrapper** appended observations (short-slug)`
+- Before handoff: `{{bean-id}} ➡️ **scrapper** handed off to verify`
+
+Use these exact strings.
