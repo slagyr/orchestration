@@ -1,11 +1,11 @@
 ---
 # orchestration-g2zf
 title: human-needed test (run-2026-07-01-1411)
-status: todo
+status: in-progress
 type: task
 priority: normal
 created_at: 2026-07-01T21:11:43Z
-updated_at: 2026-07-01T21:11:43Z
+updated_at: 2026-07-01T21:13:22Z
 ---
 
 This is a fresh process test / no-op bean for the human-needed orchestration test.
