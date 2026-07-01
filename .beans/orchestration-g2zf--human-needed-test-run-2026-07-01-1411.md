@@ -4,10 +4,8 @@ title: human-needed test (run-2026-07-01-1411)
 status: in-progress
 type: task
 priority: normal
-tags:
-    - unverified
 created_at: 2026-07-01T21:11:43Z
-updated_at: 2026-07-01T21:14:13Z
+updated_at: 2026-07-01T21:15:47Z
 ---
 
 This is a fresh process test / no-op bean for the human-needed orchestration test.
@@ -38,3 +36,4 @@ This is explicitly a process test / no-op for human-needed flow validation.
 - This bean is an explicit no-op human-needed process test, so no product-code edits or test runs were required on the worker pass.
 - The bean body requires exact-session returns through worker → verifier → worker → planner, with human escalation after planner; this first worker handoff includes submitter-session and thread correlation for that return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
+- Received verifier return hail `411bdf1e` on thread `87f75ea0`; per bean instruction, this exact worker session must now escalate the unresolved conflict to planner with full context and preserved return routing.
