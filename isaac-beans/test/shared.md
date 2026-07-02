@@ -100,6 +100,6 @@ See `verification-guide.md` for the full verification procedure, evidence patter
 - **Discord comm channels for name-based notifications** (required so `comm_send` with `notification-comm` "pub" succeeds via reverse lookup to snowflake):
   - `ssh "$TARGET" 'grep -A 30 ":discord/channels" ~/.isaac/config/isaac.edn'`
   - Must include an entry for "pub" (e.g. `"SNOWFLAKE" {:name "pub" ...}`) plus the known ones:
-    - "EXAMPLE_SNOWFLAKE_A" name "tempest"
-    - "EXAMPLE_SNOWFLAKE_B" name "isaac"
+    - "EXAMPLE_SNOWFLAKE_A" name "<channel-a>"
+    - "EXAMPLE_SNOWFLAKE_B" name "<channel-b>"
   - If "pub" is absent, name resolution will fail with snowflake coercion errors even though the code supports names. Add it to `~/.isaac/config/isaac.edn` on the target (then reload relevant sessions).
