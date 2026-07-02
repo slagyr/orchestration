@@ -1,7 +1,10 @@
 {:paths ["src" "spec"]
 
+ :deps {speclj/speclj {:mvn/version "3.13.0"}}
+
  :tasks
- {spec {:doc  "Run speclj specs"
-        :task (if (seq *command-line-args*)
-                (apply shell "clojure" "-M:spec" *command-line-args*)
-                (shell "clojure" "-M:spec"))}}}
+ {spec {:doc      "Run speclj specs"
+        :requires ([speclj.main :as speclj])
+        :task     (if (seq *command-line-args*)
+                    (apply speclj/-main "-c" "-D" "spec" *command-line-args*)
+                    (speclj/-main "-c" "-D" "spec"))}}}
