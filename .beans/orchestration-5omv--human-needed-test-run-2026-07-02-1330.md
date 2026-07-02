@@ -46,3 +46,7 @@ HEAD: 41083433452a42afb4d0ed74e6efe96f12bfdfab
 Working tree: clean
 
 Human-needed loop requires verifier to return this bean to worker without attempting approval. Verification cannot resolve the requirements conflict; worker must escalate via the plan-band with reply_to preserved.
+
+## Human intervention required
+
+The requirements conflict in this loop cannot be resolved at verifier, worker, or planner level. Human decision is required before any further handoff.
