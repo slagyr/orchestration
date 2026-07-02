@@ -6,7 +6,8 @@ workflow on `main` regresses from green to red.
 It is intentionally narrower than `isaac-beans`:
 
 - one hail band: `ci-failure`
-- one workflow template: `ci-failure-hail.yml`
+- one wrapper workflow template: `ci-failure-hail.yml`
+- one central reusable workflow in `slagyr/orchestration`
 - one installer to deploy the band and copy the workflow into a repo checkout
 - one GitHub setup script to install the repo variable/secret
 
@@ -18,6 +19,11 @@ Usually only these things need adaptation:
    - default: `CI Tests`
    - edit `github/workflows/ci-failure-hail.yml` if the target repo's main CI
      workflow uses a different name
+
+   The installed wrapper delegates to:
+   - `slagyr/orchestration/.github/workflows/ci-failure-hail-reusable.yml@main`
+
+   If you want stricter pinning, change that ref to a tag or commit SHA.
 
 2. **Band routing**
    - edit `config/hail/ci-failure.md`

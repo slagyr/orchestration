@@ -67,7 +67,9 @@ The workflow posts JSON like:
 - `config/hail/ci-failure.md`
   - single-file hail band with YAML frontmatter + prompt body
 - `github/workflows/ci-failure-hail.yml`
-  - GitHub Actions notifier template
+  - tiny GitHub Actions wrapper template
+- `../.github/workflows/ci-failure-hail-reusable.yml`
+  - reusable notifier implementation in the `orchestration` repo
 - `install.sh`
   - deploys the hail band to an Isaac root and copies the workflow into a repo
     checkout
@@ -85,6 +87,10 @@ The workflow posts JSON like:
 3. Configure GitHub:
    - `./isaac-ci/configure-github.sh slagyr/<repo>`
 4. Reload or restart the relevant Isaac sessions on `zanebot`
+
+The installed workflow is intentionally small. It delegates the real notifier
+logic to the reusable workflow in `slagyr/orchestration`, so later fixes land in
+one place.
 
 ## Notes
 
