@@ -38,24 +38,18 @@ coordinates.
 
 ## Notifications
 
-Send using `comm_send` at key points (claim/adjust/handoff):
+Send using `comm_send` at key points (receive/adjust/handback). Coordinates
+come from the delivery's data block: comm = notification-comm's :id, target =
+its :channel.
 
-- comm: :id from notification-comm ("discord")
-- content: use the "at-a-glance" format
-- discord.target: :channel from notification-comm ("pub")
+Fill `<crew>` with **your own crew name** (it's in the delivery metadata
+preamble). Use exactly these formats for content:
 
-**Recommended format** (ID first for recognition, emoji, bold crew, action + slug):
+- On receiving: `<bean-id> 🧠 **<crew>** received for plan`
+- After adjustment: `<bean-id> ✏️ **<crew>** added unblock note`
+- Before handoff: `<bean-id> ➡️ **<crew>** handed back to worker`
 
-```
-{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug}})
-```
-
-Examples:
-- `orchestration-25e4` 🧠 **prowl** received conflict
-- `orchestration-25e4` ✏️ **prowl** added unblock note
-- `orchestration-25e4` ➡️ **prowl** handed back to worker
-
-Use 🧠/📋 for planner actions, 🟢 for positive adjustments.
+ID first for recognition; 🧠/📋 for planner actions, 🟢 for positive adjustments.
 
 ## If unable to resolve - notify human
 

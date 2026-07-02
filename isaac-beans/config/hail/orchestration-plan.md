@@ -12,14 +12,5 @@ params. Supply a --prompt override when the worker needs an explanation (the
 data still arrives); pass reply_to with the incoming hail id so the thread
 correlates.
 
-**Notifications (comm_send via notification-comm; use exactly this format):**
-
-- On receiving: `{{bean-id}} 🧠 **prowl** received for plan`
-- After adjustment: `{{bean-id}} ✏️ **prowl** added unblock note`
-- Before handoff: `{{bean-id}} ➡️ **prowl** handed back to worker`
-
-Use these exact strings.
-
-If unable to resolve the issue, follow the human-help escalation in the
-"hail-bean-plan" skill, using the notification-comm and human-help-comm
-coordinates from the data block.
+Notification formats and the human-help escalation are defined in the skill;
+use the notification-comm and human-help-comm coordinates from the data block.

@@ -58,45 +58,21 @@ When the bean body says **process test**, **no-op**, or **orchestration smoke**
 
 ## Notifications
 
-At key milestones, send a concise progress update using `comm_send`:
+At key milestones (claim, observations, handoff), send a concise progress
+update using `comm_send`. Coordinates come from the delivery's data block:
+comm = notification-comm's :id, target = its :channel (name or snowflake).
 
-- comm: the :id from notification-comm (e.g. "discord")
-- content: use the "at-a-glance" format below for easy scanning in #pub
-- discord.target: the :channel from notification-comm (e.g. "pub" -- it supports name or snowflake ID)
+Fill `<crew>` with **your own crew name** (it's in the delivery metadata
+preamble); `<short-slug>` comes from the bean title. Use exactly these
+formats for content:
 
-**Recommended "at-a-glance" format** (ID first, emoji for status/good-bad, bold crew, short action + context slug from title):
+- After claim: `<bean-id> 🟢 **<crew>** claimed (<short-slug>)`
+- After observations: `<bean-id> 📝 **<crew>** appended observations (<short-slug>)`
+- Before handoff to verify: `<bean-id> ➡️ **<crew>** handed off to verify`
+- Before handoff to planner: `<bean-id> ➡️ **<crew>** handed off to planner (plan-review-loop)`
 
-```
-{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug-from-title}})
-```
-
-Examples:
-- `orchestration-25e4` 🟢 **scrapper** claimed (no-op-process-test-run-...)
-- `orchestration-25e4` 📝 **scrapper** appended observations (no-op-process-test-run-...)
-- `orchestration-25e4` ➡️ **scrapper** handed off to verify
-- `orchestration-25e4` ➡️ **scrapper** handed off to planner (plan-review-loop)
-- `orchestration-25e4` 🧠 **prowl** received for plan
-- `orchestration-25e4` ✏️ **prowl** added unblock note
-
-Use:
-- 🟢 for positive/complete/claim
-- 📝 for observations/edit
-- ➡️ for handoff (to verify or to planner)
-- 👁️ or 🔍 for verify start/review
-- ❌ for fail
-- 🟢 or ✅ for pass
-- 🧠 or 📋 for planner
-
-- After claiming the bean.
-- After appending observations (include summary).
-- Before/when handing off (include what was done).
-
-**ALWAYS use exactly this format for content (ID first for recognition, emoji for status, **crew** bold, short action + slug):**
-
-For claim: "orchestration-xxx 🟢 **scrapper** claimed (short-slug)"
-For observations: "orchestration-xxx 📝 **scrapper** appended observations (short-slug)"
-For handoff to verify: "orchestration-xxx ➡️ **scrapper** handed off to verify"
-For handoff to planner: "orchestration-xxx ➡️ **scrapper** handed off to planner (plan-review-loop)"
+ID first for recognition; emoji for quick status scanning (🟢 claim/positive,
+📝 observations, ➡️ handoff).
 
 Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
 

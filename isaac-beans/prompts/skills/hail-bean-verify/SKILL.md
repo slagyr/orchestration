@@ -48,30 +48,14 @@ proceed is a question for the planner, not a dead end.
 
 ## Notifications
 
-Send updates using `comm_send` at key points:
+Send updates using `comm_send` at key points. Coordinates come from the
+delivery's data block: comm = notification-comm's :id, target = its :channel.
 
-- comm: the :id from notification-comm (e.g. "discord")
-- content: use the "at-a-glance" format below
-- discord.target: the :channel from notification-comm (e.g. "pub")
+Fill `<crew>` with **your own crew name** (it's in the delivery metadata
+preamble). Use exactly these formats for content:
 
-**Recommended "at-a-glance" format** (ID first, emoji for status, bold crew, action):
+- On starting review: `<bean-id> 👁️ **<crew>** verification started`
+- On pass: `<bean-id> 🟢 **<crew>** verification passed`
+- On fail: `<bean-id> ❌ **<crew>** verification failed (reason...)`
 
-```
-{{bean-id}} {{emoji}} **{{crew}}** {{action}} ({{short-slug}})
-```
-
-Examples:
-- `orchestration-25e4` 👁️ **perceptor** verification started
-- `orchestration-25e4` 🟢 **perceptor** verification passed
-- `orchestration-25e4` ❌ **perceptor** verification failed (reason...)
-
-- On starting review.
-- On pass: use the format above.
-- On fail: use the format above with failure reason.
-
-**ALWAYS use exactly this format for content:**
-
-"orchestration-xxx 👁️ **perceptor** verification started"
-"orchestration-xxx 🟢 **perceptor** verification passed"
-
-Include the bean-id and use emojis for quick good/bad recognition.
+ID first for recognition; emoji for quick good/bad scanning.

@@ -14,12 +14,5 @@ If a conflict is found (bean cannot satisfy standards), hail the plan-band with
 planner can unblock/adjust.
 Perform only the work described; append observations if process test.
 
-**Notifications (comm_send via notification-comm; use exactly this format —
-ID first, emoji, **crew**, short action + slug from title):**
-
-- After claim: `{{bean-id}} 🟢 **scrapper** claimed (short-slug)`
-- After observations: `{{bean-id}} 📝 **scrapper** appended observations (short-slug)`
-- Before handoff to verify: `{{bean-id}} ➡️ **scrapper** handed off to verify`
-- Before handoff to planner (on conflict): `{{bean-id}} ➡️ **scrapper** handed off to planner (plan-review-loop)`
-
-Use these exact strings. (The model must choose based on which band it is hailing to.)
+Notification formats are defined in the skill; use the notification-comm
+coordinates from the data block.

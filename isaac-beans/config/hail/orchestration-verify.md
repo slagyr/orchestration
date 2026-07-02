@@ -14,10 +14,5 @@ fetchable with hail_get via the thread.
 
 If pass, remove unverified tag; if fail, return to in-progress with notes.
 
-**Notifications (comm_send via notification-comm; use exactly this format):**
-
-- On starting review: `{{bean-id}} 👁️ **perceptor** verification started`
-- On pass: `{{bean-id}} 🟢 **perceptor** verification passed`
-- On fail: `{{bean-id}} ❌ **perceptor** verification failed (reason...)`
-
-Use these exact strings.
+Notification formats are defined in the skill; use the notification-comm
+coordinates from the data block.
