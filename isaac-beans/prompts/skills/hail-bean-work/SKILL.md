@@ -106,9 +106,12 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
 - Use the `hail-send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
 - For normal band handoff:
   - band: the verify band name from the incoming data (e.g. value of verify-hail)
-  - params: include at minimum :bean-id, and to support exact returns later also include submitter-crew, submitter-session (this current session's id/name), thread_id, notification-comm, plan-hail, verify-hail, etc.
+  - params: **:bean-id is the only required param** — the band template carries
+    bean-repo, notification-comm, plan-hail, work-hail. Optionally add
+    submitter-session (this current session's id/name) and thread_id to support
+    exact-session returns later.
   Example:
-    {"band": "orchistration-verify", "params": {"bean-id": "{{bean-id}}", "bean-repo": "...", "notification-comm": {...}, "submitter-session": "<your-current-session>", "submitter-crew": "scrapper", "thread_id": "<correlation>"}}
+    {"band": "<verify-hail value>", "params": {"bean-id": "{{bean-id}}", "submitter-session": "<your-current-session>", "thread_id": "<correlation>"}}
 - Verifier pulls the beans repo root before reviewing.
 
 ## Hand off to planner (e.g. on requirements conflict)
@@ -120,7 +123,7 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
   - Include submitter info so planner (or subsequent steps) can return precisely to *this exact session*.
   - Provide "prompt" with full explanation if needed.
   Example:
-    {"band": "orchistration-plan", "params": {"bean-id": "{{bean-id}}", ..., "submitter-session": "<this-session-id>", "thread_id": "..."}, "prompt": "Conflict detected on bean {{bean-id}}: [summary from verifier note and requirements]. Returning for planner adjustment. Previous context on this exact worker session."}
+    {"band": "<plan-hail value>", "params": {"bean-id": "{{bean-id}}", "submitter-session": "<this-session-id>", "thread_id": "..."}, "prompt": "Conflict detected on bean {{bean-id}}: [summary from verifier note and requirements]. Returning for planner adjustment. Previous context on this exact worker session."}
 - The planner will adjust (e.g. add unblock note) and hand back to this exact session.
 
 ## Handoffs to exact sessions (returns / loops, preserving context)

@@ -1,16 +1,16 @@
 ---
 crew: prowl
 session-tags:
-  - :orchestration
+  - :isaac
 reach: :one
 ---
 
-bean-repo: git@github.com:slagyr/orchestration.git
+bean-repo: git@github.com:slagyr/isaac.git
 bean: {{bean-id}}
-notification-comm: {:id :discord :channel "pub"}
+notification-comm: {:id :discord :channel "isaac"}
 human-help-comm: {:id :imessage :target "micahmartin@mac.com" :service "iMessage"}
-work-hail: "orchistration-work"
-verify-hail: "orchistration-verify"
+work-hail: "isaac-work"
+verify-hail: "isaac-verify"
 
 Load and follow the "hail-bean-plan" skill.
 Use the data map above (includes bean-id via the template, bean-repo, notification-comm, etc.).
@@ -18,7 +18,7 @@ When delegating (or returning) to work, hail the work-hail band (or direct to ex
 
 For returns to exact prior worker session: use the submitter session id and provide explanatory prompt.
 
-**Notifications to pub (use exactly this format for comm_send content):**
+**Notifications to isaac (use exactly this format for comm_send content):**
 
 - On receiving: `{{bean-id}} 🧠 **prowl** received for plan`
 - After adjustment: `{{bean-id}} ✏️ **prowl** added unblock note`

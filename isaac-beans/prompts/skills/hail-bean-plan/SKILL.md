@@ -57,8 +57,12 @@ Use 🧠/📋 for planner actions, 🟢 for positive adjustments.
 
 ## If unable to resolve - notify human
 
-- Send comm_send to the notification-comm (discord "pub") with content in at-a-glance format: `{{bean-id}} 🆘 **prowl** human help needed (short synopsis)`
+The escalation coordinates come from the band data map: **notification-comm**
+(at-a-glance channel) and **human-help-comm** (direct human contact). Never
+hardcode channels or addresses — read them from the incoming band data.
 
-- Additionally send imessage: comm_send with comm="imessage" content="🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: {{bean-id}}\nFrom: **prowl**\n\n[short synopsis]\n\n👉 Check Discord #pub for full details." imessage.target="micahmartin@mac.com" imessage.service="iMessage"
+- Send comm_send to the notification-comm coordinates with content in at-a-glance format: `{{bean-id}} 🆘 **{{crew}}** human help needed (short synopsis)`
 
-- Use the synopsis from the hail instructions or bean body. Make the iMessage visually clear with emojis, newlines, and structure.
+- Additionally send to the human-help-comm coordinates (comm = its :id, target/service from its keys): content like "🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: {{bean-id}}\nFrom: **{{crew}}**\n\n[short synopsis]\n\n👉 Check the notification-comm channel for full details."
+
+- Use the synopsis from the hail instructions or bean body. Make the message visually clear with emojis, newlines, and structure.
