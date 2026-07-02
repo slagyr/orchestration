@@ -1,0 +1,4 @@
+{:session-tags #{:isaac}
+ :reach :one
+ :prefer :recent
+ :create :if-missing}

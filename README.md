@@ -9,6 +9,7 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
   - `config/discord-channels.example.edn` — reference for the `:discord/channels` map (name ↔ snowflake) required for `comm_send` with channel *names* like "pub"
   - `prompts/commands/` and `prompts/skills/` — the `plan`/`work`/`verify` commands and the `hail-bean-*` skills
   - `install.sh` — the installer (see below)
+- `isaac-ci/` — reusable GitHub Actions + hail-band templates for sending CI failure hails to Isaac on green -> red transitions
 - `test/shared.md` — common setup (Remote Access, Installation, Given, Pre-When)
 - `test/verification-guide.md` — verification procedure, evidence patterns, terminology, and detailed checks
 - `test/happy-path.md`, `verify-fail.md`, `plan-review.md`, `human-needed.md` — the executable test specifications (slim Given/When/Then)
