@@ -72,6 +72,8 @@ The workflow posts JSON like:
 - `install.sh`
   - deploys the hail band to an Isaac root and copies the workflow into a repo
     checkout
+- `configure-github.sh`
+  - sets the required GitHub Actions repo variable and secret from `../.env`
 - `REUSE.md`
   - how to adapt this package for another project
 
@@ -81,9 +83,8 @@ The workflow posts JSON like:
    - `./isaac-ci/install.sh --repo /path/to/project`
 2. Adjust the watched workflow name if needed:
    - default is `CI Tests`
-3. Set:
-   - `vars.ISAAC_HAIL_URL`
-   - `secrets.ISAAC_SERVER_AUTH_TOKEN`
+3. Configure GitHub:
+   - `./isaac-ci/configure-github.sh slagyr/<repo>`
 4. Reload or restart the relevant Isaac sessions on `zanebot`
 
 ## Notes

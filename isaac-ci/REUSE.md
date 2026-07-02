@@ -8,6 +8,7 @@ It is intentionally narrower than `isaac-beans`:
 - one hail band: `ci-failure`
 - one workflow template: `ci-failure-hail.yml`
 - one installer to deploy the band and copy the workflow into a repo checkout
+- one GitHub setup script to install the repo variable/secret
 
 ## What to customize
 
@@ -45,6 +46,12 @@ You can also pass the repo checkout explicitly:
 ./isaac-ci/install.sh --repo /path/to/project
 ```
 
+To configure GitHub Actions settings for a repo:
+
+```sh
+./isaac-ci/configure-github.sh slagyr/your-repo
+```
+
 ## What the installer does
 
 1. Copies:
@@ -61,8 +68,9 @@ It never deletes files on the target.
 
 ## Required GitHub settings per repo
 
+`configure-github.sh` sets these for you:
+
 - `vars.ISAAC_HAIL_URL`
-  - e.g. `https://zanebot.tail66e5f8.ts.net/hail/send`
 - `secrets.ISAAC_SERVER_AUTH_TOKEN`
 
 ## Optional session affinity
