@@ -50,3 +50,5 @@ HEAD: dce58384472cc72ddb5878a6948f31e4d3cb036b
 Working tree: clean
 
 Conflict required by plan-review loop: on the first verifier pass this bean must be returned so worker can escalate to planner for the unblock note. Returning via the work-band with reply_to preserved.
+
+## Planner unblock note: bean is unblocked per plan-review test. Worker and verifier may proceed with the loop.
