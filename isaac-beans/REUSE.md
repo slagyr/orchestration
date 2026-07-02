@@ -133,6 +133,11 @@ Without the `"pub"` name entry, `comm_send` to the public channel will fail (eve
 - **Notification strings**: The skills contain "ALWAYS use exactly this format" lists for at-a-glance messages. Customize the expected strings in your bands/skills for the new project.
 - **Human escalation**: The procedure lives in the `hail-bean-plan` skill; the coordinates (`notification-comm`, `human-help-comm`) live in your base template's `data:`.
 - **Git access**: The remote clones (plan/work/verify) perform `beans update` + commit + push. They need appropriate permissions.
+- **Commit provenance**: Every orchestration-created commit should include an
+  `Isaac-Session: <session-id>` trailer so later automation can route CI
+  regressions back to the originating session. Apply that to both bean repo
+  commits and implementation repo commits. Recommended form:
+  `git commit --trailer "Isaac-Session: <session-id>"`
 - **No legacy .toolbox**: This system uses the `prompts/` layout.
 - **Session reloads**: Changes to bands or prompts require reloading the affected sessions.
 - **Fresh beans for testing**: Every test run (or real workflow validation) should use a brand new bean with a unique ID.

@@ -22,7 +22,14 @@ Use when hailed via orchestration-plan band (or for conflict resolution / unbloc
   `hail_get` via the thread.
 - Pull latest, review the bean.
 - Make the adjustment (for test: simply append a note like "## Planner unblock note: bean is unblocked..."; in real use: clarify requirements, edit gherkin, etc.).
-- Commit the change in the beans repo.
+- Commit the change in the beans repo, including an `Isaac-Session: <session-id>`
+  trailer. Recommended form:
+
+  ```sh
+  git commit --trailer "Isaac-Session: <session-id>"
+  ```
+
+  The current session id comes from your session identity block.
 - Hand back via the work-band (see below).
 
 ## Handoff back to work

@@ -24,6 +24,23 @@ Use when a hail (or band prompt) assigns bean verification.
    reply_to (the incoming hail id), and a prompt override explaining the
    failure. On subsequent passes, complete.
 
+## Commit trailer
+
+Any verification-side commit in the beans repo should include the current
+session id as a trailer:
+
+```text
+Isaac-Session: <session-id>
+```
+
+Recommended form:
+
+```sh
+git commit --trailer "Isaac-Session: <session-id>"
+```
+
+The current session id comes from your session identity block.
+
 ## Incoming hail data
 
 **:bean-id is the only required param.** Everything else you need arrives in

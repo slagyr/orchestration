@@ -24,6 +24,28 @@ Run in order before claiming or editing anything.
 
 All `beans` commands and bean markdown commits happen in the **beans repo** root even when implementation edits happen in a module sibling.
 
+## Commit trailer
+
+Every commit made from an Isaac orchestration session should carry the current
+session id as a trailer:
+
+```text
+Isaac-Session: <session-id>
+```
+
+Apply that to:
+
+- bean state commits in the beans repo
+- implementation commits in the module repo
+
+Recommended form:
+
+```sh
+git commit --trailer "Isaac-Session: <session-id>"
+```
+
+The current session id comes from your session identity block.
+
 ## Session cwd vs worktree
 
 | Surface | Typical path | Holds |
