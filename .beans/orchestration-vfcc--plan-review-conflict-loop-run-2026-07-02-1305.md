@@ -4,8 +4,10 @@ title: plan-review conflict loop (run-2026-07-02-1305)
 status: in-progress
 type: task
 priority: normal
+tags:
+    - unverified
 created_at: 2026-07-02T21:17:51Z
-updated_at: 2026-07-02T21:18:39Z
+updated_at: 2026-07-02T21:18:54Z
 ---
 
 This is a fresh process test bean for the plan-review orchestration flow, under the band-data + reply_to threading configuration.
@@ -31,3 +33,12 @@ Send comm_send notifications at every milestone using the exact formats from you
 6. Verifier: On receipt of the unblocked bean, approve it. Remove unverified tag, set status completed. Append verification pass note.
 
 This is explicitly a process test / no-op for orchestration flow validation.
+
+## Process Observations
+
+- Trusted hail `7a7a3810` carried bean-id `orchestration-vfcc`; work proceeded against that exact bean.
+- Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md`.
+- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchestration/work/orchestration` with `.beans/` present.
+- This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the initial worker pass.
+- The bean body requires band-only handoffs with reply_to threading preserved through worker → verifier → worker → planner → worker → verifier.
+- Notification attempts target the named Discord channel `pub` using the delivery-provided notification coordinates.
