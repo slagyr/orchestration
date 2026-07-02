@@ -20,30 +20,31 @@ Use when a hail (or band prompt) assigns bean verification.
 5. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
 6. Verify the bean per `prompts/commands/verify.md`.
 7. If pass: `beans update <id> --remove-tag=unverified`
-8. If fail: return to `in-progress`. If the bean body instructs to return to the original worker (e.g. "send back to the same session 'orchistration-work'"), hail to the work-hail band (targeting the submitter-session if available in incoming data or as instructed). On subsequent passes, complete.
+8. If fail: return to `in-progress` and hail the **work-band** with :bean-id,
+   reply_to (the incoming hail id), and a prompt override explaining the
+   failure. On subsequent passes, complete.
 
 ## Incoming hail data
 
-**:bean-id is the only required param.** Everything else you need comes from
-the band data map (bean-repo, plan-hail, work-hail, notification-comm) or from
-the bean itself (scope, acceptance criteria, worker notes). Optional params
-like submitter-session / thread_id, when present, enable exact-session
-returns — use them, but never require them.
+**:bean-id is the only required param.** Everything else you need arrives in
+the delivery's data block (bean-repo, plan-band, work-band, notification-comm)
+or lives in the bean itself (scope, acceptance criteria, worker notes).
 
-Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail / return-to-same-session instructions in the bean body).
+Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail instructions in the bean body).
 
-For returns to exact prior sessions (no band template), compose a full "prompt" in the hail-send that explains the situation + bean-id + notes, and target using "session": <the submitter-session id>.
+**Thread with reply_to.** Set "reply_to" to the incoming hail's id on every
+responding hail; the thread id is inherited automatically. Prior hails in the
+thread (the worker's handoff, earlier fails) — including their prompts and
+data — are fetchable with `hail_get`.
 
 ## When you're stuck, ask the planner — never drop the bean
 
 If you cannot verify — implementation not found, acceptance criteria
 ambiguous, missing context of any kind — do NOT fail the bean and stop.
-Hail the **plan-hail** band (it is in your band data) with :bean-id in
-params and a prompt explaining exactly what you need. The planner resolves
+Hail the **plan-band** (name in your data block) with :bean-id in params,
+reply_to, and a prompt explaining exactly what you need. The planner resolves
 it (and owns human escalation if needed). A verification that cannot
 proceed is a question for the planner, not a dead end.
-
-On fail per bean instructions, target the work session using direct "session" frequencies (or work-hail + submitter-session) + explanatory prompt. When handing off yourself (to work or plan), pass submitter info forward when you have it.
 
 ## Notifications
 

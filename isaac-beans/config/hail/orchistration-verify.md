@@ -1,25 +1,20 @@
 ---
+base: _orchistration-template
 crew: perceptor
-session-tags:
-  - :orchestration
-reach: :one
 ---
 
-bean-repo: git@github.com:slagyr/orchestration.git
-bean: {{bean-id}}
-notification-comm: {:id :discord :channel "pub"}
-plan-hail: "orchistration-plan"
-work-hail: "orchistration-work"
-
 Load and follow the "hail-bean-verify" skill.
-Use the data map above (includes bean-id via the template, bean-repo, notification-comm, etc.).
-The incoming hail should have :bean-id in params. Review the bean and hand off as needed (e.g. back to plan if clarification required; or back to the same worker session using the submitter-session for exact targeting if the bean explicitly instructs first-fail + return-to-same-session).
+Coordinates (bean-repo, notification-comm, sibling bands) arrive in this
+delivery's data block; the bean id arrives in params.
 
-For exact returns to a prior session: use direct "session" key in hail-send (from submitter info) and supply a "prompt" with explanation + bean-id (no template).
+Review the bean and hand off as needed: on fail, hail the work-band with
+:bean-id, reply_to, and a --prompt override explaining the failure; if
+clarification is required, hail the plan-band the same way. Prior context is
+fetchable with hail_get via the thread.
 
-If pass, remove unverified tag; if fail, return to in-progress with notes. Pass submitter info forward on your handoffs.
+If pass, remove unverified tag; if fail, return to in-progress with notes.
 
-**Notifications to pub (use exactly this format for comm_send content):**
+**Notifications (comm_send via notification-comm; use exactly this format):**
 
 - On starting review: `{{bean-id}} 👁️ **perceptor** verification started`
 - On pass: `{{bean-id}} 🟢 **perceptor** verification passed`

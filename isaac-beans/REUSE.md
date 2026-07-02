@@ -42,8 +42,9 @@ The session names and tags are used for hail routing and isolation.
 
 ## 4. Project-Specific Hail Band Configs
 
-Create three files under `~/.isaac/config/hail/` on the target:
+Create four files under `~/.isaac/config/hail/` on the target:
 
+- `_<project>-template.md` — the base template: shared frontmatter + `data:`
 - `<project>-plan.md`
 - `<project>-work.md`
 - `<project>-verify.md`
@@ -54,18 +55,33 @@ Create three files under `~/.isaac/config/hail/` on the target:
 orchestration/isaac-beans/config/hail/
 ```
 
-### Required customizations in each band file
+### The base template (`_<project>-template.md`)
+
+All shared coordinates live once, in the template's frontmatter. The three
+band files declare `base: _<project>-template` and add only their `crew:` and
+body instructions. Leading `_` marks the template as non-addressable.
+
+Customize in the template:
+
+- `session-tags: [ :<project> ]`
+- `data:` — the coordinate map the skills contract on:
+  - `bean-repo:` (full git URL of the beans repo)
+  - `notification-comm:` (typically `{:id :discord :channel "pub"}`)
+  - `human-help-comm:` (e.g. `{:id :imessage :target "<address>"}`)
+  - `plan-band`, `work-band`, `verify-band` (matching your band names)
+
+Customize per band file:
 
 - `crew:`
-- `session-tags: [ :<project> ]`
-- `bean-repo:` (full git URL of the beans repo)
-- `notification-comm:` (typically `{:id :discord :channel "pub"}`)
-- Cross-hail names:
-  - `plan-hail`, `work-hail`, `verify-hail` (matching your band names)
 - Notification text expectations (update examples/slugs as desired)
 - Load the correct reusable skill (`hail-bean-plan`, `hail-bean-work`, or `hail-bean-verify`)
 
-See the existing `orchistration-*.md` files for the full structure and examples.
+The band `data:` is delivered with every hail — including hails that override
+the prompt — so crews can hail each other with explanatory prompts without
+losing coordinates.
+
+See the existing `_orchistration-template.md` + `orchistration-*.md` files for
+the full structure and examples.
 
 ## 5. Install Reusable Prompts + Your Bands
 
@@ -106,9 +122,9 @@ Without the `"pub"` name entry, `comm_send` to the public channel will fail (eve
 
 - **Beans repo prefix**: Your `.beans.yml` defines the bean ID prefix (e.g. `myproject-`).
 - **Implementation clones** (for split-repo projects): If your beans drive work in separate repos, ensure the relevant clones exist as siblings under the role homes. The work skill looks for them.
-- **Hail payload keys**: Workers and verifiers pass `submitter-session`, `submitter-crew`, `thread_id`, `notification-comm`, and the various `*-hail` names. These are required for exact-session returns and loops.
+- **Hail params**: `:bean-id` is the only required param on every hail. Coordinates travel in the band `data:`; explanations travel in prompt overrides; thread continuity comes from `reply_to` (prior hails fetchable with `hail_get`).
 - **Notification strings**: The skills contain "ALWAYS use exactly this format" lists for at-a-glance messages. Customize the expected strings in your bands/skills for the new project.
-- **Human escalation**: The iMessage target (`micahmartin@mac.com`) and some wording are currently hardcoded in the plan band and `hail-bean-plan` skill. Update them for your project.
+- **Human escalation**: The procedure lives in the `hail-bean-plan` skill; the coordinates (`notification-comm`, `human-help-comm`) live in your base template's `data:`.
 - **Git access**: The remote clones (plan/work/verify) perform `beans update` + commit + push. They need appropriate permissions.
 - **No legacy .toolbox**: This system uses the `prompts/` layout.
 - **Session reloads**: Changes to bands or prompts require reloading the affected sessions.

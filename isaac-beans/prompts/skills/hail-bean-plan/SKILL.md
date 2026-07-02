@@ -14,25 +14,27 @@ Use when hailed via orchistration-plan band (or for conflict resolution / unbloc
 3. Follow `prompts/commands/plan.md` for planning and bean updates.
 4. When receiving a bean from work (e.g. conflict), adjust as instructed in the hail / bean body, then hand back.
 
-## Receiving conflict / return hails from worker
+## Receiving conflict / return hails from worker or verifier
 
-- Incoming hail will have :bean-id and details of the issue (conflict note, prior observations) in params.
-- The hail may include submitter-session / thread info for returning to the *exact worker session* that has context.
+- Incoming hail has :bean-id in params; the situation arrives in the prompt
+  override. Coordinates (bean-repo, notification-comm, work-band, ...) are in
+  the delivery's data block. Earlier legs of the exchange are fetchable with
+  `hail_get` via the thread.
 - Pull latest, review the bean.
 - Make the adjustment (for test: simply append a note like "## Planner unblock note: bean is unblocked..."; in real use: clarify requirements, edit gherkin, etc.).
 - Commit the change in the beans repo.
-- Hand back to the exact worker session (see handoff below).
+- Hand back via the work-band (see below).
 
-## Handoff back to work (exact session targeting)
+## Handoff back to work
 
 - Use the `hail-send` tool with flat snake_case.
-- To target the *exact prior worker session*: use "session": the id from submitter-session (or the work session name), plus a full "prompt" explaining the adjustment (no band template for precise return).
-- Include bean-id and data in params, thread_id, notification-comm.
-- Example:
-  {"session": "<exact-worker-session-id-from-submitter>", "params": {"bean-id": "{{bean-id}}", "notification-comm": {...}, "work-hail": "..."}, "prompt": "Planner adjustment complete for bean {{bean-id}}. Added unblock note [or real clarification]. [Summary of change]. Please continue work on the exact same session and hand to verifier when ready."}
-- If using the work band for the return, still pass the targeting info.
+- Hail the **work-band** (name from your data block) with a prompt override
+  explaining the adjustment, and reply_to for thread continuity:
+  {"band": "<work-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>", "prompt": "Planner adjustment complete for bean {{bean-id}}. Added unblock note [or real clarification]. [Summary of change]. Please continue work and hand to verifier when ready."}
 
-When hailing the work band normally (not return), pass the bean-id (and other relevant project data) in the params so the target can use {{bean-id}} and the worker skill gets the id.
+When hailing the work-band normally (not a return), :bean-id in params is all
+that's needed — the band body provides the instructions and the data block the
+coordinates.
 
 ## Notifications
 
@@ -57,7 +59,7 @@ Use 🧠/📋 for planner actions, 🟢 for positive adjustments.
 
 ## If unable to resolve - notify human
 
-The escalation coordinates come from the band data map: **notification-comm**
+The escalation coordinates come from the band data block: **notification-comm**
 (at-a-glance channel) and **human-help-comm** (direct human contact). Never
 hardcode channels or addresses — read them from the incoming band data.
 

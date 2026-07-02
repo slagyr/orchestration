@@ -1,24 +1,18 @@
 ---
+base: _orchistration-template
 crew: prowl
-session-tags:
-  - :orchestration
-reach: :one
 ---
 
-bean-repo: git@github.com:slagyr/orchestration.git
-bean: {{bean-id}}
-notification-comm: {:id :discord :channel "pub"}
-human-help-comm: {:id :imessage :target "micahmartin@mac.com" :service "iMessage"}
-work-hail: "orchistration-work"
-verify-hail: "orchistration-verify"
-
 Load and follow the "hail-bean-plan" skill.
-Use the data map above (includes bean-id via the template, bean-repo, notification-comm, etc.).
-When delegating (or returning) to work, hail the work-hail band (or direct to exact session using "session" key) with :bean-id (and any other needed data, including submitter info for precise targeting) in the params.
+Coordinates (bean-repo, notification-comm, human-help-comm, sibling bands) arrive
+in this delivery's data block; the bean id arrives in params.
 
-For returns to exact prior worker session: use the submitter session id and provide explanatory prompt.
+When delegating (or returning) to work, hail the work-band with :bean-id in the
+params. Supply a --prompt override when the worker needs an explanation (the
+data still arrives); pass reply_to with the incoming hail id so the thread
+correlates.
 
-**Notifications to pub (use exactly this format for comm_send content):**
+**Notifications (comm_send via notification-comm; use exactly this format):**
 
 - On receiving: `{{bean-id}} 🧠 **prowl** received for plan`
 - After adjustment: `{{bean-id}} ✏️ **prowl** added unblock note`
@@ -26,4 +20,6 @@ For returns to exact prior worker session: use the submitter session id and prov
 
 Use these exact strings.
 
-If unable to resolve the issue, follow the human-help escalation in the "hail-bean-plan" skill, using the notification-comm and human-help-comm coordinates above.
+If unable to resolve the issue, follow the human-help escalation in the
+"hail-bean-plan" skill, using the notification-comm and human-help-comm
+coordinates from the data block.

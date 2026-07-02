@@ -68,7 +68,7 @@ The user named this bean deliberately. Treat it as a hard constraint: never subs
 2. If the bean references approved feature scenarios, ensure those scenarios pass and are not pending.
 3. If the bean references approved feature scenarios, do not move the bean past `in-progress` while those scenarios remain pending.
 4. If the bean references approved feature scenarios, do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it.
-5. Check boot files (`AGENTS.md`, `CLAUDE.md`, etc.) for the project's completion convention. If the project uses a separate `/verify` flow, leave the bean `in-progress` and add the `unverified` tag for the verifier to pick up: `beans update <id> --tag=unverified`. Then hail the verify band (from the incoming data map) passing at least :bean-id in the params. Otherwise, default to plain `beans update <id> --status=completed`.
+5. Check boot files (`AGENTS.md`, `CLAUDE.md`, etc.) for the project's completion convention. If the project uses a separate `/verify` flow, leave the bean `in-progress` and add the `unverified` tag for the verifier to pick up: `beans update <id> --tag=unverified`. Then hail the verify-band (name from the delivery's data block) passing :bean-id in the params and reply_to for thread continuity. Otherwise, default to plain `beans update <id> --status=completed`.
 6. Commit the bean update together with the code changes in one commit, with a descriptive message. Push.
 
 ## Common Traps
