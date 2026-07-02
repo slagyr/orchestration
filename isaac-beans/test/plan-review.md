@@ -23,14 +23,20 @@ See `verification-guide.md` for the verification approach, evidence collection p
   ```
 
 ## Then
-- Work (scrapper) claims, hands off to verify (with submitter info).
-- Verify returns to exact worker session after noting conflict.
-- Same worker escalates to planner.
-- Planner adjusts the bean (adds unblock note + commits from plan clone) and hands back to exact worker session.
-- Worker hands off to exact verifier session.
+- Work (scrapper) claims, hands off via the verify band with `reply_to`.
+- Verify notes the conflict and returns via the work band (`reply_to` + prompt
+  override explaining the failure). Band reach `:one` pins each role to its
+  dedicated session, so session continuity holds without direct targeting.
+- Same worker session escalates via the plan band (`reply_to` + prompt override).
+- Planner adjusts the bean (adds unblock note + commits from plan clone) and
+  hands back via the work band (`reply_to` + prompt override).
+- Worker hands off via the verify band again (`reply_to`).
 - Verifier completes the bean.
-- All handoffs use direct `session` targeting where returns occur.
-- Correct at-a-glance notifications and exact session continuity.
+- **Every hail in the loop carries the same thread-id** (inherited via
+  `reply_to` from the original dispatch) — verify in the delivered hail records.
+- `:bean-id` is the only param on every hail; band `data:` supplies coordinates.
+- Correct at-a-glance notifications (formats from the hail-bean-* skills,
+  crew filled from ambient identity).
 - Bean ends completed with no unverified tag.
 
 ## Verification Notes
