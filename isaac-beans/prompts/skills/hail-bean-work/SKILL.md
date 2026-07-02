@@ -89,6 +89,7 @@ session identity block); `<short-slug>` comes from the bean title. Use exactly t
 formats for content:
 
 - After claim: `<bean-id> 🟢 **<crew>** claimed (<short-slug>)`
+- On receiving a verify-fail or planner return: `<bean-id> 🔁 **<crew>** resumed (<short-slug>)`
 - After observations: `<bean-id> 📝 **<crew>** appended observations (<short-slug>)`
 - Before handoff to verify: `<bean-id> ➡️ **<crew>** handed off to verify`
 - Before handoff to planner: `<bean-id> ➡️ **<crew>** handed off to planner (plan-review-loop)`

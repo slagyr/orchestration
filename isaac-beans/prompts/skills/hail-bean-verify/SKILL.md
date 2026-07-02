@@ -73,6 +73,7 @@ session identity block). Use exactly these formats for content:
 
 - On starting review: `<bean-id> 👁️ **<crew>** verification started`
 - On pass: `<bean-id> 🟢 **<crew>** verification passed`
-- On fail: `<bean-id> ❌ **<crew>** verification failed (reason...)`
+- On fail: `<bean-id> ❌ **<crew>** verification failed (reason...) → back to worker`
+  (send it AFTER the return hail so the at-a-glance reflects whose court the bean is in)
 
 ID first for recognition; emoji for quick good/bad scanning.
