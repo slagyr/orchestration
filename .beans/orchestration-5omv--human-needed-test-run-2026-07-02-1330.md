@@ -36,6 +36,7 @@ The bean ends in-progress. This is explicitly a process test / no-op for human-n
 - This bean is explicitly a process-test / no-op human-needed loop, so no product-code edits or test runs were required on the initial worker pass.
 - The bean body requires band-only handoffs with reply_to threading preserved through worker → verifier → worker → planner, after which planner escalates to human help and does not return the bean to worker.
 - Notification attempts target the named Discord channel `pub` using the delivery-provided notification coordinates.
+- Received verifier return hail `2d750aa9` on thread `80383678`; per bean instruction, this requirements conflict cannot be resolved at worker level and must be escalated to planner for the human-intervention path.
 
 
 
