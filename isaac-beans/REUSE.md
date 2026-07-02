@@ -1,6 +1,6 @@
 # Reusing Orchestration on Other Projects
 
-This setup (sometimes called "orchistration") allows hail-driven bean workflows across multiple roles (planner, worker, verifier) with exact session handoffs, at-a-glance notifications, and support for conflict loops or human escalation.
+This setup (sometimes called "orchestration") allows hail-driven bean workflows across multiple roles (planner, worker, verifier) with exact session handoffs, at-a-glance notifications, and support for conflict loops or human escalation.
 
 The core skills and commands are designed to be **project-agnostic**. Only the hail band configs are project-specific.
 
@@ -80,7 +80,7 @@ The band `data:` is delivered with every hail — including hails that override
 the prompt — so crews can hail each other with explanatory prompts without
 losing coordinates.
 
-See the existing `_orchistration-template.md` + `orchistration-*.md` files for
+See the existing `_orchestration-template.md` + `orchestration-*.md` files for
 the full structure and examples.
 
 ## 5. Install Reusable Prompts + Your Bands

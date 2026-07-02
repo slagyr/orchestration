@@ -5,7 +5,7 @@ description: Bootstrap for planning hails via plan band. Used for orchestration 
 
 # Hail-driven plan
 
-Use when hailed via orchistration-plan band (or for conflict resolution / unblock in bean loops).
+Use when hailed via orchestration-plan band (or for conflict resolution / unblock in bean loops).
 
 ## Bootstrap
 

@@ -11,7 +11,7 @@ Run checks roughly in order and report **pass/fail + specific evidence** for eac
 **Critical rule for every run:** Always create a *brand new* bean with a unique ID (include a run timestamp or suffix in the title). Never reuse old bean IDs. Confirm freshness before starting the test steps.
 
 ## Terminology (used across all tests)
-- Role homes / sessions / bands: `orchistration-*` and `/Users/zane/agents/orchistration/{plan,work,verify}`.
+- Role homes / sessions / bands: `orchestration-*` and `/Users/zane/agents/orchestration/{plan,work,verify}`.
 - Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
 - Session tag used: `:orchestration`.
 
@@ -21,9 +21,9 @@ All inspection happens on the remote target via SSH (after constructing `TARGET`
 
 Typical commands:
 ```sh
-ssh "$TARGET" 'cd /Users/zane/agents/orchistration/plan/orchestration && beans show <id>'
-ssh "$TARGET" 'cd /Users/zane/agents/orchistration/work/orchestration && git log --oneline -S <id> -- .beans/'
-ssh "$TARGET" 'tail -c 50000 ~/.isaac/sessions/orchistration-work.jsonl | grep -E "<id>|hail|comm_send" | tail -20'
+ssh "$TARGET" 'cd /Users/zane/agents/orchestration/plan/orchestration && beans show <id>'
+ssh "$TARGET" 'cd /Users/zane/agents/orchestration/work/orchestration && git log --oneline -S <id> -- .beans/'
+ssh "$TARGET" 'tail -c 50000 ~/.isaac/sessions/orchestration-work.jsonl | grep -E "<id>|hail|comm_send" | tail -20'
 ```
 
 Look for:
@@ -37,7 +37,7 @@ Look for:
 
 **Always verify:**
 - No "isaac" references leaked in active context (grep recent transcripts, bean body, and band files for "isaac" case-insensitive, excluding historical notes).
-- Correct `orchistration-*` names, `:orchestration` tags, and bean-repo used.
+- Correct `orchestration-*` names, `:orchestration` tags, and bean-repo used.
 - Fresh bean with no prior history for this ID.
 - Notifications used the documented at-a-glance strings.
 
@@ -55,10 +55,10 @@ Look for:
 
 Follow shared.md remote access + pre-when first.
 
-- Confirm orchistration-work (scrapper) turn: claim, observations, handoff to verify.
+- Confirm orchestration-work (scrapper) turn: claim, observations, handoff to verify.
 - Bean reaches `in-progress` + `unverified`.
 - Verify clone established under work role home.
-- orchistration-verify (perceptor) turn: receives, passes, completes bean (`status=completed`, no unverified tag).
+- orchestration-verify (perceptor) turn: receives, passes, completes bean (`status=completed`, no unverified tag).
 - Plan clone visible under plan role home.
 - comm_send calls at key milestones (claim, handoff, verify start, pass) with correct at-a-glance content.
 - Git history shows the state changes.
@@ -70,7 +70,7 @@ Follow shared.md remote access + pre-when first.
 
 **First cycle:**
 - Work turn 1 (scrapper): claims, hands off to verify.
-- Verify turn 1 (perceptor): follows bean body "fail first", appends `## Verification failed`, returns to exact same `orchistration-work` session using direct `session` key + explanatory prompt.
+- Verify turn 1 (perceptor): follows bean body "fail first", appends `## Verification failed`, returns to exact same `orchestration-work` session using direct `session` key + explanatory prompt.
 - Bean temporarily back to `in-progress` (unverified removed for the return).
 
 **Second cycle (same work session):**

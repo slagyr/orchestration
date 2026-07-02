@@ -27,7 +27,7 @@ Follow the sequence exactly:
 
 - Hail:
   ```sh
-  isaac hail send --band orchistration-work --params '{:bean-id "orchestration-XXXX"}'
+  isaac hail send --band orchestration-work --params '{:bean-id "orchestration-XXXX"}'
   ```
 
 ## Then

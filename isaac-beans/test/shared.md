@@ -28,8 +28,8 @@ All verification steps execute against the live remote target system (zanebot).
 - Execute the checks on the remote. All `ls`, `beans`, `git`, transcript inspection, etc. below are performed via SSH (or equivalent):
 
   ```sh
-  ssh "$TARGET" 'ls /Users/zane/agents/orchistration/plan'
-  ssh "$TARGET" 'cd /Users/zane/agents/orchistration/work/orchestration && beans show <id> && git log --oneline .beans/<id>--*.md'
+  ssh "$TARGET" 'ls /Users/zane/agents/orchestration/plan'
+  ssh "$TARGET" 'cd /Users/zane/agents/orchestration/work/orchestration && beans show <id> && git log --oneline .beans/<id>--*.md'
   ```
 
   (For long-running or complex inspection, you may scp files or use other remote tools, but ssh + quoted command is the baseline.)
@@ -62,40 +62,40 @@ See `isaac-beans/install.sh` for details and the exact remote commands.
 ## Given
 
 - All of the config files and prompts have been installed in the Isaac root.
-- The directory /Users/zane/agents/orchistration/plan exists.
-- The directory /Users/zane/agents/orchistration/work exists.
-- The directory /Users/zane/agents/orchistration/verify exists.
-- An orchistration-plan session exists with crew prowl and cwd /Users/zane/agents/orchistration/plan.
-- An orchistration-work session exists with crew scrapper and cwd /Users/zane/agents/orchistration/work.
-- An orchistration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchistration/verify.
+- The directory /Users/zane/agents/orchestration/plan exists.
+- The directory /Users/zane/agents/orchestration/work exists.
+- The directory /Users/zane/agents/orchestration/verify exists.
+- An orchestration-plan session exists with crew prowl and cwd /Users/zane/agents/orchestration/plan.
+- An orchestration-work session exists with crew scrapper and cwd /Users/zane/agents/orchestration/work.
+- An orchestration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchestration/verify.
 
 ## Pre-When checks (confirm setup before the hail to work)
 
 See `verification-guide.md` for the full verification procedure, evidence patterns, terminology, and reporting rules. The sections below focus on concrete pre-run confirmation steps.
 
 - Confirm the three role home directories exist on the target machine:
-  - `ls /Users/zane/agents/orchistration/plan`
-  - `ls /Users/zane/agents/orchistration/work`
-  - `ls /Users/zane/agents/orchistration/verify`
+  - `ls /Users/zane/agents/orchestration/plan`
+  - `ls /Users/zane/agents/orchestration/work`
+  - `ls /Users/zane/agents/orchestration/verify`
 
 - Confirm the three sessions exist with correct crew and cwd (via session listing tools, transcript listings, or inspecting the relevant Isaac session metadata):
-  - orchistration-plan → crew=prowl, cwd=/Users/zane/agents/orchistration/plan
-  - orchistration-work → crew=scrapper, cwd=/Users/zane/agents/orchistration/work
-  - orchistration-verify → crew=perceptor, cwd=/Users/zane/agents/orchistration/verify
+  - orchestration-plan → crew=prowl, cwd=/Users/zane/agents/orchestration/plan
+  - orchestration-work → crew=scrapper, cwd=/Users/zane/agents/orchestration/work
+  - orchestration-verify → crew=perceptor, cwd=/Users/zane/agents/orchestration/verify
 
 - (Required) Confirm session tags and naming isolation:
   - Sessions carry the `:orchestration` tag (from band frontmatter).
-  - Bands in use are `orchistration-plan` / `orchistration-work` / `orchistration-verify` (not any `isaac-*`).
+  - Bands in use are `orchestration-plan` / `orchestration-work` / `orchestration-verify` (not any `isaac-*`).
   - Grep session metadata or early transcript lines for confirmation.
 
 - Confirm a *brand new* bean was created specifically for *this run of the test* (do not reuse any previous bean ID such as orchestration-lrlu, orchestration-43d1, etc. — check `beans list` or git before creation to ensure the ID is fresh):
   - In the plan clone, explicitly run `beans create` with a unique title (e.g. including "run-YYYY-MM-DD-HHMM" or a one-time ID). Record the new ID.
   - `beans show <fresh-bean-id>` (after creation) shows status `todo` and the title/body contains the run-specific description.
   - `git log --oneline -- .beans/<fresh-bean-id>--*.md` (or `git log --oneline -S <id> -- .beans/`) shows a fresh creation commit with *no prior history* for this ID.
-  - `ls /Users/zane/agents/orchistration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
+  - `ls /Users/zane/agents/orchestration/plan/orchestration` contains at least `.git/`, `.beans.yml`, and `.beans/`.
 
 - Confirm the orchestration-specific prompts/config are the ones active for these sessions (evidence will appear in transcripts; optionally inspect the Isaac root used by the crews):
-  - `prompts/skills/hail-bean-*/SKILL.md` and `config/hail/orchistration-*.md` (the versions from the isaac-beans deployment) are the ones referenced/loaded.
+  - `prompts/skills/hail-bean-*/SKILL.md` and `config/hail/orchestration-*.md` (the versions from the isaac-beans deployment) are the ones referenced/loaded.
 
 - **Discord comm channels for name-based notifications** (required so `comm_send` with `notification-comm` "pub" succeeds via reverse lookup to snowflake):
   - `ssh "$TARGET" 'grep -A 30 ":discord/channels" ~/.isaac/config/isaac.edn'`

@@ -14,6 +14,6 @@ This is a process test / no-op bean for verifying the orchestration happy path. 
 
 - Hail payload resolved bean-id from params via hail `4701f35d`; work proceeded against `orchestration-43d1`.
 - Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md` and `prompts/commands/work.md`.
-- Beans root used for the worker handoff was `/Users/zane/agents/orchistration/work/orchestration`.
+- Beans root used for the worker handoff was `/Users/zane/agents/orchestration/work/orchestration`.
 - This bean is explicitly a process-test / no-op bean, so no product-code edits or test runs were required.
 - No follow-up gaps were identified during this no-op handoff run.

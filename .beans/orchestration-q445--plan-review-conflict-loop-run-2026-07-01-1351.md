@@ -14,7 +14,7 @@ Perform only the work described; append observations if process test.
 
 ## Plan-review loop instructions (all participants must follow exactly)
 
-Use exact same sessions for returns so context is preserved. For handoffs back to a previous participant, target the exact session using the "session" key in hail-send (the session id is provided via submitter-session in incoming data or your current session context; example value is the "orchistration-work" session that already touched this bean). Do NOT use only band+tags for returns; use direct session frequencies.
+Use exact same sessions for returns so context is preserved. For handoffs back to a previous participant, target the exact session using the "session" key in hail-send (the session id is provided via submitter-session in incoming data or your current session context; example value is the "orchestration-work" session that already touched this bean). Do NOT use only band+tags for returns; use direct session frequencies.
 
 When hailing directly to a session (no band template), you must provide a "prompt" that fully explains the situation, includes the bean-id, summarizes prior work/notes on this bean, and tells the recipient what to do next. Also pass bean-id (and other data) in "params".
 
@@ -38,7 +38,7 @@ This is explicitly a process test / no-op for orchestration flow validation.
 
 - Trusted hail `1db33ae6` carried bean-id `orchestration-q445`; work proceeded against that exact bean.
 - Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md` and `prompts/commands/work.md`.
-- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchistration/work/orchestration-1db33ae6` with `.beans/` present.
+- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchestration/work/orchestration-1db33ae6` with `.beans/` present.
 - This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the worker pass.
 - The bean body requires exact-session returns through worker → verifier → worker → planner → worker → verifier, so this first worker handoff includes submitter-session and thread correlation for the return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.

@@ -19,7 +19,7 @@ See `verification-guide.md` for the verification approach, evidence collection p
 
 - Hail to the work band:
   ```sh
-  isaac hail send --band orchistration-work --params '{:bean-id "orchestration-abcd"}'
+  isaac hail send --band orchestration-work --params '{:bean-id "orchestration-abcd"}'
   ```
 
 ## Then

@@ -1,5 +1,5 @@
 ---
-base: _orchistration-template
+base: _orchestration-template
 crew: scrapper
 ---
 

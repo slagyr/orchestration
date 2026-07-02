@@ -5,7 +5,7 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
 ## Layout
 
 - `isaac-beans/` — the payload that gets installed into an Isaac root. Matches the directory structure expected under `~/.isaac/`:
-  - `config/hail/` — band definitions (`orchistration-plan`, `orchistration-work`, `orchistration-verify`)
+  - `config/hail/` — band definitions (`orchestration-plan`, `orchestration-work`, `orchestration-verify`)
   - `config/discord-channels.example.edn` — reference for the `:discord/channels` map (name ↔ snowflake) required for `comm_send` with channel *names* like "pub"
   - `prompts/commands/` and `prompts/skills/` — the `plan`/`work`/`verify` commands and the `hail-bean-*` skills
   - `install.sh` — the installer (see below)
@@ -31,7 +31,7 @@ The installer:
 - Supports `--dry-run`.
 - Has a local mode when the host looks like localhost.
 
-After installing, reload the Isaac sessions/crews that use the `orchistration-*` bands so the new prompts and hail configuration are active.
+After installing, reload the Isaac sessions/crews that use the `orchestration-*` bands so the new prompts and hail configuration are active.
 
 ## Running the tests
 
@@ -48,12 +48,12 @@ All verification uses the remote (or local) target from `.env`. Detailed evidenc
 
 - The real hostname lives only in the git-ignored `.env`.
 - This setup deliberately uses `prompts/` (instead of the legacy `.toolbox/`) at the global Isaac level.
-- The three dedicated sessions (orchistration-plan / work / verify) with crews prowl / scrapper / perceptor are assumed to exist with the correct cwds and `:orchestration` tag.
+- The three dedicated sessions (orchestration-plan / work / verify) with crews prowl / scrapper / perceptor are assumed to exist with the correct cwds and `:orchestration` tag.
 - After file changes, sessions typically need to be restarted or reloaded to pick up updated skills/commands/bands.
 
 ## Discord channel configuration (for comm_send name resolution)
 
-The `orchistration-*` hail bands use `notification-comm: {:id :discord :channel "pub"}`.
+The `orchestration-*` hail bands use `notification-comm: {:id :discord :channel "pub"}`.
 
 The `comm_send` tool (with `discord.target: "pub"`) relies on name→snowflake reverse lookup in isaac-discord. This only works when the channel is declared with a `:name` in the runtime config:
 

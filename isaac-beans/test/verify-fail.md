@@ -10,7 +10,7 @@ See `verification-guide.md` for the verification approach, evidence collection p
 ## When
 - Create a brand new bean with explicit first-fail instructions in the body (e.g. "no-op verify-fail bean (run-YYYY-MM-DD-HHMM)"):
   ```
-  Fail the first verification. Append a clear failure note and send the bean back (hail to the work band) specifically to the same session 'orchistration-work' that performed the initial work. On the second verification, pass the bean and complete it (remove unverified tag, set status completed).
+  Fail the first verification. Append a clear failure note and send the bean back (hail to the work band) specifically to the same session 'orchestration-work' that performed the initial work. On the second verification, pass the bean and complete it (remove unverified tag, set status completed).
   ```
   Commit and push.
 - Hail to the work band.

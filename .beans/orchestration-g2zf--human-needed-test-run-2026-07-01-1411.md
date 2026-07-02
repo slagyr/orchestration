@@ -32,13 +32,13 @@ This is explicitly a process test / no-op for human-needed flow validation.
 
 - Trusted hail `87f75ea0` carried bean-id `orchestration-g2zf`; work proceeded against that exact bean.
 - Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md` and `prompts/commands/work.md`.
-- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchistration/work/orchestration-87f75ea0` with `.beans/` present.
+- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchestration/work/orchestration-87f75ea0` with `.beans/` present.
 - This bean is an explicit no-op human-needed process test, so no product-code edits or test runs were required on the worker pass.
 - The bean body requires exact-session returns through worker → verifier → worker → planner, with human escalation after planner; this first worker handoff includes submitter-session and thread correlation for that return path.
 - Notification attempts target the named Discord channel `pub`; the installed skill says name-or-id is supported, and this run uses the exact required notification strings.
 - Received verifier return hail `411bdf1e` on thread `87f75ea0`; per bean instruction, this exact worker session must now escalate the unresolved conflict to planner with full context and preserved return routing.
 - Planner reviewed the conflict and determined it cannot be resolved at planner level; human intervention is required to decide feature priority.
-- Exact-session follow-up context is preserved for any post-decision return: submitter-session `orchistration-work`, submitter-crew `scrapper`, thread `87f75ea0`.
+- Exact-session follow-up context is preserved for any post-decision return: submitter-session `orchestration-work`, submitter-crew `scrapper`, thread `87f75ea0`.
 
 ## Human needed
 

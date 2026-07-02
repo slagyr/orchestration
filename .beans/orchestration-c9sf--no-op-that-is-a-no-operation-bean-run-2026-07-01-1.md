@@ -14,7 +14,7 @@ Fresh process test / no-op bean for verifying the orchestration happy path on th
 
 - Trusted hail `9b11cbdd` carried bean-id `orchestration-c9sf`; work proceeded against that exact bean.
 - Bootstrap followed repo-local `hail-bean-work` guidance from `isaac-beans/prompts/skills/hail-bean-work/SKILL.md` and `isaac-beans/prompts/commands/work.md`.
-- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchistration/work/orchestration` with `.beans/` present.
+- Confirmed the orchestration repo is available under the worker role home at `/Users/zane/agents/orchestration/work/orchestration` with `.beans/` present.
 - This bean is explicitly a fresh process-test / no-op bean, so no product-code edits or test runs were required.
 - The bean was visible in the worker clone after the required pull, so no cross-clone copy step was needed on this run.
 - Notification attempts target the named Discord channel `pub`; this run uses the exact required claim / observations / handoff message format.
