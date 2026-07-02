@@ -51,8 +51,8 @@ proceed is a question for the planner, not a dead end.
 Send updates using `comm_send` at key points. Coordinates come from the
 delivery's data block: comm = notification-comm's :id, target = its :channel.
 
-Fill `<crew>` with **your own crew name** (it's in the delivery metadata
-preamble). Use exactly these formats for content:
+Fill `<crew>` with **your own crew name** (it's in your system prompt's
+session identity block). Use exactly these formats for content:
 
 - On starting review: `<bean-id> 👁️ **<crew>** verification started`
 - On pass: `<bean-id> 🟢 **<crew>** verification passed`

@@ -62,8 +62,8 @@ At key milestones (claim, observations, handoff), send a concise progress
 update using `comm_send`. Coordinates come from the delivery's data block:
 comm = notification-comm's :id, target = its :channel (name or snowflake).
 
-Fill `<crew>` with **your own crew name** (it's in the delivery metadata
-preamble); `<short-slug>` comes from the bean title. Use exactly these
+Fill `<crew>` with **your own crew name** (it's in your system prompt's
+session identity block); `<short-slug>` comes from the bean title. Use exactly these
 formats for content:
 
 - After claim: `<bean-id> 🟢 **<crew>** claimed (<short-slug>)`
