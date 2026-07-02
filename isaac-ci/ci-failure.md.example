@@ -1,3 +1,11 @@
+---
+session-tags:
+  - :isaac
+reach: :one
+prefer: :recent
+create: :if-missing
+---
+
 GitHub Actions reported a CI regression on the default branch.
 
 Repository: {{full_repo}}

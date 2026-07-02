@@ -65,8 +65,8 @@ The workflow posts JSON like:
 ## Files
 
 - `ci-failure-hail.yml` - GitHub Actions workflow template
-- `ci-failure.edn.example` - example hail band config for `~/.isaac/config/hail/`
-- `ci-failure.md.example` - example band prompt companion
+- `ci-failure.md.example` - single-file hail band example for `~/.isaac/config/hail/ci-failure.md`
+  with YAML frontmatter + prompt body
 
 ## Apply to a repo
 
@@ -78,7 +78,6 @@ The workflow posts JSON like:
    - `vars.ISAAC_HAIL_URL`
    - `secrets.ISAAC_SERVER_AUTH_TOKEN`
 4. Install the band on `zanebot`:
-   - copy `ci-failure.edn.example` to `~/.isaac/config/hail/ci-failure.edn`
    - copy `ci-failure.md.example` to `~/.isaac/config/hail/ci-failure.md`
 5. Reload or restart the relevant Isaac sessions on `zanebot`
 
