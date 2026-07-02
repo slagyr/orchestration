@@ -4,10 +4,8 @@ title: human-needed test (run-2026-07-02-1330)
 status: in-progress
 type: task
 priority: normal
-tags:
-    - unverified
 created_at: 2026-07-02T21:27:14Z
-updated_at: 2026-07-02T21:28:12Z
+updated_at: 2026-07-02T21:29:12Z
 ---
 
 This is a fresh process test / no-op bean for the human-needed orchestration test, under the band-data + reply_to threading configuration.
@@ -38,3 +36,12 @@ The bean ends in-progress. This is explicitly a process test / no-op for human-n
 - This bean is explicitly a process-test / no-op human-needed loop, so no product-code edits or test runs were required on the initial worker pass.
 - The bean body requires band-only handoffs with reply_to threading preserved through worker → verifier → worker → planner, after which planner escalates to human help and does not return the bean to worker.
 - Notification attempts target the named Discord channel `pub` using the delivery-provided notification coordinates.
+
+
+
+## Verification failed
+
+HEAD: 41083433452a42afb4d0ed74e6efe96f12bfdfab
+Working tree: clean
+
+Human-needed loop requires verifier to return this bean to worker without attempting approval. Verification cannot resolve the requirements conflict; worker must escalate via the plan-band with reply_to preserved.
