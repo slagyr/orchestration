@@ -12,37 +12,38 @@ Use when a hail (or band prompt) assigns bean verification.
 1. **Find the beans repo** — the directory containing `.beans/`.
 2. **`git -C <beans-repo>` pull --rebase** — sync state.
 3. **`beans list --tag=unverified`** or `beans show <id>`.
-4. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
-5. Verify the bean per `prompts/commands/verify.md`.
-6. If pass: `beans update <id> --remove-tag=unverified`
-7. If fail: return to `in-progress`. If the bean body instructs to return to the original worker (e.g. "send back to the same session 'orchistration-work'"), hail to the work-hail band (targeting the submitter-session if available in incoming data or as instructed). On subsequent passes, complete.
-
-## Handoff payload contract (for determinism)
-
-When the worker hails this verify band, expect (and validate) at minimum in the params/payload:
-
-- bean-id
-- repo
-- summary
-- what-done (array)
-- commit
-- submitter-crew
-- submitter-session
-- thread_id (for correlation)
-
-Use these to drive the verification without relying on free-text in the prompt. If the payload is missing required fields, fail early or request clarification via plan band. On fail, use submitter-session (or explicit instructions in bean) to target return hails to the original worker session when the bean specifies "same session".
-
-When handing off yourself (to work or plan on fail/clarification), pass submitter info forward.
+4. **Find the implementation repo** — bean scope / title / body names the repo
+   (a module sibling or the beans repo itself). Locate the work commits there:
+   `git log --grep=<bean-id>` in the sibling checkout (pull first; clone on
+   demand if missing). Do NOT assume the beans-repo HEAD holds the
+   implementation — the bean handoff commit usually touches only `.beans/`.
+5. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
+6. Verify the bean per `prompts/commands/verify.md`.
+7. If pass: `beans update <id> --remove-tag=unverified`
+8. If fail: return to `in-progress`. If the bean body instructs to return to the original worker (e.g. "send back to the same session 'orchistration-work'"), hail to the work-hail band (targeting the submitter-session if available in incoming data or as instructed). On subsequent passes, complete.
 
 ## Incoming hail data
 
-The incoming hail should have :bean-id (and other project-specific data) in the params.
+**:bean-id is the only required param.** Everything else you need comes from
+the band data map (bean-repo, plan-hail, work-hail, notification-comm) or from
+the bean itself (scope, acceptance criteria, worker notes). Optional params
+like submitter-session / thread_id, when present, enable exact-session
+returns — use them, but never require them.
 
 Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail / return-to-same-session instructions in the bean body).
 
 For returns to exact prior sessions (no band template), compose a full "prompt" in the hail-send that explains the situation + bean-id + notes, and target using "session": <the submitter-session id>.
 
-Hail back to the plan band (if specified in data) if clarification from planner is needed. On fail per bean instructions, target the work session using direct "session" frequencies (or work-hail + submitter-session) + explanatory prompt.
+## When you're stuck, ask the planner — never drop the bean
+
+If you cannot verify — implementation not found, acceptance criteria
+ambiguous, missing context of any kind — do NOT fail the bean and stop.
+Hail the **plan-hail** band (it is in your band data) with :bean-id in
+params and a prompt explaining exactly what you need. The planner resolves
+it (and owns human escalation if needed). A verification that cannot
+proceed is a question for the planner, not a dead end.
+
+On fail per bean instructions, target the work session using direct "session" frequencies (or work-hail + submitter-session) + explanatory prompt. When handing off yourself (to work or plan), pass submitter info forward when you have it.
 
 ## Notifications
 
