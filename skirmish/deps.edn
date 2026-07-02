@@ -4,5 +4,5 @@
 
  :aliases
  {:spec {:extra-paths ["spec"]
-         :extra-deps  {speclj/speclj {:local/root "../../speclj"}}
+         :extra-deps  {speclj/speclj {:mvn/version "3.13.0"}}
          :main-opts   ["-m" "speclj.main" "-c" "-D" "spec"]}}}
