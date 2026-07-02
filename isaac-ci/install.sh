@@ -41,9 +41,9 @@ fi
 
 TARGET="${USER}@${HOST}"
 
-ISAAC_ROOT=${ISAAC_ROOT:-${isaac_root:-~/.isaac}}
+ISAAC_ROOT=${isaac_root:-${ISAAC_ROOT:-~/.isaac}}
 
-CI_REPO_DIR=${CI_REPO_DIR:-${ci_repo_dir:-}}
+CI_REPO_DIR=${ci_repo_dir:-${CI_REPO_DIR:-}}
 
 DRY_RUN=""
 BAND_ONLY="false"

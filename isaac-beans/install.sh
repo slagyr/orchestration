@@ -58,8 +58,8 @@ fi
 
 TARGET="${USER}@${HOST}"
 
-# Optional override via env or .env (ISAAC_ROOT=...)
-ISAAC_ROOT=${ISAAC_ROOT:-${isaac_root:-~/.isaac}}
+# Optional override via .env (ISAAC_ROOT=...)
+ISAAC_ROOT=${isaac_root:-${ISAAC_ROOT:-~/.isaac}}
 
 DRY_RUN=""
 if [[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]]; then
