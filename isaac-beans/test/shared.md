@@ -52,7 +52,7 @@ Before the Given state can be true, the custom hail bands and prompts must be in
    - Use `./isaac-beans/install.sh --dry-run` (or `-n`) to preview.
    - The script supports local installs (when `host: localhost` or similar) and remote via ssh using the same `$TARGET` pattern as verification.
    - It copies the directories (overwriting existing files, but never deleting anything else):
-     - `isaac-beans/config/` → `~/.isaac/config/`   (includes hail bands + `discord-channels.example.edn` reference)
+     - `isaac-beans/config/` → `~/.isaac/config/`   (hail bands)
      - `isaac-beans/prompts/` → `~/.isaac/prompts/`
 
 3. After install, restart/reload the relevant sessions or daemons on the target so new skills, commands, and hail bands are loaded.
