@@ -15,7 +15,7 @@ CI failures on `main` to hail `zanebot` and wake the worker pool.
 - The notifier uses a hail band (`ci-failure`) so the CI side stays simple.
 - Session affinity is **optional**. If the failing commit includes an
   `Isaac-Session:` trailer, the workflow includes that session id in the hail
-  params.
+  params. The band prompt does not mention this; it is orchestration metadata.
 
 ## Required GitHub configuration
 
@@ -37,7 +37,8 @@ Isaac-Session: glimmering-cardinal
 The notifier extracts that trailer and includes it in the hail payload as
 `params.session_id`.
 
-This is optional metadata. The hail still sends if no trailer is present.
+This is optional orchestration metadata. The hail still sends if no trailer is
+present.
 
 ## Hail payload
 

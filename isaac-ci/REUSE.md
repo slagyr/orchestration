@@ -80,4 +80,5 @@ The workflow extracts it from the failing commit and includes:
 {"params": {"session_id": "glimmering-cardinal"}}
 ```
 
-The hail still sends if the trailer is absent.
+The hail still sends if the trailer is absent. Keep that behavior in workflow or
+worker logic, not in the hail band prompt.
