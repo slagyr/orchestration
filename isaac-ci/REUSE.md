@@ -70,7 +70,7 @@ It never deletes files on the target.
 
 `configure-github.sh` sets these for you:
 
-- `vars.ISAAC_HAIL_URL`
+- `secrets.ISAAC_HAIL_URL`
 - `secrets.ISAAC_SERVER_AUTH_TOKEN`
 
 ## Optional session affinity

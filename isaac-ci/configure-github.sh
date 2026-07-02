@@ -8,7 +8,7 @@
 #
 # Reads ../.env and configures:
 #   - secret   ISAAC_SERVER_AUTH_TOKEN
-#   - variable ISAAC_HAIL_URL
+#   - secret   ISAAC_HAIL_URL
 #
 # Expected .env keys:
 #   HOST=zanebot.tail66e5f8.ts.net
@@ -80,18 +80,18 @@ if [[ -z "$TOKEN_VALUE" ]]; then
 fi
 
 echo "==> Configuring GitHub Actions settings for ${REPO}"
-echo "    variable ISAAC_HAIL_URL=${HAIL_URL}"
+echo "    secret   ISAAC_HAIL_URL=[hidden]"
 echo "    secret   ISAAC_SERVER_AUTH_TOKEN=[hidden]"
 [[ "$DRY_RUN" == "true" ]] && echo "    [dry-run mode]"
 echo
 
 if [[ "$DRY_RUN" == "true" ]]; then
-  echo "gh variable set ISAAC_HAIL_URL -R ${REPO} --body ${HAIL_URL}"
+  echo "gh secret set ISAAC_HAIL_URL -R ${REPO} <hidden>"
   echo "gh secret set ISAAC_SERVER_AUTH_TOKEN -R ${REPO} <hidden>"
   exit 0
 fi
 
-gh variable set ISAAC_HAIL_URL -R "$REPO" --body "$HAIL_URL"
+printf '%s' "$HAIL_URL" | gh secret set ISAAC_HAIL_URL -R "$REPO"
 printf '%s' "$TOKEN_VALUE" | gh secret set ISAAC_SERVER_AUTH_TOKEN -R "$REPO"
 
 echo

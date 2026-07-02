@@ -21,8 +21,7 @@ CI failures on `main` to hail `zanebot` and wake the worker pool.
 
 Per repository:
 
-- `vars.ISAAC_HAIL_URL`
-  - Example: `https://zanebot.tail66e5f8.ts.net/hail/send`
+- `secrets.ISAAC_HAIL_URL`
 - `secrets.ISAAC_SERVER_AUTH_TOKEN`
   - The same bearer token configured on the Isaac server
 
@@ -73,7 +72,7 @@ The workflow posts JSON like:
   - deploys the hail band to an Isaac root and copies the workflow into a repo
     checkout
 - `configure-github.sh`
-  - sets the required GitHub Actions repo variable and secret from `../.env`
+  - sets the required GitHub Actions repo secrets from `../.env`
 - `REUSE.md`
   - how to adapt this package for another project
 

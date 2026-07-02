@@ -116,6 +116,6 @@ fi
 echo
 echo "Install complete."
 echo "Next steps:"
-echo "  - configure vars.ISAAC_HAIL_URL in the target GitHub repo"
+echo "  - configure secrets.ISAAC_HAIL_URL in the target GitHub repo"
 echo "  - configure secrets.ISAAC_SERVER_AUTH_TOKEN in the target GitHub repo"
 echo "  - reload/restart the relevant Isaac sessions on the target"

@@ -19,7 +19,7 @@ jobs:
       github.event.workflow_run.conclusion == 'failure'
     runs-on: ubuntu-latest
     env:
-      ISAAC_HAIL_URL: ${{ vars.ISAAC_HAIL_URL }}
+      ISAAC_HAIL_URL: ${{ secrets.ISAAC_HAIL_URL }}
       ISAAC_SERVER_AUTH_TOKEN: ${{ secrets.ISAAC_SERVER_AUTH_TOKEN }}
     steps:
       - name: Decide whether this is a green -> red transition
