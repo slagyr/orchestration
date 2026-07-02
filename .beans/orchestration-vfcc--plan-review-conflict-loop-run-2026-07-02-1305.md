@@ -40,6 +40,7 @@ This is explicitly a process test / no-op for orchestration flow validation.
 - This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the initial worker pass.
 - The bean body requires band-only handoffs with reply_to threading preserved through worker → verifier → worker → planner → worker → verifier.
 - Notification attempts target the named Discord channel `pub` using the delivery-provided notification coordinates.
+- Received verifier return hail `a1c9dde2` on thread `7a7a3810`; per bean instruction, this first-pass conflict cannot be resolved at worker level and must be escalated to planner with reply_to preserved.
 
 
 
