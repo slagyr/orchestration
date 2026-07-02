@@ -1,0 +1,7 @@
+{:paths ["src" "spec"]
+
+ :tasks
+ {spec {:doc  "Run speclj specs"
+        :task (if (seq *command-line-args*)
+                (apply shell "clojure" "-M:spec" *command-line-args*)
+                (shell "clojure" "-M:spec"))}}}

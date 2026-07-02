@@ -1,0 +1,8 @@
+{:paths ["src"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.12.1"}}
+
+ :aliases
+ {:spec {:extra-paths ["spec"]
+         :extra-deps  {speclj/speclj {:local/root "../../speclj"}}
+         :main-opts   ["-m" "speclj.main" "-c" "-D" "spec"]}}}
