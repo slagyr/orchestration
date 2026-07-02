@@ -87,13 +87,20 @@ the full structure and examples.
 
 The reusable logic lives in:
 
-- `prompts/skills/hail-bean-{work,verify,plan}/`
-- `prompts/commands/{plan,work,verify}.md`
+- `prompts/skills/hail-bean-{work,verify,plan}/` — orchestration-owned skills (this repo)
+- Commands (`plan`, `work`, `verify`, `plan-with-features`) — canonical in
+  [agent-lib](https://github.com/slagyr/agent-lib); **never copy them into this
+  repo**. Fetch them from agent-lib raw URLs per the
+  [toolbox](https://github.com/slagyr/toolbox) procedure.
 
 You must deploy:
 
-1. Your three project-specific band files → `~/.isaac/config/hail/`
-2. The reusable `prompts/` tree → `~/.isaac/prompts/`
+1. Your project-specific band files → `~/.isaac/config/hail/`
+2. The `prompts/skills/` tree → `~/.isaac/prompts/skills/`
+3. The agent-lib commands → `~/.isaac/prompts/commands/` (toolbox fetch, not repo copy)
+
+On the target, maintain a deployment manifest skill (see zanebot's
+`zane-toolbox`) listing every deployed component and its canonical source.
 
 You can adapt the installer from this repo:
 
