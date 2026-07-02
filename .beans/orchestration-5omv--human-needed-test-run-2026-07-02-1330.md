@@ -1,11 +1,11 @@
 ---
 # orchestration-5omv
 title: human-needed test (run-2026-07-02-1330)
-status: todo
+status: in-progress
 type: task
 priority: normal
 created_at: 2026-07-02T21:27:14Z
-updated_at: 2026-07-02T21:27:14Z
+updated_at: 2026-07-02T21:27:55Z
 ---
 
 This is a fresh process test / no-op bean for the human-needed orchestration test, under the band-data + reply_to threading configuration.
