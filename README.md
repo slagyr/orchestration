@@ -19,7 +19,7 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
 
 ```sh
 cp .env.example .env
-# edit .env with the real host + user (never commit .env)
+# edit .env with the real HOST= and USER= values (never commit .env)
 cd orchestration
 ./isaac-beans/install.sh
 ```
@@ -46,7 +46,7 @@ All verification uses the remote (or local) target from `.env`. Detailed evidenc
 
 ## Notes
 
-- The real hostname lives only in the git-ignored `.env`.
+- The real hostname and tokens live only in the git-ignored `.env`.
 - This setup deliberately uses `prompts/` (instead of the legacy `.toolbox/`) at the global Isaac level.
 - The three dedicated sessions (orchestration-plan / work / verify) with crews prowl / scrapper / perceptor are assumed to exist with the correct cwds and `:orchestration` tag.
 - After file changes, sessions typically need to be restarted or reloaded to pick up updated skills/commands/bands.

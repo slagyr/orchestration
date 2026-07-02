@@ -17,7 +17,7 @@
 #   - SSH access to the target (key-based auth recommended; same pattern as
 #     verification in happy-path.md).
 #
-# The script re-uses the same .env (host: / user:) established for running
+# The script re-uses the same .env (HOST= / USER=) established for running
 # the happy-path verification. The real hostname is never in this script
 # or any committed file.
 #
@@ -38,29 +38,28 @@ ENV_FILE="${SCRIPT_DIR}/../.env"
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "ERROR: $ENV_FILE not found."
   echo "Make sure you are running from the orchestration checkout root, or that .env exists next to the isaac-beans/ directory."
-  echo "Copy .env.example to .env and edit the host/user values."
+  echo "Copy .env.example to .env and edit the HOST/USER values."
   exit 1
 fi
 
-# Parse the same .env format used by verification steps.
-HOST=$(grep -E '^host:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
-USER=$(grep -E '^user:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
+# Parse the same dotenv format used by verification steps.
+set -a
+# shellcheck disable=SC1090
+source "$ENV_FILE"
+set +a
+
+HOST=${HOST:-${host:-}}
+USER=${USER:-${user:-}}
 
 if [[ -z "$HOST" || -z "$USER" ]]; then
-  echo "ERROR: Could not parse 'host:' and 'user:' from $ENV_FILE"
+  echo "ERROR: Could not parse HOST= and USER= from $ENV_FILE"
   exit 1
 fi
 
 TARGET="${USER}@${HOST}"
 
-# Optional override via env or .env (isaac-root: ...)
-ISAAC_ROOT=${ISAAC_ROOT:-}
-if [[ -z "$ISAAC_ROOT" ]]; then
-  ISAAC_ROOT=$(grep -E '^isaac-root:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
-fi
-if [[ -z "$ISAAC_ROOT" ]]; then
-  ISAAC_ROOT="~/.isaac"
-fi
+# Optional override via env or .env (ISAAC_ROOT=...)
+ISAAC_ROOT=${ISAAC_ROOT:-${isaac_root:-~/.isaac}}
 
 DRY_RUN=""
 if [[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]]; then

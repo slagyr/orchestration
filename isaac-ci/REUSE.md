@@ -34,10 +34,10 @@ Usually only these things need adaptation:
 
 `install.sh` reads `../.env` and expects:
 
-- `host:`
-- `user:`
-- optional `isaac-root:`
-- optional `ci-repo-dir:`
+- `HOST=`
+- `USER=`
+- optional `ISAAC_ROOT=`
+- optional `CI_REPO_DIR=`
 
 You can also pass the repo checkout explicitly:
 

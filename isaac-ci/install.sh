@@ -12,8 +12,8 @@
 #   ./isaac-ci/install.sh --repo /path/to/repo --dry-run
 #   ./isaac-ci/install.sh --band-only
 #
-# The remote host/user/isaac-root come from ../.env. The workflow target repo
-# may come from --repo, CI_REPO_DIR, or "ci-repo-dir:" in ../.env.
+# The remote HOST/USER/ISAAC_ROOT come from ../.env. The workflow target repo
+# may come from --repo, CI_REPO_DIR, or CI_REPO_DIR= in ../.env.
 
 set -euo pipefail
 
@@ -22,32 +22,28 @@ ENV_FILE="${SCRIPT_DIR}/../.env"
 
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "ERROR: $ENV_FILE not found."
-  echo "Copy ../.env.example to ../.env and populate host/user values."
+  echo "Copy ../.env.example to ../.env and populate HOST/USER values."
   exit 1
 fi
 
-HOST=$(grep -E '^host:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
-USER=$(grep -E '^user:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
+set -a
+# shellcheck disable=SC1090
+source "$ENV_FILE"
+set +a
+
+HOST=${HOST:-${host:-}}
+USER=${USER:-${user:-}}
 
 if [[ -z "$HOST" || -z "$USER" ]]; then
-  echo "ERROR: Could not parse 'host:' and 'user:' from $ENV_FILE"
+  echo "ERROR: Could not parse HOST= and USER= from $ENV_FILE"
   exit 1
 fi
 
 TARGET="${USER}@${HOST}"
 
-ISAAC_ROOT=${ISAAC_ROOT:-}
-if [[ -z "$ISAAC_ROOT" ]]; then
-  ISAAC_ROOT=$(grep -E '^isaac-root:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
-fi
-if [[ -z "$ISAAC_ROOT" ]]; then
-  ISAAC_ROOT="~/.isaac"
-fi
+ISAAC_ROOT=${ISAAC_ROOT:-${isaac_root:-~/.isaac}}
 
-CI_REPO_DIR=${CI_REPO_DIR:-}
-if [[ -z "$CI_REPO_DIR" ]]; then
-  CI_REPO_DIR=$(grep -E '^ci-repo-dir:' "$ENV_FILE" | cut -d: -f2- | xargs || true)
-fi
+CI_REPO_DIR=${CI_REPO_DIR:-${ci_repo_dir:-}}
 
 DRY_RUN=""
 BAND_ONLY="false"
@@ -101,7 +97,7 @@ if [[ "$BAND_ONLY" != "true" ]]; then
   if [[ -z "$CI_REPO_DIR" ]]; then
     echo
     echo "ERROR: No workflow target repo configured."
-    echo "Set ci-repo-dir: in ../.env or pass --repo /path/to/repo"
+    echo "Set CI_REPO_DIR= in ../.env or pass --repo /path/to/repo"
     exit 1
   fi
   if [[ ! -d "$CI_REPO_DIR/.git" ]]; then

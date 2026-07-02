@@ -7,8 +7,8 @@ All verification steps execute against the live remote target system (zanebot).
 - Real connection details are in the git-ignored `.env` at the root of the orchestration checkout (the directory containing `isaac-beans/` and `.beans.yml`). See `.env.example` (committed) for the expected format:
 
   ```
-  host: <tailnet or hostname>
-  user: zane
+  HOST=<tailnet or hostname>
+  USER=zane
   ```
 
 - **Never commit the real hostname (or the `.env` file itself) to git / github.**
@@ -20,8 +20,9 @@ All verification steps execute against the live remote target system (zanebot).
 - Construct the target (example parsing, adjust for your shell):
 
   ```sh
-  HOST=$(grep '^host:' .env | cut -d: -f2 | xargs)
-  USER=$(grep '^user:' .env | cut -d: -f2 | xargs)
+  set -a
+  source .env
+  set +a
   TARGET="$USER@$HOST"
   ```
 
@@ -50,7 +51,7 @@ Before the Given state can be true, the custom hail bands and prompts must be in
    ```
 
    - Use `./isaac-beans/install.sh --dry-run` (or `-n`) to preview.
-   - The script supports local installs (when `host: localhost` or similar) and remote via ssh using the same `$TARGET` pattern as verification.
+   - The script supports local installs (when `HOST=localhost` or similar) and remote via ssh using the same `$TARGET` pattern as verification.
    - It copies the directories (overwriting existing files, but never deleting anything else):
      - `isaac-beans/config/` → `~/.isaac/config/`   (hail bands)
      - `isaac-beans/prompts/` → `~/.isaac/prompts/`
