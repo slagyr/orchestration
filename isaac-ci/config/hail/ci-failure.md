@@ -1,6 +1,6 @@
 ---
 session-tags:
-  - :isaac
+  - :orchestration
 reach: :one
 prefer: :recent
 create: :if-missing

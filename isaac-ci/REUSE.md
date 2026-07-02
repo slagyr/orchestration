@@ -21,7 +21,7 @@ Usually only these things need adaptation:
 2. **Band routing**
    - edit `config/hail/ci-failure.md`
    - defaults:
-     - `session-tags: [:isaac]`
+     - `session-tags: [:orchestration]`
      - `reach: :one`
      - `prefer: :recent`
      - `create: :if-missing`
