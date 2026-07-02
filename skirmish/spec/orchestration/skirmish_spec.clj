@@ -36,7 +36,7 @@
                             {:side :right :overcharge? true}
                             {:side :left :overcharge? true}
                             {:side :right}])]
-      (should= :ion-wasp (:winner result))
+      (should= :red-dwarf (:winner result))
       (should= {:name :red-dwarf :hull 6 :shields 0 :attack 4} (:left result))
       (should= {:name :ion-wasp :hull 0 :shields 0 :attack 3} (:right result))
       (should= [{:attacker :red-dwarf :defender :ion-wasp :damage 4 :recoil 0 :overcharge? false}
