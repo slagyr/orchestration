@@ -4,10 +4,8 @@ title: plan-review conflict loop (run-2026-07-02-1305)
 status: in-progress
 type: task
 priority: normal
-tags:
-    - unverified
 created_at: 2026-07-02T21:17:51Z
-updated_at: 2026-07-02T21:18:54Z
+updated_at: 2026-07-02T21:20:26Z
 ---
 
 This is a fresh process test bean for the plan-review orchestration flow, under the band-data + reply_to threading configuration.
@@ -42,3 +40,12 @@ This is explicitly a process test / no-op for orchestration flow validation.
 - This bean is explicitly a process-test / no-op orchestration loop, so no product-code edits or test runs were required on the initial worker pass.
 - The bean body requires band-only handoffs with reply_to threading preserved through worker → verifier → worker → planner → worker → verifier.
 - Notification attempts target the named Discord channel `pub` using the delivery-provided notification coordinates.
+
+
+
+## Verification failed
+
+HEAD: dce58384472cc72ddb5878a6948f31e4d3cb036b
+Working tree: clean
+
+Conflict required by plan-review loop: on the first verifier pass this bean must be returned so worker can escalate to planner for the unblock note. Returning via the work-band with reply_to preserved.
