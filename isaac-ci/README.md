@@ -62,24 +62,28 @@ The workflow posts JSON like:
 
 `session_id` is omitted when no `Isaac-Session:` trailer is present.
 
-## Files
+## Layout
 
-- `ci-failure-hail.yml` - GitHub Actions workflow template
-- `ci-failure.md.example` - single-file hail band example for `~/.isaac/config/hail/ci-failure.md`
-  with YAML frontmatter + prompt body
+- `config/hail/ci-failure.md`
+  - single-file hail band with YAML frontmatter + prompt body
+- `github/workflows/ci-failure-hail.yml`
+  - GitHub Actions notifier template
+- `install.sh`
+  - deploys the hail band to an Isaac root and copies the workflow into a repo
+    checkout
+- `REUSE.md`
+  - how to adapt this package for another project
 
 ## Apply to a repo
 
-1. Copy `ci-failure-hail.yml` into:
-   - `.github/workflows/ci-failure-hail.yml`
+1. Run:
+   - `./isaac-ci/install.sh --repo /path/to/project`
 2. Adjust the watched workflow name if needed:
    - default is `CI Tests`
 3. Set:
    - `vars.ISAAC_HAIL_URL`
    - `secrets.ISAAC_SERVER_AUTH_TOKEN`
-4. Install the band on `zanebot`:
-   - copy `ci-failure.md.example` to `~/.isaac/config/hail/ci-failure.md`
-5. Reload or restart the relevant Isaac sessions on `zanebot`
+4. Reload or restart the relevant Isaac sessions on `zanebot`
 
 ## Notes
 
