@@ -31,10 +31,15 @@ Follow the sequence exactly:
   ```
 
 ## Then
-- Worker → verifier → exact worker → planner.
+- Worker → verifier → worker → planner, all via bands with `reply_to`
+  chaining (one thread-id for the whole loop; band reach `:one` pins each
+  role's session).
 - Planner cannot resolve, appends human note, commits/pushes (no return to worker).
+- Human escalation uses the **coordinates from the band data block**
+  (`notification-comm` for the at-a-glance channel, `human-help-comm` for
+  the direct human contact) per the hail-bean-plan skill — nothing hardcoded.
 - Discord receives: `orchestration-XXXX 🆘 **prowl** human help needed (short synopsis)`
-- iMessage sent to micahmartin@mac.com with visually stimulating content, e.g.:
+- iMessage sent to the human-help-comm target with visually stimulating content, e.g.:
   ```
   🆘🚨 HUMAN HELP NEEDED 🚨🆘
 
@@ -43,7 +48,8 @@ Follow the sequence exactly:
 
   [short synopsis]
 
-  👉 Check Discord #pub for full details.
+  👉 Check the notification channel for full details.
   ```
 - Bean ends in-progress.
-- Correct exact-session targeting and at-a-glance comms used throughout.
+- `:bean-id` is the only param on every hail; at-a-glance comms at each
+  milestone, crew signed from ambient identity.
