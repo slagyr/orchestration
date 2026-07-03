@@ -64,6 +64,7 @@ body instructions. Leading `_` marks the template as non-addressable.
 Customize in the template:
 
 - `session-tags: [ :<project> ]`
+- `prefer: :oldest`
 - `data:` — the coordinate map the skills contract on:
   - `bean-repo:` (full git URL of the beans repo)
   - `notification-comm:` (typically `{:id :discord :channel "pub"}`)
@@ -79,6 +80,10 @@ Customize per band file:
 The band `data:` is delivered with every hail — including hails that override
 the prompt — so crews can hail each other with explanatory prompts without
 losing coordinates.
+
+Use `prefer: :oldest` for pooled work sessions. The router defaults to
+`recent` when no preference is set, which concentrates all `reach :one` work on
+the hottest matching session and leaves sibling work sessions idle.
 
 See the existing `_orchestration-template.md` + `orchestration-*.md` files for
 the full structure and examples.

@@ -1,5 +1,6 @@
 {:session-tags [:orchestration]
  :reach        :one
+ :prefer       :oldest
  :data         {:bean-repo         "git@github.com:slagyr/orchestration.git"
                 :notification-comm {:id :discord :channel "pub"}
                 :human-help-comm   {:id :imessage :target "micahmartin@mac.com"}
