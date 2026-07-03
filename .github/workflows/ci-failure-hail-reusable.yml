@@ -96,8 +96,7 @@ jobs:
           echo "No hail sent."
           echo "Previous main push conclusion: '${{ steps.gate.outputs.previous_conclusion }}'"
 
-      - name: Read commit subject and optional Isaac session trailer
-        id: commit
+      - name: Send hail to Isaac
         if: steps.gate.outputs.should_hail == 'true'
         uses: actions/github-script@v7
         with:
@@ -105,50 +104,67 @@ jobs:
             const owner = '${{ inputs.repository_owner }}';
             const repo = '${{ inputs.repository_name }}';
             const sha = '${{ inputs.workflow_head_sha }}';
-            const {data} = await github.rest.repos.getCommit({owner, repo, ref: sha});
-            const message = data.commit.message || '';
+            const runId = '${{ inputs.workflow_run_id }}';
+            const band = '${{ inputs.hail_band }}';
+
+            const {data: commit} = await github.rest.repos.getCommit({owner, repo, ref: sha});
+            const message = commit.commit.message || '';
             const subject = message.split('\n')[0] || '';
-            const match = message.match(/^Isaac-Session:\s*(\S+)/mi);
-            core.setOutput('subject', subject);
-            core.setOutput('session_id', match ? match[1] : '');
+            const sessionMatch = message.match(/^Isaac-Session:\s*(\S+)/mi);
+            const beanMatch = message.match(/^Isaac-Bean:\s*(\S+)/mi);
+            const sessionId = sessionMatch ? sessionMatch[1] : '';
+            const beanId = beanMatch ? beanMatch[1] : '';
 
-      - name: Send hail to Isaac
-        if: steps.gate.outputs.should_hail == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
+            const {data: jobsPage} = await github.rest.actions.listJobsForWorkflowRun({
+              owner,
+              repo,
+              run_id: runId
+            });
 
-          payload="$(
-            jq -n \
-              --arg repo "${{ inputs.repository_name }}" \
-              --arg full_repo "${{ inputs.repository_full_name }}" \
-              --arg workflow "${{ inputs.workflow_name }}" \
-              --arg run_url "${{ inputs.workflow_run_url }}" \
-              --arg sha "${{ inputs.workflow_head_sha }}" \
-              --arg branch "${{ inputs.workflow_head_branch }}" \
-              --arg actor "${{ inputs.workflow_actor }}" \
-              --arg commit_subject "${{ steps.commit.outputs.subject }}" \
-              --arg session_id "${{ steps.commit.outputs.session_id }}" \
-              --arg band "${{ inputs.hail_band }}" \
-              '
-              {
-                frequencies: {band: $band},
-                params:
-                  ({
-                    repo: $repo,
-                    full_repo: $full_repo,
-                    workflow: $workflow,
-                    run_url: $run_url,
-                    sha: $sha,
-                    branch: $branch,
-                    actor: $actor,
-                    commit_subject: $commit_subject
-                  } + (if $session_id != "" then {session_id: $session_id} else {} end))
-              }'
-          )"
+            const failedJobs = (jobsPage.jobs || []).filter(j => j.conclusion === 'failure');
+            const failingJobs = failedJobs.map(j => j.name);
+            const failingSteps = failedJobs.flatMap(j =>
+              (j.steps || [])
+                .filter(s => s.conclusion === 'failure')
+                .map(s => `${j.name}: ${s.name}`)
+            );
 
-          curl --fail-with-body \
-            -X POST "$ISAAC_HAIL_URL" \
-            -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer $ISAAC_SERVER_AUTH_TOKEN" \
-            -d "$payload"
+            const frequencies = {band};
+            if (sessionId) {
+              frequencies.session = [sessionId];
+            }
+
+            const params = {
+              repo: '${{ inputs.repository_name }}',
+              full_repo: '${{ inputs.repository_full_name }}',
+              workflow: '${{ inputs.workflow_name }}',
+              run_id: runId,
+              run_url: '${{ inputs.workflow_run_url }}',
+              sha,
+              branch: '${{ inputs.workflow_head_branch }}',
+              actor: '${{ inputs.workflow_actor }}',
+              commit_subject: subject,
+              failing_jobs: failingJobs.join(', '),
+              failing_steps: failingSteps.join('; ')
+            };
+            if (beanId) {
+              params.bean_id = beanId;
+            }
+
+            const payload = {frequencies, params};
+
+            const response = await fetch(process.env.ISAAC_HAIL_URL, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.ISAAC_SERVER_AUTH_TOKEN}`
+              },
+              body: JSON.stringify(payload)
+            });
+
+            const body = await response.text();
+            if (!response.ok) {
+              core.setFailed(`Isaac hail failed (${response.status}): ${body}`);
+              return;
+            }
+            core.info(`Isaac hail sent: ${body}`);

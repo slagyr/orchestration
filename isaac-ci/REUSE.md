@@ -28,10 +28,10 @@ Usually only these things need adaptation:
 2. **Band routing**
    - edit `config/hail/ci-failure.md`
    - defaults:
-     - `session-tags: [:orchestration]`
+     - `session-tags: [:ci]`
      - `reach: :one`
-     - `prefer: :recent`
-     - `create: :if-missing`
+     - `create: :never`
+   - tag intended CI-repair fallback sessions with `:ci` on the Isaac host
 
 3. **Prompt body**
    - update the markdown body in `config/hail/ci-failure.md` if the target
@@ -79,20 +79,19 @@ It never deletes files on the target.
 - `secrets.ISAAC_HAIL_URL`
 - `secrets.ISAAC_SERVER_AUTH_TOKEN`
 
-## Optional session affinity
+## Commit trailers (session + bean correlation)
 
-If you want CI failures to prefer the original Isaac session, have orchestration
-commits include this trailer:
+Implementation commits should carry:
 
 ```text
 Isaac-Session: glimmering-cardinal
+Isaac-Bean: isaac-abcd
 ```
 
-The workflow extracts it from the failing commit and includes:
+The workflow extracts trailers from the failing commit:
 
-```json
-{"params": {"session_id": "glimmering-cardinal"}}
-```
+- `Isaac-Session` → `frequencies.session` (direct delivery to that session)
+- `Isaac-Bean` → `params.bean_id` (correlate repair with active bean work)
 
-The hail still sends if the trailer is absent. Keep that behavior in workflow or
-worker logic, not in the hail band prompt.
+The hail still sends when trailers are absent; the `:ci`-scoped band routes to
+tagged fallback sessions (undeliverable if none exist).
