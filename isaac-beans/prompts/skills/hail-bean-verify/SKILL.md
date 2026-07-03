@@ -19,10 +19,28 @@ Use when a hail (or band prompt) assigns bean verification.
    implementation — the bean handoff commit usually touches only `.beans/`.
 5. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
 6. Verify the bean per `prompts/commands/verify.md`.
-7. If pass: `beans update <id> --remove-tag=unverified`
-8. If fail: return to `in-progress` and hail the **work-band** with :bean-id,
-   reply_to (the incoming hail id), and a prompt override explaining the
-   failure. On subsequent passes, complete.
+7. **A bean CANNOT pass if its acceptance scenarios are still @wip or red, or if no implementation exists.** Before passing, confirm the acceptance scenarios have had @wip removed and the suite runs GREEN, and that real implementation commits exist (not just scenario/doc commits). If the acceptance is unmet, this is a FAIL, not a pass — return to the work-band. A verifier that passes unbuilt work is the worst failure mode.
+7b. If pass: `beans update <id> --remove-tag=unverified`
+8. If fail: return to `in-progress` and hail the **work-band** (the value from
+   your data block) with :bean-id, reply_to (the incoming hail id), and a
+   prompt override explaining the failure. On subsequent passes, complete.
+
+   **Hail format (flat snake_case, no nested frequencies):**
+   `{"band": "<work-band>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>", "prompt": "VERIFY FAIL for <id> (reply_to: <incoming>): ..."}`
+
+   **Targeting rule (critical):**
+   - Use *only* the `band` key for the handoff in normal cases. The band config
+     (session-tags, crew, prefer, reach) will select an appropriate worker
+     session.
+   - Add a `session` key **only** if you have retrieved a *concrete* session id
+     (e.g. "isaac-work-1" or "orchestration-work") via `hail_get` on the
+     thread (look for the worker's originating hail).
+   - **Never** use the band name itself (e.g. "isaac-work", "orchestration-work")
+     as a `:session` value. Band names are selectors, not session names.
+     Projects with parallel workers use names like `<project>-work-1`,
+     `<project>-work-2`.
+   - If the incoming hail to you had no submitter/worker session (e.g. arrived
+     via band/CLI), just use the band — do not invent a session.
 
 ## Commit trailer
 
@@ -53,6 +71,9 @@ Use the bean id to look up the bean and review it against the acceptance criteri
 responding hail; the thread id is inherited automatically. Prior hails in the
 thread (the worker's handoff, earlier fails) — including their prompts and
 data — are fetchable with `hail_get`.
+
+Use `hail_get` to inspect the worker's prior hail if you need its exact
+session id for a direct return (rare; usually the band is sufficient and safer).
 
 ## When you're stuck, ask the planner — never drop the bean
 
