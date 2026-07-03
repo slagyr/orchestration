@@ -54,7 +54,7 @@ session identity block). Use exactly these formats for content:
 
 - On receiving: `<bean-id> 🧠 **<crew>** received for plan`
 - After adjustment: `<bean-id> ✏️ **<crew>** added unblock note`
-- Before handoff: `<bean-id> ➡️ **<crew>** handed back to worker`
+- After the work-band return hail is SENT: `<bean-id> ➡️ **<crew>** handed back to worker`
 
 ID first for recognition; 🧠/📋 for planner actions, 🟢 for positive adjustments.
 
