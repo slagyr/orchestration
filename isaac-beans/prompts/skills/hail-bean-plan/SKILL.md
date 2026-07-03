@@ -49,12 +49,12 @@ Send using `comm_send` at key points (receive/adjust/handback). Coordinates
 come from the delivery's data block: comm = notification-comm's :id, target =
 its :channel.
 
-Fill `<crew>` with **your own crew name** (it's in your system prompt's
-session identity block). Use exactly these formats for content:
+Fill `<crew>` and `<session>` from **your own identity** (both are in your
+system prompt's session identity block). Use exactly these formats for content:
 
-- On receiving: `<bean-id> 🧠 **<crew>** received for plan`
-- After adjustment: `<bean-id> ✏️ **<crew>** added unblock note`
-- After the work-band return hail is SENT: `<bean-id> ➡️ **<crew>** handed back to worker`
+- On receiving: `<bean-id> 🧠 **<crew>**@<session> received for plan`
+- After adjustment: `<bean-id> ✏️ **<crew>**@<session> added unblock note`
+- After the work-band return hail is SENT: `<bean-id> ➡️ **<crew>**@<session> handed back to worker`
 
 ID first for recognition; 🧠/📋 for planner actions, 🟢 for positive adjustments.
 

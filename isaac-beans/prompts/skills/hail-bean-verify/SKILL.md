@@ -68,12 +68,12 @@ proceed is a question for the planner, not a dead end.
 Send updates using `comm_send` at key points. Coordinates come from the
 delivery's data block: comm = notification-comm's :id, target = its :channel.
 
-Fill `<crew>` with **your own crew name** (it's in your system prompt's
-session identity block). Use exactly these formats for content:
+Fill `<crew>` and `<session>` from **your own identity** (both are in your
+system prompt's session identity block). Use exactly these formats for content:
 
-- On starting review: `<bean-id> 👁️ **<crew>** verification started`
-- On pass: `<bean-id> 🟢 **<crew>** verification passed`
-- On fail: `<bean-id> ❌ **<crew>** verification failed (reason...) → back to worker`
+- On starting review: `<bean-id> 👁️ **<crew>**@<session> verification started`
+- On pass: `<bean-id> 🟢 **<crew>**@<session> verification passed`
+- On fail: `<bean-id> ❌ **<crew>**@<session> verification failed (reason...) → back to worker`
   (send it AFTER the return hail so the at-a-glance reflects whose court the bean is in)
 
 ID first for recognition; emoji for quick good/bad scanning.

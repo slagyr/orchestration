@@ -18,7 +18,7 @@ Run in order before claiming or editing anything.
    **If the bean is not found:** the dispatch may have raced the push — wait
    briefly, `git pull --rebase`, retry once. Still missing → do NOT hand off
    to the planner and do NOT pick another bean: reply on the incoming hail
-   thread (reply_to) explaining, send a `<bean-id> ⚠️ **<crew>** bean not
+   thread (reply_to) explaining, send a `<bean-id> ⚠️ **<crew>**@<session> bean not
    found — no action taken` notification, and stop.
 4. **Find the implementation repo** — bean scope / title names the repo (e.g. the module or project being worked on). Work in the sibling checkout under your role home.
 5. **Skills** — try `list_skills` / `load_skill` if available. If empty or missing, read directly:
@@ -99,15 +99,15 @@ At key milestones (claim, observations, handoff), send a concise progress
 update using `comm_send`. Coordinates come from the delivery's data block:
 comm = notification-comm's :id, target = its :channel (name or snowflake).
 
-Fill `<crew>` with **your own crew name** (it's in your system prompt's
-session identity block); `<short-slug>` comes from the bean title. Use exactly these
+Fill `<crew>` and `<session>` from **your own identity** (both are in your
+system prompt's session identity block); `<short-slug>` comes from the bean title. Use exactly these
 formats for content:
 
-- After claim: `<bean-id> 🟢 **<crew>** claimed (<short-slug>)`
-- On receiving a verify-fail or planner return: `<bean-id> 🔁 **<crew>** resumed (<short-slug>)`
-- After observations: `<bean-id> 📝 **<crew>** appended observations (<short-slug>)`
-- After the verify handoff hail is SENT: `<bean-id> ➡️ **<crew>** handed off to verify`
-- After the planner handoff hail is SENT: `<bean-id> ➡️ **<crew>** handed off to planner (plan-review-loop)`
+- After claim: `<bean-id> 🟢 **<crew>**@<session> claimed (<short-slug>)`
+- On receiving a verify-fail or planner return: `<bean-id> 🔁 **<crew>**@<session> resumed (<short-slug>)`
+- After observations: `<bean-id> 📝 **<crew>**@<session> appended observations (<short-slug>)`
+- After the verify handoff hail is SENT: `<bean-id> ➡️ **<crew>**@<session> handed off to verify`
+- After the planner handoff hail is SENT: `<bean-id> ➡️ **<crew>**@<session> handed off to planner (plan-review-loop)`
 
 ID first for recognition; emoji for quick status scanning (🟢 claim/positive,
 📝 observations, ➡️ handoff).
