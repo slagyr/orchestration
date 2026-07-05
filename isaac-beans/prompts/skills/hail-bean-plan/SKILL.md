@@ -21,7 +21,7 @@ Use when hailed via orchestration-plan band (or for conflict resolution / unbloc
   the delivery's data block. Earlier legs of the exchange are fetchable with
   `hail_get` via the thread.
 - Pull latest, review the bean.
-- Make the adjustment (for test: simply append a note like "## Planner unblock note: bean is unblocked..."; in real use: clarify requirements, edit gherkin, etc.).
+- Make the adjustment (for test: simply append a note like "## Planner unblock note: bean is unblocked..."; in real use: clarify requirements, edit gherkin, etc.). The `## Planner` note is also the **reset marker for the verify-fail escalation counter** (see hail-bean-verify): once you add it, the verifier's fail count starts fresh, so the normal work→verify loop resumes. If a bean was escalated to you because it kept failing verification, your adjustment should change something real (rescope acceptance, split the bean, unblock, or fix the gherkin) — not just append an empty note — or it will simply bounce back.
 - Commit the change in the beans repo, including an `Isaac-Session: <session-id>`
   trailer. Recommended form:
 
@@ -36,7 +36,9 @@ Use when hailed via orchestration-plan band (or for conflict resolution / unbloc
 
 - Use the `hail-send` tool with flat snake_case.
 - Hail the **work-band** (name from your data block) with a prompt override
-  explaining the adjustment, and reply_to for thread continuity:
+  explaining the adjustment, and reply_to for thread continuity. Use only the
+  band key (see targeting rules in hail-bean-verify/SKILL.md; never use band name
+  as :session):
   {"band": "<work-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>", "prompt": "Planner adjustment complete for bean {{bean-id}}. Added unblock note [or real clarification]. [Summary of change]. Please continue work and hand to verifier when ready."}
 
 When hailing the work-band normally (not a return), :bean-id in params is all

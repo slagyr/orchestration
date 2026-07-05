@@ -21,12 +21,32 @@ Use when a hail (or band prompt) assigns bean verification.
 6. Verify the bean per `prompts/commands/verify.md`.
 7. **A bean CANNOT pass if its acceptance scenarios are still @wip or red, or if no implementation exists.** Before passing, confirm the acceptance scenarios have had @wip removed and the suite runs GREEN, and that real implementation commits exist (not just scenario/doc commits). If the acceptance is unmet, this is a FAIL, not a pass — return to the work-band. A verifier that passes unbuilt work is the worst failure mode.
 7b. If pass: `beans update <id> --remove-tag=unverified`
-8. If fail: return to `in-progress` and hail the **work-band** (the value from
-   your data block) with :bean-id, reply_to (the incoming hail id), and a
-   prompt override explaining the failure. On subsequent passes, complete.
+8. **If fail:** first record a durable fail marker, then decide where to hand
+   off based on how many times this bean has already failed.
 
-   **Hail format (flat snake_case, no nested frequencies):**
-   `{"band": "<work-band>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>", "prompt": "VERIFY FAIL for <id> (reply_to: <incoming>): ..."}`
+   a. **Append to the bean body** a note of the form
+      `## Verify fail (attempt N, <YYYY-MM-DD>): <one-line reason>` and commit it
+      (with the session trailer). N = the number of existing `## Verify fail`
+      notes since the last `## Planner` note, plus one. This marker is the
+      escalation counter — it must go in the bean body, not just the hail.
+
+   b. **Count `## Verify fail` notes since the last `## Planner` note** in the
+      bean body (a planner adjustment resets the count):
+      - **Fewer than 2** → set `in-progress` and hail the **work-band** (the
+        value from your data block) with :bean-id, reply_to (the incoming hail
+        id), and a prompt explaining the failure. This is the normal
+        rework loop.
+      - **2 or more** → the bean is bouncing with no progress. Do **NOT** return
+        it to the worker again. Set `in-progress` and hail the **plan-band**
+        (the value from your data block) with :bean-id, reply_to, and a prompt
+        explaining the repeated failure and exactly what the worker could not
+        resolve. The planner rescopes, splits, unblocks, or escalates to human.
+        A subsequent `## Planner` note resets the counter so the normal
+        work→verify loop can resume.
+
+   **Hail format (flat snake_case, no nested frequencies) — same shape for the
+   work-band (normal fail) or the plan-band (escalation), swap the band value:**
+   `{"band": "<work-band | plan-band>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>", "prompt": "VERIFY FAIL for <id> (reply_to: <incoming>): ..."}`
 
    **Targeting rule (critical):**
    - Use *only* the `band` key for the handoff in normal cases. The band config
@@ -94,7 +114,8 @@ system prompt's session identity block). Use exactly these formats for content:
 
 - On starting review: `<bean-id> 👁️ **<crew>**@<session> verification started`
 - On pass: `<bean-id> 🟢 **<crew>**@<session> verification passed`
-- On fail: `<bean-id> ❌ **<crew>**@<session> verification failed (reason...) → back to worker`
-  (send it AFTER the return hail so the at-a-glance reflects whose court the bean is in)
+- On fail (1st, back to worker): `<bean-id> ❌ **<crew>**@<session> verification failed (reason...) → back to worker`
+- On escalation (2nd+ fail → planner): `<bean-id> 🆙 **<crew>**@<session> escalated to planner (N verify-fails, no progress) → plan`
+  (send either AFTER the return/escalation hail so the at-a-glance reflects whose court the bean is in)
 
 ID first for recognition; emoji for quick good/bad scanning.
