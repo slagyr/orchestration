@@ -65,6 +65,16 @@ Use when a hail (or band prompt) assigns bean verification.
    - If the incoming hail to you had no submitter/worker session (e.g. arrived
      via band/CLI), just use the band — do not invent a session.
 
+## Never end a turn in limbo
+
+Every verification turn must end in exactly one of these states: **pass**
+(bean completed, tag removed, notification sent), **fail** (fail note +
+return/escalation hail sent), **stuck** (plan-band hail sent asking for what
+you need), or a **continuation hail to your own band** when verification
+needs another turn. A turn that ends with only analysis strands the bean
+silently. If you are running long, send the continuation hail EARLY — "ask me
+to continue" is a dead end on an unattended turn.
+
 ## Commit trailer
 
 Any verification-side commit in the beans repo should include the current

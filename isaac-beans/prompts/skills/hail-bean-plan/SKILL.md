@@ -48,6 +48,17 @@ inherits the same rule: draft (or the parent's status), not a fresh `todo`.
   The current session id comes from your session identity block.
 - Hand back via the work-band (see below).
 
+## Never end a turn in limbo
+
+Every planning turn must end in exactly one of these states: adjustment made
+and **handed back** (work-band hail sent), **escalated to human** (comms
+sent), or a **continuation hail to your own band** (`reply_to` this delivery)
+when the decision needs more work. A turn that ends with only analysis — no
+note, no hail, no notification — strands the bean silently: the requester
+waits forever for a verdict that never comes. If you are running long, send
+the continuation hail EARLY; "I'll think more" with no hail is a dead end on
+an unattended turn.
+
 ## Handoff back to work
 
 - Use the `hail-send` tool with flat snake_case.
