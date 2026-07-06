@@ -51,6 +51,8 @@ inherits the same rule: draft (or the parent's status), not a fresh `todo`.
 ## Handoff back to work
 
 - Use the `hail-send` tool with flat snake_case.
+- **Copy the band value EXACTLY from your delivery's data block — never type it
+  from memory.** A typo'd band name routes nowhere and dead-letters silently.
 - Hail the **work-band** (name from your data block) with a prompt override
   explaining the adjustment, and reply_to for thread continuity. Use only the
   band key (see targeting rules in hail-bean-verify/SKILL.md; never use band name

@@ -49,6 +49,9 @@ Use when a hail (or band prompt) assigns bean verification.
    `{"band": "<work-band | plan-band>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>", "prompt": "VERIFY FAIL for <id> (reply_to: <incoming>): ..."}`
 
    **Targeting rule (critical):**
+   - **Copy the band value EXACTLY from your delivery's data block — never type
+     it from memory.** A typo'd band name (e.g. "orchistration-verify") routes
+     nowhere and dead-letters silently.
    - Use *only* the `band` key for the handoff in normal cases. The band config
      (session-tags, crew, prefer, reach) will select an appropriate worker
      session.

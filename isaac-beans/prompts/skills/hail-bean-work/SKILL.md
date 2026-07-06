@@ -131,6 +131,8 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.
 - Use the `hail-send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
+- **Copy the band value EXACTLY from your delivery's data block — never type it
+  from memory.** A typo'd band name routes nowhere and dead-letters silently.
 - Hail the **verify-band** (name from the incoming data block):
     {"band": "<verify-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>"}
 - Verifier pulls the beans repo root before reviewing.
