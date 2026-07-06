@@ -7,6 +7,22 @@ description: Bootstrap for planning hails via plan band. Used for orchestration 
 
 Use when hailed via orchestration-plan band (or for conflict resolution / unblock in bean loops).
 
+## Role boundary (critical)
+
+**You PLAN beans. You do NOT work them.** Never implement code, edit source,
+run tests, or verify an implementation — those belong to the work band and the
+verify band. Your only actions on a bean are: adjust its body (scope,
+acceptance criteria, gherkin), split/merge beans, unblock or clarify, or
+escalate to a human. When work is needed, hand it to the work band with a hail;
+never do the work yourself.
+
+**You do NOT promote beans to `todo`.** Beans reach `todo` only through **human
+review and approval**. If planning surfaces new work, create it as `draft`
+(sparingly) or note it in the current bean, and flag it for human review —
+never `todo`, never self-promote, and never leave a bean you created sitting in
+`in-progress`. Splitting an existing bean is fine, but the split-off bean
+inherits the same rule: draft (or the parent's status), not a fresh `todo`.
+
 ## Bootstrap
 
 1. Pull in the beans repo root (directory containing `.beans/`).

@@ -15,6 +15,11 @@ On the target machine (e.g. zanebot) create:
 └── verify/
 ```
 
+**Role boundaries (enforced by the hail-bean-* skills):**
+- **Planner** — plans only. Adjusts / splits / unblocks / clarifies beans; does **not** implement, run tests, verify, or promote beans to `todo`. Only a human promotes a bean to `todo`.
+- **Worker** — implements a claimed (`todo` → `in-progress`) bean, then hands to the verifier.
+- **Verifier** — verifies against acceptance and completes (or bounces / escalates); never implements.
+
 ## 2. Clone the Beans Repo in Each Role Home
 
 In **each** role directory, clone the project's beans repository (the repo containing `.beans.yml` and `.beans/`):
@@ -32,13 +37,20 @@ The bootstrap logic discovers the directory containing `.beans/` (it does not re
 
 Create and run these sessions:
 
-| Session Name     | Crew      | cwd                                      | Tags          |
-|------------------|-----------|------------------------------------------|---------------|
-| `<project>-plan` | `prowl`   | `/Users/zane/agents/<project>/plan`      | `[:<project>]` |
-| `<project>-work` | `scrapper`| `/Users/zane/agents/<project>/work`      | `[:<project>]` |
-| `<project>-verify`| `perceptor` | `/Users/zane/agents/<project>/verify`  | `[:<project>]` |
+| Session Name     | Crew      | cwd                                      | Tags                  |
+|------------------|-----------|------------------------------------------|-----------------------|
+| `<project>-plan` | `prowl`   | `/Users/zane/agents/<project>/plan`      | `[:<project>]`        |
+| `<project>-work` | `scrapper`| `/Users/zane/agents/<project>/work`      | `[:<project> :ci]`    |
+| `<project>-verify`| `perceptor` | `/Users/zane/agents/<project>/verify`  | `[:<project>]`        |
 
 The session names and tags are used for hail routing and isolation.
+
+**Important targeting rules (see hail-bean-verify/SKILL.md for full details):**
+- Hail using the band (e.g. `{"band": "<project>-work"}`) — the band config's `session-tags`, crew, prefer, reach etc. select the session(s).
+- Use explicit `session` key **only** for exact continuity to a concrete id you retrieved (e.g. "myproject-work-1"). Never use the bare band name (e.g. "myproject-work") as a session value.
+- Projects commonly use suffixed names (`<project>-work-1`, `<project>-work-2`, ...) for parallel workers under one band.
+
+**Worker sessions (`<project>-work`) must also carry the `:ci` tag.** This allows the `ci-failure` hail band to route GitHub Actions regressions to the repair workers when no `Isaac-Session:` trailer is present in the failing commit.
 
 ## 4. Project-Specific Hail Band Configs
 
