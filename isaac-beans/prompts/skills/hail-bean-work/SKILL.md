@@ -127,6 +127,19 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
   responding hail; the thread id is inherited automatically. Prior hails in the
   thread (including their prompts and data) are fetchable with `hail_get`.
 
+## Never end a turn in limbo
+
+Every work turn must end in exactly one of these states: bean **completed**,
+**handoff hail sent** (verify-band), **conflict hail sent** (plan-band), or a
+**continuation hail sent to your own band** (`reply_to` this delivery) when
+work remains. Anything else strands the bean silently — claimed, no pending
+hail, nobody coming back.
+
+If you are deep in a long investigation and sense you may not finish this
+turn, send the continuation hail EARLY — before you run out of tool calls. A
+final message like "ask me to continue" is a dead end on an unattended turn:
+nobody is there to ask.
+
 ## Hand off to verify
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.
