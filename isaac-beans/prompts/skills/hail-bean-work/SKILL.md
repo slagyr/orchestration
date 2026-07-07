@@ -146,6 +146,10 @@ nobody is there to ask.
 - Use the `hail-send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
 - **Copy the band value EXACTLY from your delivery's data block — never type it
   from memory.** A typo'd band name routes nowhere and dead-letters silently.
+- **Band handoffs carry the `band` key and `params` ONLY** — never add
+  `session-tags`, `crew`, or other frequency filters: extra filters can select
+  ZERO recipients and the hail parks SILENTLY as undeliverable (isaac-exi2
+  lost 11 hours to an invented session-tag).
 - Hail the **verify-band** (name from the incoming data block):
     {"band": "<verify-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>"}
 - Verifier pulls the beans repo root before reviewing.

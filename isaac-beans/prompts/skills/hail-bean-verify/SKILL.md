@@ -52,6 +52,9 @@ Use when a hail (or band prompt) assigns bean verification.
    - **Copy the band value EXACTLY from your delivery's data block — never type
      it from memory.** A typo'd band name (e.g. "orchistration-verify") routes
      nowhere and dead-letters silently.
+   - **Band handoffs carry the `band` key and `params` ONLY** — never add
+     `session-tags`, `crew`, or other frequency filters: extra filters can
+     select ZERO recipients and the hail parks SILENTLY as undeliverable.
    - Use *only* the `band` key for the handoff in normal cases. The band config
      (session-tags, crew, prefer, reach) will select an appropriate worker
      session.
