@@ -68,6 +68,22 @@ bean you are implementing.
 Hail init text ("checkout in quarters") describes intent, not a guaranteed path.
 Authoritative rule: **the directory that contains `.beans/` is the beans repo (project root for this orchestration).**
 
+### Workspace protocol (shared checkouts are load-bearing)
+
+Sibling checkouts are shared infrastructure: other sessions' suite runs
+resolve `../<module>` deps against them.
+
+- Work **in the sibling checkout** on a `bean/<bean-id>` branch. If you need
+  isolation, `git worktree add ../<module>-<bean-id> -b bean/<bean-id>` from
+  the sibling — never a fresh full clone.
+- **NEVER rename, move, symlink, or replace a sibling checkout.** Pointing
+  the shared dep path at your bean tree corrupts every other session's suite
+  runs and outlives your turn. If cross-repo suites must see your branch,
+  that is what CI's pinned-sibling runs are for — hand off and let verify/CI
+  do it.
+- On completion (or when abandoning), remove your worktree
+  (`git worktree remove`) and leave the sibling checkout on main, clean.
+
 ## Normal implementation bean
 
 Follow `prompts/commands/work.md`:
@@ -131,14 +147,30 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
 
 Every work turn must end in exactly one of these states: bean **completed**,
 **handoff hail sent** (verify-band), **conflict hail sent** (plan-band), or a
-**continuation hail sent to your own band** (`reply_to` this delivery) when
-work remains. Anything else strands the bean silently — claimed, no pending
-hail, nobody coming back.
+**continuation hail sent to yourself** (see below) when work remains.
+Anything else strands the bean silently — claimed, no pending hail, nobody
+coming back.
 
 If you are deep in a long investigation and sense you may not finish this
 turn, send the continuation hail EARLY — before you run out of tool calls. A
 final message like "ask me to continue" is a dead end on an unattended turn:
 nobody is there to ask.
+
+### Continuation hails: session-direct, budgeted
+
+- **Address your OWN session directly** — `{"session": "<your session id>",
+  "params": {"bean-id": "..."}, "reply_to": "<this delivery's hail id>",
+  "prompt": "..."}`. Never band-address a self-continuation: band routing can
+  bind a *sibling session* that starts cold in a different directory. (The
+  band+params-only rule governs handoffs BETWEEN roles, not self-hails.)
+- **Carry a total continuation count in the prompt** ("continuation 3 of 5
+  for this bean") — read it from the incoming prompt and increment; it NEVER
+  resets, even across new hail threads. System re-queue counters reset when
+  you create a new hail; your prompt-carried count is the real budget.
+- **At 5 total continuations, STOP.** Do not send continuation 6. Send the
+  🆘 human-help escalation (notification-comm + human-help-comm from the data
+  block) describing where the work stands and what is blocking completion.
+  Endless self-continuation is silent failure with extra steps.
 
 ## Hand off to verify
 

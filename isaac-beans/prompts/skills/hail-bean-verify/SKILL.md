@@ -73,7 +73,7 @@ Use when a hail (or band prompt) assigns bean verification.
 Every verification turn must end in exactly one of these states: **pass**
 (bean completed, tag removed, notification sent), **fail** (fail note +
 return/escalation hail sent), **stuck** (plan-band hail sent asking for what
-you need), or a **continuation hail to your own band** when verification
+you need), or a **continuation hail sent directly to your OWN session** — {"session": "<your session id>", "reply_to": "<this delivery's hail id>", ...} with a prompt-carried total count ("continuation N of 5"; never resets across threads; at 5, escalate to human instead). Never band-address a self-continuation: band routing can bind a cold sibling session when verification
 needs another turn. A turn that ends with only analysis strands the bean
 silently. If you are running long, send the continuation hail EARLY — "ask me
 to continue" is a dead end on an unattended turn.

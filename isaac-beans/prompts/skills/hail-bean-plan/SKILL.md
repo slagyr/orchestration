@@ -52,7 +52,7 @@ inherits the same rule: draft (or the parent's status), not a fresh `todo`.
 
 Every planning turn must end in exactly one of these states: adjustment made
 and **handed back** (work-band hail sent), **escalated to human** (comms
-sent), or a **continuation hail to your own band** (`reply_to` this delivery)
+sent), or a **continuation hail sent directly to your OWN session** — {"session": "<your session id>", "reply_to": "<this delivery's hail id>", ...} with a prompt-carried total count ("continuation N of 5"; never resets across threads; at 5, escalate to human instead). Never band-address a self-continuation: band routing can bind a cold sibling session
 when the decision needs more work. A turn that ends with only analysis — no
 note, no hail, no notification — strands the bean silently: the requester
 waits forever for a verdict that never comes. If you are running long, send
