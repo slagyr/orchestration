@@ -78,6 +78,22 @@ needs another turn. A turn that ends with only analysis strands the bean
 silently. If you are running long, send the continuation hail EARLY — "ask me
 to continue" is a dead end on an unattended turn.
 
+**If you do escalate to a human** (the continuation cap above; normally you route
+human escalation through the planner instead — see "When you're stuck, ask the
+planner"), that escalation is **terminal**: once the 🆘 comms are sent, do not
+re-hail, hand off, or continue. Mark the bean held so it is visibly waiting, not
+silently stranded — append a held note and commit/push it (`Isaac-Session`
+trailer):
+
+```
+## Held (awaiting human, <date>)
+
+Escalated to human by **<crew>**@<session>. Blocking: <one-line synopsis>.
+Resumes only on explicit human action. No crew re-picks this until then.
+```
+
+Nothing auto-resumes; a human resumes explicitly.
+
 ## Commit trailer
 
 Any verification-side commit in the beans repo should include the current

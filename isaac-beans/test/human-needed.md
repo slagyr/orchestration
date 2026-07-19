@@ -35,6 +35,13 @@ Follow the sequence exactly:
   chaining (one thread-id for the whole loop; band reach `:one` pins each
   role's session).
 - Planner cannot resolve, appends human note, commits/pushes (no return to worker).
+- **Escalation is terminal**: after the 🆘 comms, the planner sends NO further
+  hail — no work-band handback, no self-continuation, no re-hail. The bean is
+  left held, not re-queued.
+- **Held marker**: the planner appends a `## Held (awaiting human, <date>)` note
+  to the bean body (naming the blocker and that it resumes only on explicit human
+  action) and commits/pushes it, so the escalated bean is legibly distinct from a
+  bean under active work.
 - Human escalation uses the **coordinates from the band data block**
   (`notification-comm` for the at-a-glance channel, `human-help-comm` for
   the direct human contact) per the hail-bean-plan skill — nothing hardcoded.
@@ -50,6 +57,7 @@ Follow the sequence exactly:
 
   👉 Check the notification channel for full details.
   ```
-- Bean ends in-progress.
+- Bean ends in-progress **and held** (the `## Held` note present); nothing
+  auto-resumes it.
 - `:bean-id` is the only param on every hail; at-a-glance comms at each
   milestone, crew signed from ambient identity.

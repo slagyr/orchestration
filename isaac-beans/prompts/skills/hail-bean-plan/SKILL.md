@@ -104,3 +104,29 @@ hardcode channels or addresses — read them from the incoming band data.
 - Additionally send to the human-help-comm coordinates (comm = its :id, target/service from its keys): content like "🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: {{bean-id}}\nFrom: **{{crew}}**\n\n[short synopsis]\n\n👉 Check the notification-comm channel for full details."
 
 - Use the synopsis from the hail instructions or bean body. Make the message visually clear with emojis, newlines, and structure.
+
+### Escalation is terminal — HOLD the bean, do not re-queue
+
+Once the 🆘 human-help comms are sent, **the turn is over**. Human escalation is a
+full stop, not another leg of the loop:
+
+- Do **not** hand back to the work band, do **not** send a self-continuation, do
+  **not** re-hail anything. You just asked a human to look at this bean —
+  re-queuing work on it is exactly the churn escalation exists to end. The bean
+  stays put until a human acts.
+- **Mark it held so it is visibly waiting, not silently stranded.** Append a
+  held note to the bean body and commit/push it (with the `Isaac-Session`
+  trailer), so an escalated bean is legibly distinct from a bean under active
+  work:
+
+  ```
+  ## Held (awaiting human, <date>)
+
+  Escalated to human by **<crew>**@<session>. Blocking: <one-line synopsis>.
+  Resumes only on explicit human action (re-hail the work/plan band, or
+  re-promote). No crew re-picks this until then.
+  ```
+
+- **Nothing auto-resumes.** There is no code backstop that re-drives a held
+  bean; a human resumes it explicitly. Leaving it held + `in-progress` with the
+  note is the correct, quiet, inspectable end state.

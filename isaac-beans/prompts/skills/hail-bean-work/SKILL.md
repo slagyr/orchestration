@@ -172,6 +172,24 @@ nobody is there to ask.
   block) describing where the work stands and what is blocking completion.
   Endless self-continuation is silent failure with extra steps.
 
+**Escalation is terminal — HOLD the bean, do not re-queue.** Once the 🆘 comms
+are sent, the turn is over: do **not** hand off, do **not** send another
+continuation, do **not** re-hail. You just asked a human to look at this bean;
+re-queuing work on it is the churn escalation exists to end. Mark it held so it
+is visibly waiting (not silently stranded) — append a held note to the bean body
+and commit/push it (with the `Isaac-Session` trailer):
+
+```
+## Held (awaiting human, <date>)
+
+Escalated to human by **<crew>**@<session>. Blocking: <one-line synopsis>.
+Resumes only on explicit human action (re-hail the work/plan band, or
+re-promote). No crew re-picks this until then.
+```
+
+Nothing auto-resumes; a human resumes explicitly. Held + `in-progress` with the
+note is the correct, quiet end state.
+
 ## Hand off to verify
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.
