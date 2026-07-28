@@ -1,8 +1,8 @@
 # Reusing Orchestration on Other Projects
 
-This setup (sometimes called "orchestration") allows hail-driven bean workflows across multiple roles (planner, worker, verifier) with exact session handoffs, at-a-glance notifications, and support for conflict loops or human escalation.
+This setup (sometimes called "orchestration") allows hail-driven bean workflows across multiple roles (planner, worker, verifier, optional hardener) with exact session handoffs, at-a-glance notifications, and support for conflict loops or human escalation.
 
-The core skills and commands are designed to be **project-agnostic**. Only the hail band configs are project-specific.
+The core skills and commands are designed to be **project-agnostic**. Only the hail band configs are project-specific. **Quality thresholds** live in the product repo’s `.hardening.edn`, not in these skills.
 
 ## 1. Role Home Directories
 
@@ -12,13 +12,15 @@ On the target machine (e.g. zanebot) create:
 /Users/zane/agents/<project-name>/
 ├── plan/
 ├── work/
-└── verify/
+├── verify/
+└── harden/    # optional — only if you configure harden-band
 ```
 
 **Role boundaries (enforced by the hail-bean-* skills):**
 - **Planner** — plans only. Adjusts / splits / unblocks / clarifies beans; does **not** implement, run tests, verify, or promote beans to `todo`. Only a human promotes a bean to `todo`.
 - **Worker** — implements a claimed (`todo` → `in-progress`) bean, then hands to the verifier.
-- **Verifier** — verifies against acceptance and completes (or bounces / escalates); never implements.
+- **Verifier** — verifies against acceptance; on pass, either completes the pipeline or hands to harden when `harden-band` is set; never implements.
+- **Hardener** (optional) — enforces project quality bars (`.hardening.edn`); never implements acceptance.
 
 ## 2. Clone the Beans Repo in Each Role Home
 
@@ -33,17 +35,20 @@ Do the same under `work/` and `verify/`.
 
 The bootstrap logic discovers the directory containing `.beans/` (it does not require the session cwd to point directly at the clone).
 
-## 3. Create Three Dedicated Isaac Sessions
+## 3. Create Dedicated Isaac Sessions
 
 Create and run these sessions:
 
-| Session Name     | Crew      | cwd                                      | Tags                  |
-|------------------|-----------|------------------------------------------|-----------------------|
-| `<project>-plan` | `prowl`   | `/Users/zane/agents/<project>/plan`      | `[:<project>]`        |
-| `<project>-work` | `scrapper`| `/Users/zane/agents/<project>/work`      | `[:<project> :ci]`    |
-| `<project>-verify`| `perceptor` | `/Users/zane/agents/<project>/verify`  | `[:<project>]`        |
+| Session Name      | Crew        | cwd                                       | Tags                         |
+|-------------------|-------------|-------------------------------------------|------------------------------|
+| `<project>-plan`  | `prowl`     | `/Users/zane/agents/<project>/plan`       | `[:<project>]`               |
+| `<project>-work`  | `scrapper`  | `/Users/zane/agents/<project>/work`       | `[:<project> :ci]`           |
+| `<project>-verify`| `perceptor` | `/Users/zane/agents/<project>/verify`     | `[:<project> :verify]`       |
+| `<project>-harden`| `perceptor` | `/Users/zane/agents/<project>/harden`     | `[:<project> :harden]` *(opt)* |
 
-The session names and tags are used for hail routing and isolation.
+The session names and tags are used for hail routing and isolation. Give
+verify and harden **distinct tags** so they do not share one session pool
+when both use crew `perceptor`.
 
 **Important targeting rules (see hail-bean-verify/SKILL.md for full details):**
 - Hail using the band (e.g. `{"band": "<project>-work"}`) — the band config's `session-tags`, crew, prefer, reach etc. select the session(s).
@@ -54,12 +59,13 @@ The session names and tags are used for hail routing and isolation.
 
 ## 4. Project-Specific Hail Band Configs
 
-Create four files under `~/.isaac/config/hail/` on the target:
+Create files under `~/.isaac/config/hail/` on the target:
 
-- `_<project>-template.md` — the base template: shared frontmatter + `data:`
+- `_<project>-template` (edn or md) — shared frontmatter + `data:`
 - `<project>-plan.md`
 - `<project>-work.md`
 - `<project>-verify.md`
+- `<project>-harden.md` — **only if** you enable the harden stage
 
 **Start by copying** the templates from this repo:
 
@@ -82,16 +88,22 @@ Customize in the template:
   - `notification-comm:` (typically `{:id :discord :channel "pub"}`)
   - `human-help-comm:` (e.g. `{:id :imessage :target "<address>"}`)
   - `plan-band`, `work-band`, `verify-band` (matching your band names)
+  - **`harden-band` (optional)** — if present, verify pass tags `unhardened`
+    and hails this band; if **omitted**, verify is terminal (work → verify only)
 
 Customize per band file:
 
-- `crew:`
+- `crew:` and role-specific `session-tags:` when two roles share a crew
 - Notification text expectations (update examples/slugs as desired)
-- Load the correct reusable skill (`hail-bean-plan`, `hail-bean-work`, or `hail-bean-verify`)
+- Load the correct reusable skill (`hail-bean-plan`, `hail-bean-work`,
+  `hail-bean-verify`, or `hail-bean-harden`)
 
 The band `data:` is delivered with every hail — including hails that override
 the prompt — so crews can hail each other with explanatory prompts without
 losing coordinates.
+
+**Pipeline coupling is data-only:** skills hand off to band names from the
+data block; they do not hardcode a product-specific next step.
 
 Use `prefer: :oldest` for pooled work sessions. The router defaults to
 `recent` when no preference is set, which concentrates all `reach :one` work on
@@ -104,8 +116,9 @@ the full structure and examples.
 
 The reusable logic lives in:
 
-- `prompts/skills/hail-bean-{work,verify,plan}/` — orchestration-owned skills (this repo)
-- Commands (`plan`, `work`, `verify`, `plan-with-features`) — canonical in
+- `prompts/skills/hail-bean-{work,verify,plan,harden}/` — orchestration-owned skills (this repo)
+- Commands (`plan`, `work`, `verify`, `harden`, `plan-with-features`) and
+  skill `hardening` — canonical in
   [agent-lib](https://github.com/slagyr/agent-lib); **never copy them into this
   repo**. Fetch them from agent-lib raw URLs per the
   [toolbox](https://github.com/slagyr/toolbox) procedure.
@@ -114,7 +127,17 @@ You must deploy:
 
 1. Your project-specific band files → `~/.isaac/config/hail/`
 2. The `prompts/skills/` tree → `~/.isaac/prompts/skills/`
-3. The agent-lib commands → `~/.isaac/prompts/commands/` (toolbox fetch, not repo copy)
+3. The agent-lib commands + hardening skill → `~/.isaac/prompts/` (toolbox fetch, not repo copy)
+
+### Project quality config (product repo, not hail)
+
+In the **implementation** repository (not necessarily the beans repo):
+
+```text
+.hardening.edn    # which steps run + thresholds (optional; skill defaults apply)
+```
+
+Workers and hardener both read it. See agent-lib `commands/harden.md`.
 
 On the target, maintain a deployment manifest skill (see zanebot's
 `zane-toolbox`) listing every deployed component and its canonical source.
@@ -167,7 +190,8 @@ Without the `"pub"` name entry, `comm_send` to the public channel will fail (eve
 │   └── hail/
 │       ├── <project>-plan.md
 │       ├── <project>-work.md
-│       └── <project>-verify.md
+│       ├── <project>-verify.md
+│       └── <project>-harden.md   # optional
 ├── prompts/          # (copy or symlink the reusable tree)
 │   ├── commands/
 │   └── skills/
@@ -176,7 +200,9 @@ Without the `"pub"` name entry, `comm_send` to the public channel will fail (eve
 └── README.md
 ```
 
-The prompts can be shared across all projects using this style. Only the three band files + any project-specific notification text need to be maintained per project.
+The prompts can be shared across all projects using this style. Only the band
+files + any project-specific notification text need to be maintained per
+project. Thresholds stay in each product’s `.hardening.edn`.
 
 ## Verification
 

@@ -5,14 +5,14 @@ Test harness and custom Isaac configuration for exercising the orchestration (ha
 ## Layout
 
 - `isaac-beans/` — the payload that gets installed into an Isaac root. Matches the directory structure expected under `~/.isaac/`:
-  - `config/hail/` — band definitions (`orchestration-plan`, `orchestration-work`, `orchestration-verify`)
+  - `config/hail/` — band definitions (`orchestration-plan`, `orchestration-work`, `orchestration-verify`, optional `orchestration-harden`)
   - `config/discord-channels.example.edn` — reference for the `:discord/channels` map (name ↔ snowflake) required for `comm_send` with channel *names* like "pub"
-  - `prompts/commands/` and `prompts/skills/` — the `plan`/`work`/`verify` commands and the `hail-bean-*` skills
+  - `prompts/skills/` — hail-bean-{plan,work,verify,harden} skills (commands live in agent-lib)
   - `install.sh` — the installer (see below)
 - `isaac-ci/` — reusable GitHub Actions + hail-band package for sending CI failure hails to Isaac on green -> red transitions, with its own installer and reuse notes
 - `test/shared.md` — common setup (Remote Access, Installation, Given, Pre-When)
 - `test/verification-guide.md` — verification procedure, evidence patterns, terminology, and detailed checks
-- `test/happy-path.md`, `verify-fail.md`, `plan-review.md`, `human-needed.md` — the executable test specifications (slim Given/When/Then)
+- `test/happy-path.md`, `harden-path.md`, `verify-fail.md`, `plan-review.md`, `human-needed.md` — the executable test specifications (slim Given/When/Then). These are **manual process checks** against a live Isaac target (SSH + transcripts + beans), not automated unit tests of hail.
 - `.beans.yml` — bean tracker config for this project itself (prefix `orchestration-`)
 
 ## Quick start (install on target)
@@ -48,7 +48,8 @@ All verification uses the remote (or local) target from `.env`. Detailed evidenc
 
 - The real hostname and tokens live only in the git-ignored `.env`.
 - This setup deliberately uses `prompts/` (instead of the legacy `.toolbox/`) at the global Isaac level.
-- The three dedicated sessions (orchestration-plan / work / verify) with crews prowl / scrapper / perceptor are assumed to exist with the correct cwds and `:orchestration` tag.
+- Dedicated sessions (orchestration-plan / work / verify / harden) with crews prowl / scrapper / perceptor are assumed to exist with the correct cwds and tags (`:orchestration`, plus `:verify` / `:harden` for routing isolation).
+- Pipeline is data-driven: omit `harden-band` from template data for work→verify only; include it (stock template) for work→verify→harden.
 - After file changes, sessions typically need to be restarted or reloaded to pick up updated skills/commands/bands.
 
 ## Discord channel configuration (for comm_send name resolution)

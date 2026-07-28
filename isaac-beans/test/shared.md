@@ -66,9 +66,11 @@ See `isaac-beans/install.sh` for details and the exact remote commands.
 - The directory /Users/zane/agents/orchestration/plan exists.
 - The directory /Users/zane/agents/orchestration/work exists.
 - The directory /Users/zane/agents/orchestration/verify exists.
+- The directory /Users/zane/agents/orchestration/harden exists (when testing harden-path / stock template with `harden-band`).
 - An orchestration-plan session exists with crew prowl and cwd /Users/zane/agents/orchestration/plan.
 - An orchestration-work session exists with crew scrapper and cwd /Users/zane/agents/orchestration/work.
-- An orchestration-verify session exists with crew perceptor and cwd /Users/zane/agents/orchestration/verify.
+- An orchestration-verify session exists with crew perceptor, tags including `:verify`, cwd /Users/zane/agents/orchestration/verify.
+- An orchestration-harden session exists with crew perceptor, tags including `:harden`, cwd /Users/zane/agents/orchestration/harden (when `harden-band` is configured).
 
 ## Pre-When checks (confirm setup before the hail to work)
 
@@ -78,15 +80,18 @@ See `verification-guide.md` for the full verification procedure, evidence patter
   - `ls /Users/zane/agents/orchestration/plan`
   - `ls /Users/zane/agents/orchestration/work`
   - `ls /Users/zane/agents/orchestration/verify`
+  - `ls /Users/zane/agents/orchestration/harden` (when harden-band is in template data)
 
-- Confirm the three sessions exist with correct crew and cwd (via session listing tools, transcript listings, or inspecting the relevant Isaac session metadata):
+- Confirm the role sessions exist with correct crew and cwd (via session listing tools, transcript listings, or inspecting the relevant Isaac session metadata):
   - orchestration-plan → crew=prowl, cwd=/Users/zane/agents/orchestration/plan
   - orchestration-work → crew=scrapper, cwd=/Users/zane/agents/orchestration/work
-  - orchestration-verify → crew=perceptor, cwd=/Users/zane/agents/orchestration/verify
+  - orchestration-verify → crew=perceptor, tags `:orchestration` + `:verify`, cwd=.../verify
+  - orchestration-harden → crew=perceptor, tags `:orchestration` + `:harden`, cwd=.../harden (when testing harden)
 
 - (Required) Confirm session tags and naming isolation:
   - Sessions carry the `:orchestration` tag (from band frontmatter).
-  - Bands in use are `orchestration-plan` / `orchestration-work` / `orchestration-verify` (not any `isaac-*`).
+  - Verify vs harden use distinct extra tags (`:verify` / `:harden`) so they do not steal each other's hails.
+  - Bands in use are `orchestration-plan` / `orchestration-work` / `orchestration-verify` / optional `orchestration-harden` (not any `isaac-*`).
   - Grep session metadata or early transcript lines for confirmation.
 
 - Confirm a *brand new* bean was created specifically for *this run of the test* (do not reuse any previous bean ID such as orchestration-lrlu, orchestration-43d1, etc. — check `beans list` or git before creation to ensure the ID is fresh):

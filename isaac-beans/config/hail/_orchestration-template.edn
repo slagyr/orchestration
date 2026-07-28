@@ -6,4 +6,8 @@
                 :human-help-comm   {:id :imessage :target "micahmartin@mac.com"}
                 :plan-band         "orchestration-plan"
                 :work-band         "orchestration-work"
-                :verify-band       "orchestration-verify"}}
+                :verify-band       "orchestration-verify"
+                ;; Optional pipeline stage. When present, verify pass tags the
+                ;; bean unhardened and hails this band. Omit on projects that
+                ;; want work → verify only (e.g. some Isaac installs).
+                :harden-band       "orchestration-harden"}}

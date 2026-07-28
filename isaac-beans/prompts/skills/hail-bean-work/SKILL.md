@@ -203,6 +203,10 @@ note is the correct, quiet end state.
 - Hail the **verify-band** (name from the incoming data block):
     {"band": "<verify-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>"}
 - Verifier pulls the beans repo root before reviewing.
+- **Do not hail harden yourself.** If the project uses a harden stage, verify
+  hands off via optional `harden-band` in data. Workers **should** still meet
+  project quality bars (`.hardening.edn` / harden command defaults) so harden
+  is enforcement, not first contact with the bar.
 
 ## Hand off to planner (e.g. on requirements conflict)
 

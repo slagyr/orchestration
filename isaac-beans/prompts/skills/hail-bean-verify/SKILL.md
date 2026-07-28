@@ -20,7 +20,18 @@ Use when a hail (or band prompt) assigns bean verification.
 5. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
 6. Verify the bean per `prompts/commands/verify.md`.
 7. **A bean CANNOT pass if its acceptance scenarios are still @wip or red, or if no implementation exists.** Before passing, confirm the acceptance scenarios have had @wip removed and the suite runs GREEN, and that real implementation commits exist (not just scenario/doc commits). If the acceptance is unmet, this is a FAIL, not a pass — return to the work-band. A verifier that passes unbuilt work is the worst failure mode.
-7b. If pass: `beans update <id> --remove-tag=unverified`
+7b. **If pass:** `beans update <id> --status=completed --remove-tag=unverified`, then
+    **data-driven next step** (do not hardcode a product pipeline):
+    - If the delivery data block includes **`harden-band`** (non-blank string):
+      1. `beans update <id> --tag=unhardened`
+      2. Commit + push beans (`Isaac-Session` trailer).
+      3. Hail the **harden-band** exactly as named in data:
+         `{"band": "<harden-band value>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>"}`
+      4. Notify verify pass (and that harden was queued). Do **not** treat the
+         pipeline as finished until harden completes.
+    - If **`harden-band` is absent**: pipeline is **terminal** after verify.
+      Commit + push if needed; notify pass. (Projects without a harden stage —
+      e.g. some Isaac installs — stay on work → verify only.)
 8. **If fail:** first record a durable fail marker, then decide where to hand
    off based on how many times this bean has already failed.
 
@@ -70,10 +81,12 @@ Use when a hail (or band prompt) assigns bean verification.
 
 ## Never end a turn in limbo
 
-Every verification turn must end in exactly one of these states: **pass**
-(bean completed, tag removed, notification sent), **fail** (fail note +
-return/escalation hail sent), **stuck** (plan-band hail sent asking for what
-you need), or a **continuation hail sent directly to your OWN session** — {"session": "<your session id>", "reply_to": "<this delivery's hail id>", ...} with a prompt-carried total count ("continuation N of 5"; never resets across threads; at 5, escalate to human instead). Never band-address a self-continuation: band routing can bind a cold sibling session when verification
+Every verification turn must end in exactly one of these states: **pass
+terminal** (completed, no unverified, no harden-band, notify), **pass handed
+to harden** (completed + unhardened, harden-band hail sent, notify), **fail**
+(fail note + return/escalation hail sent), **stuck** (plan-band hail sent
+asking for what you need), or a **continuation hail sent directly to your OWN
+session** — {"session": "<your session id>", "reply_to": "<this delivery's hail id>", ...} with a prompt-carried total count ("continuation N of 5"; never resets across threads; at 5, escalate to human instead). Never band-address a self-continuation: band routing can bind a cold sibling session when verification
 needs another turn. A turn that ends with only analysis strands the bean
 silently. If you are running long, send the continuation hail EARLY — "ask me
 to continue" is a dead end on an unattended turn.
@@ -114,8 +127,9 @@ The current session id comes from your session identity block.
 ## Incoming hail data
 
 **:bean-id is the only required param.** Everything else you need arrives in
-the delivery's data block (bean-repo, plan-band, work-band, notification-comm)
-or lives in the bean itself (scope, acceptance criteria, worker notes).
+the delivery's data block (bean-repo, plan-band, work-band, notification-comm,
+optional **harden-band**) or lives in the bean itself (scope, acceptance
+criteria, worker notes).
 
 Use the bean id to look up the bean and review it against the acceptance criteria (including any explicit first-fail instructions in the bean body).
 
@@ -145,7 +159,9 @@ Fill `<crew>` and `<session>` from **your own identity** (both are in your
 system prompt's session identity block). Use exactly these formats for content:
 
 - On starting review: `<bean-id> 👁️ **<crew>**@<session> verification started`
-- On pass: `<bean-id> 🟢 **<crew>**@<session> verification passed`
+- On pass (terminal, no harden-band): `<bean-id> 🟢 **<crew>**@<session> verification passed`
+- On pass (handed to harden): `<bean-id> 🟢 **<crew>**@<session> verification passed → harden`
+  (send AFTER the harden-band hail succeeds)
 - On fail (1st, back to worker): `<bean-id> ❌ **<crew>**@<session> verification failed (reason...) → back to worker`
 - On escalation (2nd+ fail → planner): `<bean-id> 🆙 **<crew>**@<session> escalated to planner (N verify-fails, no progress) → plan`
   (send either AFTER the return/escalation hail so the at-a-glance reflects whose court the bean is in)

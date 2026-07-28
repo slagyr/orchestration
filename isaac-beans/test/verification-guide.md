@@ -11,9 +11,10 @@ Run checks roughly in order and report **pass/fail + specific evidence** for eac
 **Critical rule for every run:** Always create a *brand new* bean with a unique ID (include a run timestamp or suffix in the title). Never reuse old bean IDs. Confirm freshness before starting the test steps.
 
 ## Terminology (used across all tests)
-- Role homes / sessions / bands: `orchestration-*` and `/Users/zane/agents/orchestration/{plan,work,verify}`.
+- Role homes / sessions / bands: `orchestration-*` and `/Users/zane/agents/orchestration/{plan,work,verify,harden}`.
 - Project / repo / clone leaf dir / .beans prefix: `orchestration` (bean-repo in bands is `git@github.com:slagyr/orchestration.git`).
-- Session tag used: `:orchestration`.
+- Session tags: `:orchestration` plus role tags `:verify` / `:harden` where needed.
+- Pipeline: work → verify → (optional) harden when data includes `harden-band`.
 
 ## Common Evidence Collection Patterns
 
@@ -58,11 +59,23 @@ Follow shared.md remote access + pre-when first.
 - Confirm orchestration-work (scrapper) turn: claim, observations, handoff to verify.
 - Bean reaches `in-progress` + `unverified`.
 - Verify clone established under work role home.
-- orchestration-verify (perceptor) turn: receives, passes, completes bean (`status=completed`, no unverified tag).
+- orchestration-verify (perceptor) turn: receives, passes.
+  - **Without** `harden-band`: `status=completed`, no `unverified`, no `unhardened`.
+  - **With** `harden-band` (stock template): see Harden Path checks below.
 - Plan clone visible under plan role home.
 - comm_send calls at key milestones (claim, handoff, verify start, pass) with correct at-a-glance content.
 - Git history shows the state changes.
 - No errors in transcripts.
+
+## Harden Path Specific Checks
+
+Follow shared.md (including harden role home + session) first. Use a process-test bean.
+
+- Work → verify as usual; verify pass **tags `unhardened`** and hails **`orchestration-harden`** (exact data value).
+- orchestration-harden turn: hardening started notification; process-test skip; removes `unhardened`; `status=completed`.
+- Final bean: completed, no unverified, no unhardened.
+- No Cloverage/tool failure required for process-test (skip is correct).
+- comm_send includes verify `→ harden` and harden passed lines.
 
 ## Verify-Fail Specific Checks
 
