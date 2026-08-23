@@ -145,39 +145,26 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
 
 ## Never end a turn in limbo
 
-Every work turn must end in exactly one of these states: bean **completed**,
-**handoff hail sent** (verify-band), **conflict hail sent** (plan-band), or a
-**continuation hail sent to yourself** (see below) when work remains.
-Anything else strands the bean silently — claimed, no pending hail, nobody
-coming back.
+Every work turn must end in exactly one of these states: bean **completed**
+(unverified handoff hail sent), **conflict hail sent** (plan-band), or
+**HOLD + human escalate** if you cannot finish. Anything else strands the
+bean silently — claimed, no pending hail, nobody coming back.
 
-If you are deep in a long investigation and sense you may not finish this
-turn, send the continuation hail EARLY — before you run out of tool calls. A
-final message like "ask me to continue" is a dead end on an unattended turn:
-nobody is there to ask.
+**Do not hail yourself to continue.** No session-direct continuation hails,
+no "continuation N of 5", no sending the next hail EARLY. The tool-loop
+budget defaults to 500 cycles; stay in this turn. A final message like
+"ask me to continue" is a dead end on an unattended turn.
 
-### Continuation hails: session-direct, budgeted
-
-- **Address your OWN session directly** — `{"session": "<your session id>",
-  "params": {"bean-id": "..."}, "reply_to": "<this delivery's hail id>",
-  "prompt": "..."}`. Never band-address a self-continuation: band routing can
-  bind a *sibling session* that starts cold in a different directory. (The
-  band+params-only rule governs handoffs BETWEEN roles, not self-hails.)
-- **Carry a total continuation count in the prompt** ("continuation 3 of 5
-  for this bean") — read it from the incoming prompt and increment; it NEVER
-  resets, even across new hail threads. System re-queue counters reset when
-  you create a new hail; your prompt-carried count is the real budget.
-- **At 5 total continuations, STOP.** Do not send continuation 6. Send the
-  🆘 human-help escalation (notification-comm + human-help-comm from the data
-  block) describing where the work stands and what is blocking completion.
-  Endless self-continuation is silent failure with extra steps.
+If you still cannot finish (loop cap, blocked, lost), send the 🆘 human-help
+escalation (notification-comm + human-help-comm from the data block) and HOLD.
+Do **not** re-hail.
 
 **Escalation is terminal — HOLD the bean, do not re-queue.** Once the 🆘 comms
-are sent, the turn is over: do **not** hand off, do **not** send another
-continuation, do **not** re-hail. You just asked a human to look at this bean;
-re-queuing work on it is the churn escalation exists to end. Mark it held so it
-is visibly waiting (not silently stranded) — append a held note to the bean body
-and commit/push it (with the `Isaac-Session` trailer):
+are sent, the turn is over: do **not** hand off, do **not** re-hail. You just
+asked a human to look at this bean; re-queuing is the churn escalation exists
+to end. Mark it held so it is visibly waiting (not silently stranded) — append
+a held note to the bean body and commit/push it (with the `Isaac-Session`
+trailer):
 
 ```
 ## Held (awaiting human, <date>)

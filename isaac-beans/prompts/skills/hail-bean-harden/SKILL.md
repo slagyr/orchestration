@@ -61,9 +61,9 @@ session id retrieved via `hail_get`.
 ## Never end a turn in limbo
 
 Every harden turn ends in exactly one of: **pass** (tag removed, notify),
-**fail** (note + work/plan hail), **stuck** (plan-band hail asking for what
-you need), or a **session-direct continuation** to yourself (budget 5, then
-human escalation / hold — same pattern as verify).
+**fail** (note + work/plan hail), or **stuck** (plan-band hail asking for
+what you need). **Do not hail yourself to continue.** Stay in this turn
+(tool-loop default 500); HOLD + human escalate if you cannot finish.
 
 ## Commit trailer
 

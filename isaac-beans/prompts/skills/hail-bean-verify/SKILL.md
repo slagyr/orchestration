@@ -84,19 +84,16 @@ Use when a hail (or band prompt) assigns bean verification.
 Every verification turn must end in exactly one of these states: **pass
 terminal** (completed, no unverified, no harden-band, notify), **pass handed
 to harden** (completed + unhardened, harden-band hail sent, notify), **fail**
-(fail note + return/escalation hail sent), **stuck** (plan-band hail sent
-asking for what you need), or a **continuation hail sent directly to your OWN
-session** — {"session": "<your session id>", "reply_to": "<this delivery's hail id>", ...} with a prompt-carried total count ("continuation N of 5"; never resets across threads; at 5, escalate to human instead). Never band-address a self-continuation: band routing can bind a cold sibling session when verification
-needs another turn. A turn that ends with only analysis strands the bean
-silently. If you are running long, send the continuation hail EARLY — "ask me
-to continue" is a dead end on an unattended turn.
+(fail note + return/escalation hail sent), or **stuck** (plan-band hail sent
+asking for what you need). **Do not hail yourself to continue.** No
+session-direct continuation hails, no "N of 5". Stay in this turn (tool-loop
+default 500). A turn that ends with only analysis strands the bean silently.
 
-**If you do escalate to a human** (the continuation cap above; normally you route
-human escalation through the planner instead — see "When you're stuck, ask the
-planner"), that escalation is **terminal**: once the 🆘 comms are sent, do not
-re-hail, hand off, or continue. Mark the bean held so it is visibly waiting, not
-silently stranded — append a held note and commit/push it (`Isaac-Session`
-trailer):
+**If you do escalate to a human** (normally you route human escalation through
+the planner instead — see "When you're stuck, ask the planner"), that
+escalation is **terminal**: once the 🆘 comms are sent, do not re-hail, hand
+off, or continue. Mark the bean held so it is visibly waiting, not silently
+stranded — append a held note and commit/push it (`Isaac-Session` trailer):
 
 ```
 ## Held (awaiting human, <date>)
