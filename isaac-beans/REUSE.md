@@ -163,13 +163,13 @@ In `~/.isaac/config/isaac.edn` you **must** have a name resolution entry:
                                       ...}}}
 ```
 
-Without the `"pub"` name entry, `comm_send` to the public channel will fail (even if the skills always target it).
+Without the `"pub"` name entry, `comm__send` to the public channel will fail (even if the skills always target it).
 
 ## 7. Additional Requirements & Gotchas
 
 - **Beans repo prefix**: Your `.beans.yml` defines the bean ID prefix (e.g. `myproject-`).
 - **Implementation clones** (for split-repo projects): If your beans drive work in separate repos, ensure the relevant clones exist as siblings under the role homes. The work skill looks for them.
-- **Hail params**: `:bean-id` is the only required param on every hail. Coordinates travel in the band `data:`; explanations travel in prompt overrides; thread continuity comes from `reply_to` (prior hails fetchable with `hail_get`).
+- **Hail params**: `:bean-id` is the only required param on every hail. Coordinates travel in the band `data:`; explanations travel in prompt overrides; thread continuity comes from `reply_to` (prior hails fetchable with `hail__get`).
 - **Notification strings**: The skills contain "ALWAYS use exactly this format" lists for at-a-glance messages. Customize the expected strings in your bands/skills for the new project.
 - **Human escalation**: The procedure lives in the `hail-bean-plan` skill; the coordinates (`notification-comm`, `human-help-comm`) live in your base template's `data:`.
 - **Git access**: The remote clones (plan/work/verify) perform `beans update` + commit + push. They need appropriate permissions.

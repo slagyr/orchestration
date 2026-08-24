@@ -112,7 +112,7 @@ first, the ➡️ line after it succeeds — a feed line must never claim a hand
 that has not been persisted.
 
 At key milestones (claim, observations, handoff), send a concise progress
-update using `comm_send`. Coordinates come from the delivery's data block:
+update using `comm__send`. Coordinates come from the delivery's data block:
 comm = notification-comm's :id, target = its :channel (name or snowflake).
 
 Fill `<crew>` and `<session>` from **your own identity** (both are in your
@@ -128,7 +128,7 @@ formats for content:
 ID first for recognition; emoji for quick status scanning (🟢 claim/positive,
 📝 observations, ➡️ handoff).
 
-Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
+Example: comm__send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
 
 ## Band data, prompts, and threading
 
@@ -141,7 +141,7 @@ Example: comm_send with comm="discord" content="orchestration-nj8a 🟢 **scrapp
   the band's default instructions but the data still arrives.
 - **Thread with reply_to.** Set "reply_to" to the incoming hail's id on every
   responding hail; the thread id is inherited automatically. Prior hails in the
-  thread (including their prompts and data) are fetchable with `hail_get`.
+  thread (including their prompts and data) are fetchable with `hail__get`.
 
 ## Never end a turn in limbo
 
@@ -180,7 +180,7 @@ note is the correct, quiet end state.
 ## Hand off to verify
 
 - Worker: `in-progress` + `tag=unverified`, push the beans repo `.beans/` with any notes.
-- Use the `hail-send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
+- Use the `hail__send` tool with flat snake_case top-level keys (no "frequencies" wrapper).
 - **Copy the band value EXACTLY from your delivery's data block — never type it
   from memory.** A typo'd band name routes nowhere and dead-letters silently.
 - **Band handoffs carry the `band` key and `params` ONLY** — never add
@@ -199,11 +199,11 @@ note is the correct, quiet end state.
 
 - When the bean cannot satisfy verifier standards (per failure note or your judgement), or per explicit bean instructions:
   - Keep status in-progress (or as appropriate), append observations about the conflict.
-  - Send comm_send with content exactly: "orchestration-xxx ➡️ **scrapper** handed off to planner (plan-review-loop)"
+  - Send comm__send with content exactly: "orchestration-xxx ➡️ **scrapper** handed off to planner (plan-review-loop)"
   - Hail the **plan-band** with a prompt override explaining the conflict:
     {"band": "<plan-band value>", "params": {"bean-id": "{{bean-id}}"}, "reply_to": "<incoming hail id>", "prompt": "Conflict detected on bean {{bean-id}}: [summary from verifier note and requirements]. Returning for planner adjustment."}
 - The planner will adjust (e.g. add unblock note) and hand back via the work-band.
 
 The bean id travels in params; explanations travel in the prompt override; the
 details of what was done live in the bean body; earlier context lives in the
-thread (`hail_get`).
+thread (`hail__get`).

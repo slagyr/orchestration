@@ -25,7 +25,7 @@ Use when a hail (or band prompt) assigns bean verification.
     - If the delivery data block includes **`harden-band`** (non-blank string):
       1. `beans update <id> --tag=unhardened`
       2. Commit + push beans (`Isaac-Session` trailer).
-      3. Hail the **harden-band** exactly as named in data:
+      3. Hail the **harden-band** exactly as named in data, via `hail__send`:
          `{"band": "<harden-band value>", "params": {"bean-id": "<id>"}, "reply_to": "<incoming-id>"}`
       4. Notify verify pass (and that harden was queued). Do **not** treat the
          pipeline as finished until harden completes.
@@ -70,7 +70,7 @@ Use when a hail (or band prompt) assigns bean verification.
      (session-tags, crew, prefer, reach) will select an appropriate worker
      session.
    - Add a `session` key **only** if you have retrieved a *concrete* session id
-     (e.g. "isaac-work-1" or "orchestration-work") via `hail_get` on the
+     (e.g. "isaac-work-1" or "orchestration-work") via `hail__get` on the
      thread (look for the worker's originating hail).
    - **Never** use the band name itself (e.g. "isaac-work", "orchestration-work")
      as a `:session` value. Band names are selectors, not session names.
@@ -133,9 +133,9 @@ Use the bean id to look up the bean and review it against the acceptance criteri
 **Thread with reply_to.** Set "reply_to" to the incoming hail's id on every
 responding hail; the thread id is inherited automatically. Prior hails in the
 thread (the worker's handoff, earlier fails) — including their prompts and
-data — are fetchable with `hail_get`.
+data — are fetchable with `hail__get`.
 
-Use `hail_get` to inspect the worker's prior hail if you need its exact
+Use `hail__get` to inspect the worker's prior hail if you need its exact
 session id for a direct return (rare; usually the band is sufficient and safer).
 
 ## When you're stuck, ask the planner — never drop the bean
@@ -149,7 +149,7 @@ proceed is a question for the planner, not a dead end.
 
 ## Notifications
 
-Send updates using `comm_send` at key points. Coordinates come from the
+Send updates using `comm__send` at key points. Coordinates come from the
 delivery's data block: comm = notification-comm's :id, target = its :channel.
 
 Fill `<crew>` and `<session>` from **your own identity** (both are in your

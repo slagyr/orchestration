@@ -12,7 +12,7 @@ delivery's data block; the bean id arrives in params.
 Review the bean and hand off as needed: on fail, hail the work-band with
 :bean-id, reply_to, and a --prompt override explaining the failure; if
 clarification is required, hail the plan-band the same way. Prior context is
-fetchable with hail_get via the thread.
+fetchable with hail__get via the thread.
 
 If pass, remove unverified tag and set completed. If the delivery data includes
 harden-band, also tag unhardened and hail that band; otherwise the pipeline

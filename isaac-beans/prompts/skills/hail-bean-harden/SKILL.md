@@ -56,7 +56,7 @@ hail **data** includes `harden-band`. Skills never invent this band.
 **Targeting rule (critical):** copy band values **exactly** from the delivery
 data block — never from memory. Band handoffs carry `band` + `params` only
 (no invented session-tags/crew filters). Use `session` only for a concrete
-session id retrieved via `hail_get`.
+session id retrieved via `hail__get`.
 
 ## Never end a turn in limbo
 
@@ -79,7 +79,7 @@ data block (`bean-repo`, `work-band`, `plan-band`, `notification-comm`, …).
 
 ## Notifications
 
-Use `comm_send` with notification-comm from data. Fill crew/session from
+Use `comm__send` with notification-comm from data. Fill crew/session from
 **your** identity:
 
 - Start: `<bean-id> 🔨 **<crew>**@<session> hardening started`

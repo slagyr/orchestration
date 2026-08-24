@@ -35,7 +35,7 @@ inherits the same rule: draft (or the parent's status), not a fresh `todo`.
 - Incoming hail has :bean-id in params; the situation arrives in the prompt
   override. Coordinates (bean-repo, notification-comm, work-band, ...) are in
   the delivery's data block. Earlier legs of the exchange are fetchable with
-  `hail_get` via the thread.
+  `hail__get` via the thread.
 - Pull latest, review the bean.
 - Make the adjustment (for test: simply append a note like "## Planner unblock note: bean is unblocked..."; in real use: clarify requirements, edit gherkin, etc.). The `## Planner` note is also the **reset marker for the verify-fail escalation counter** (see hail-bean-verify): once you add it, the verifier's fail count starts fresh, so the normal work→verify loop resumes. If a bean was escalated to you because it kept failing verification, your adjustment should change something real (rescope acceptance, split the bean, unblock, or fix the gherkin) — not just append an empty note — or it will simply bounce back.
 - Commit the change in the beans repo, including an `Isaac-Session: <session-id>`
@@ -59,7 +59,7 @@ strands the bean silently. "I'll think more" with no hail is a dead end.
 
 ## Handoff back to work
 
-- Use the `hail-send` tool with flat snake_case.
+- Use the `hail__send` tool with flat snake_case.
 - **Copy the band value EXACTLY from your delivery's data block — never type it
   from memory.** A typo'd band name routes nowhere and dead-letters silently.
 - **Band handoffs carry the `band` key and `params` ONLY** — never add
@@ -78,7 +78,7 @@ coordinates.
 
 ## Notifications
 
-Send using `comm_send` at key points (receive/adjust/handback). Coordinates
+Send using `comm__send` at key points (receive/adjust/handback). Coordinates
 come from the delivery's data block: comm = notification-comm's :id, target =
 its :channel.
 
@@ -97,7 +97,7 @@ The escalation coordinates come from the band data block: **notification-comm**
 (at-a-glance channel) and **human-help-comm** (direct human contact). Never
 hardcode channels or addresses — read them from the incoming band data.
 
-- Send comm_send to the notification-comm coordinates with content in at-a-glance format: `{{bean-id}} 🆘 **{{crew}}** human help needed (short synopsis)`
+- Send comm__send to the notification-comm coordinates with content in at-a-glance format: `{{bean-id}} 🆘 **{{crew}}** human help needed (short synopsis)`
 
 - Additionally send to the human-help-comm coordinates (comm = its :id, target/service from its keys): content like "🆘🚨 HUMAN HELP NEEDED 🚨🆘\n\nBean: {{bean-id}}\nFrom: **{{crew}}**\n\n[short synopsis]\n\n👉 Check the notification-comm channel for full details."
 
