@@ -20,6 +20,14 @@ Use when a hail (or band prompt) assigns bean verification.
 5. **Skills fallback** — read this file and `prompts/commands/verify.md` if `list_skills` fails.
 6. Verify the bean per `prompts/commands/verify.md`.
 7. **A bean CANNOT pass if its acceptance scenarios are still @wip or red, or if no implementation exists.** Before passing, confirm the acceptance scenarios have had @wip removed and the suite runs GREEN, and that real implementation commits exist (not just scenario/doc commits). If the acceptance is unmet, this is a FAIL, not a pass — return to the work-band. A verifier that passes unbuilt work is the worst failure mode.
+7a. **Land it on main BEFORE marking completed.** `completed` means "on main", not "green on a branch". For every repo the bean's acceptance names, from that repo's sibling checkout:
+    1. `git fetch origin && git checkout main && git pull --ff-only origin main`
+    2. If the bean's work is already on `origin/main` (the worker pushed to main): confirm the acceptance SHA is an ancestor (`git merge-base --is-ancestor <sha> origin/main`) and skip to step 5.
+    3. `git merge --no-edit bean/<id>` (a fast-forward is fine). **A conflict is a FAIL**, not something to resolve here: `git merge --abort`, then fail per step 8 with reason `branch conflicts with origin/main — rebase onto main and re-hand off`.
+    4. If the merge was NOT a fast-forward, re-run the bean's targeted acceptance gate on the merged head (main moved under the branch). Red → `git reset --hard origin/main` and FAIL with the reason. Green → `git push origin main`.
+    5. Append to the bean body (commit with the trailer):
+       `## Landed on main (<YYYY-MM-DD>)` followed by one `main-sha: <repo> <sha>` line per repo.
+    **A bean without a `main-sha:` line cannot be marked completed.** Do not pin, release, or deploy from this step — the train does that; your job ends at "it is on main and the gate is green there".
 7b. **If pass:** `beans update <id> --status=completed --remove-tag=unverified`, then
     **data-driven next step** (do not hardcode a product pipeline):
     - If the delivery data block includes **`harden-band`** (non-blank string):
@@ -82,8 +90,8 @@ Use when a hail (or band prompt) assigns bean verification.
 ## Never end a turn in limbo
 
 Every verification turn must end in exactly one of these states: **pass
-terminal** (completed, no unverified, no harden-band, notify), **pass handed
-to harden** (completed + unhardened, harden-band hail sent, notify), **fail**
+terminal** (landed on main with `main-sha:` recorded, completed, no unverified, no harden-band, notify), **pass handed
+to harden** (landed on main with `main-sha:` recorded, completed + unhardened, harden-band hail sent, notify), **fail**
 (fail note + return/escalation hail sent), or **stuck** (plan-band hail sent
 asking for what you need). **Do not hail yourself to continue.** No
 session-direct continuation hails, no "N of 5". Stay in this turn (tool-loop

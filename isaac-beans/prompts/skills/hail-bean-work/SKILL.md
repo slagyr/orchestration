@@ -89,8 +89,10 @@ resolve `../<module>` deps against them.
 Follow `prompts/commands/work.md`:
 
 - TDD + `bb spec` / `bb features` per bean acceptance
+- Before handoff, rebase your `bean/<id>` branch onto current `origin/main` so verify's landing merge is a fast-forward (verify FAILS a conflicting branch back to you).
 - Hand off: `beans update <id> --tag=unverified` (stay `in-progress`)
-- Push beans + code
+- Push beans + code; the handoff note on the bean states the branch and its base:
+  `branch: bean/<id> @ <sha> (base origin/main@<sha>)`. Verify lands it on main — you do not merge or pin.
 
 ## Process-test / no-op beans
 
