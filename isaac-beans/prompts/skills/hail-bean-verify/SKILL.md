@@ -23,8 +23,15 @@ Use when a hail (or band prompt) assigns bean verification.
 7a. **Land it on main BEFORE marking completed.** `completed` means "on main", not "green on a branch". For every repo the bean's acceptance names, from that repo's sibling checkout:
     1. `git fetch origin && git checkout main && git pull --ff-only origin main`
     2. If the bean's work is already on `origin/main` (the worker pushed to main): confirm the acceptance SHA is an ancestor (`git merge-base --is-ancestor <sha> origin/main`) and skip to step 5.
-    3. `git merge --no-edit bean/<id>` (a fast-forward is fine). **A conflict is a FAIL**, not something to resolve here: `git merge --abort`, then fail per step 8 with reason `branch conflicts with origin/main — rebase onto main and re-hand off`.
-    4. If the merge was NOT a fast-forward, re-run the bean's targeted acceptance gate on the merged head (main moved under the branch). Red → `git reset --hard origin/main` and FAIL with the reason. Green → `git push origin main`.
+    3. **Squash-merge** the branch so main gets ONE commit per bean (commit-on-green leaves many
+       checkpoints on the branch): `git merge --squash bean/<id>` then
+       `git commit -m "<bean-id>: <bean title>" --trailer "Isaac-Bean: <bean-id>" --trailer "Isaac-Session: <session>"`.
+       **A conflict is a FAIL**, not something to resolve here: `git reset --hard origin/main`, then fail per step 8 with the
+       conflicting files named. The squash commit's tree equals the rebased branch tip, so the gate you ran on the branch
+       ran on this tree — the branch SHA is NOT an ancestor of main after this; record the squash commit as `main-sha`.
+    4. If main moved under the branch since the worker's last rebase (the squash needed no conflict resolution but the
+       base differs), re-run the bean's targeted acceptance gate on the squash commit. Red → `git reset --hard origin/main`
+       and fail per step 8.
     5. Append to the bean body (commit with the trailer):
        `## Landed on main (<YYYY-MM-DD>)` followed by one `main-sha: <repo> <sha>` line per repo.
     6. Delete the landed branch so branches do not accumulate: `git push origin --delete bean/<id>`
