@@ -129,12 +129,14 @@ formats for content:
 
 - After claim: `<bean-id> 🟢 **<crew>**@<session> claimed (<short-slug>)`
 - On receiving a verify-fail or planner return: `<bean-id> 🔁 **<crew>**@<session> resumed (<short-slug>)`
+- On receiving a CI-failure hail (band `<project>-ci-failure`): `<bean-id> 🔴 **<crew>**@<session> CI red on <branch> (<failing job>)` — this is NOT a resume; never send the 🔁 line for it
+- After the CI repair is pushed: `<bean-id> 🩹 **<crew>**@<session> CI repair pushed (<short-sha>)`
 - After observations: `<bean-id> 📝 **<crew>**@<session> appended observations (<short-slug>)`
 - After the verify handoff hail is SENT: `<bean-id> ➡️ **<crew>**@<session> handed off to verify`
 - After the planner handoff hail is SENT: `<bean-id> ➡️ **<crew>**@<session> handed off to planner (plan-review-loop)`
 
 ID first for recognition; emoji for quick status scanning (🟢 claim/positive,
-📝 observations, ➡️ handoff).
+📝 observations, ➡️ handoff, 🔴 CI red, 🩹 CI repair).
 
 Example: comm__send with comm="discord" content="orchestration-nj8a 🟢 **scrapper** claimed (no-op-process-test-run-...)" "discord.target"="pub"
 
