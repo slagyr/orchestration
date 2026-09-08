@@ -81,6 +81,12 @@ resolve `../<module>` deps against them.
   runs and outlives your turn. If cross-repo suites must see your branch,
   that is what CI's pinned-sibling runs are for — hand off and let verify/CI
   do it.
+- **Commit on green, always.** After every green test run (`bb spec`, `bb features`,
+  a focused scenario), commit to your `bean/<bean-id>` branch and push it —
+  not only at handoff. The branch is what makes early commits safe: nothing
+  reaches main until verify lands it. A turn can end at the cycle limit at any
+  moment (isaac-ntt6); uncommitted work in a checkout is work that may be lost
+  or overwritten. Never commit implementation work on `main` of a sibling checkout.
 - On completion (or when abandoning), remove your worktree
   (`git worktree remove`) and leave the sibling checkout on main, clean.
 

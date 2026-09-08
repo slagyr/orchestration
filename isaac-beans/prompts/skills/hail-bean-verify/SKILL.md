@@ -27,6 +27,9 @@ Use when a hail (or band prompt) assigns bean verification.
     4. If the merge was NOT a fast-forward, re-run the bean's targeted acceptance gate on the merged head (main moved under the branch). Red → `git reset --hard origin/main` and FAIL with the reason. Green → `git push origin main`.
     5. Append to the bean body (commit with the trailer):
        `## Landed on main (<YYYY-MM-DD>)` followed by one `main-sha: <repo> <sha>` line per repo.
+    6. Delete the landed branch so branches do not accumulate: `git push origin --delete bean/<id>`
+       and `git branch -D bean/<id>` (remove its worktree first if one exists). Do this only
+       after step 5 is committed; a branch that failed to land is left in place for the worker.
     **A bean without a `main-sha:` line cannot be marked completed.** Do not pin, release, or deploy from this step — the train does that; your job ends at "it is on main and the gate is green there".
 7b. **If pass:** `beans update <id> --status=completed --remove-tag=unverified`, then
     **data-driven next step** (do not hardcode a product pipeline):
