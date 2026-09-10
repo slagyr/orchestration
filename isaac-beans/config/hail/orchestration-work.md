@@ -17,4 +17,4 @@ Perform only the work described; append observations if process test.
 Notification formats are defined in the skill; use the notification-comm
 coordinates from the data block.
 
-**Re-read the skill file at the start of EVERY turn** (`skill__load` / read `~/.isaac/prompts/skills/<skill>/SKILL.md`) — skills change between turns and the copy in your transcript may be stale. Since 2026-09-03 the verify skill lands a passing bean on main and records `main-sha:` BEFORE marking it completed (step 7a); the work skill rebases onto origin/main before handoff.
+Load the skill once at the start of this turn.
