@@ -81,6 +81,12 @@ resolve `../<module>` deps against them.
   runs and outlives your turn. If cross-repo suites must see your branch,
   that is what CI's pinned-sibling runs are for — hand off and let verify/CI
   do it.
+- **Wrap-up on budget exhaustion.** When a turn's cycle budget runs out you will be
+  told to wrap up. First: `git add -A && git commit -m "wip: <bean-id> checkpoint" &&
+  git push -u origin HEAD` on your `bean/<bean-id>` branch (red is fine; start nothing
+  new). Then reply with a short note — what is done, what is next, the exact command
+  or file to resume from — and append the same note to the bean. Your next turn
+  resumes from that note.
 - **Commit on green, always.** After every green test run (`bb spec`, `bb features`,
   a focused scenario), commit to your `bean/<bean-id>` branch and push it —
   not only at handoff. The branch is what makes early commits safe: nothing
