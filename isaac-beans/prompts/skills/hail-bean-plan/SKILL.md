@@ -53,7 +53,7 @@ inherits the same rule: draft (or the parent's status), not a fresh `todo`.
 Every planning turn must end in exactly one of these states: adjustment made
 and **handed back** (work-band hail sent), or **escalated to human** (comms
 sent + HOLD). **Do not hail yourself to continue.** No session-direct
-continuation hails, no "N of 5". Stay in this turn (tool-loop default 500).
+continuation hails, no "N of 5". Stay in this turn (the cycle budget comes from config).
 A turn that ends with only analysis — no note, no hail, no notification —
 strands the bean silently. "I'll think more" with no hail is a dead end.
 

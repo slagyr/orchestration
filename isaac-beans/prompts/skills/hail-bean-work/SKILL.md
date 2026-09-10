@@ -161,8 +161,8 @@ Every work turn must end in exactly one of these states: bean **completed**
 bean silently — claimed, no pending hail, nobody coming back.
 
 **Do not hail yourself to continue.** No session-direct continuation hails,
-no "continuation N of 5", no sending the next hail EARLY. The tool-loop
-budget defaults to 500 cycles; stay in this turn. A final message like
+no "continuation N of 5", no sending the next hail EARLY. Stay in this
+turn; the cycle budget comes from config, not from this skill. A final message like
 "ask me to continue" is a dead end on an unattended turn.
 
 If you still cannot finish (loop cap, blocked, lost), send the 🆘 human-help
