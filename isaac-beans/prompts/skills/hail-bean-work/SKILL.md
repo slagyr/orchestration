@@ -163,7 +163,7 @@ Example: comm__send with comm="discord" content="orchestration-nj8a 🟢 **scrap
 
 Every work turn must end in exactly one of these states: bean **completed**
 (unverified handoff hail sent), **conflict hail sent** (plan-band), or
-**HOLD + human escalate** if you cannot finish. Anything else strands the
+**HOLD + human escalate** if you are blocked. Anything else strands the
 bean silently — claimed, no pending hail, nobody coming back.
 
 **Do not hail yourself to continue.** No session-direct continuation hails,
@@ -171,8 +171,15 @@ no "continuation N of 5", no sending the next hail EARLY. Stay in this
 turn; the cycle budget comes from config, not from this skill. A final message like
 "ask me to continue" is a dead end on an unattended turn.
 
-If you still cannot finish (loop cap, blocked, lost), send the 🆘 human-help
-escalation (notification-comm + human-help-comm from the data block) and HOLD.
+**Running out of budget is never a reason to hold.** When the cycle cap
+hits, the drive gives you a wrap-up cycle — save your work the way this
+skill says, write the done/next note — and the delivery worker continues
+the bean on a fresh turn. That is what wrap-up and continuations are for.
+"The acceptance run cannot complete within this turn" is a wrap-up, not a
+hold. HOLD only for a genuine blocker you cannot remove yourself: missing
+access or repo, a bean that contradicts the code or itself, a decision that
+is the planner's or a human's. Then send the 🆘 human-help escalation
+(notification-comm + human-help-comm from the data block) and HOLD.
 Do **not** re-hail.
 
 **Escalation is terminal — HOLD the bean, do not re-queue.** Once the 🆘 comms
