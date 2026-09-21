@@ -46,8 +46,11 @@ on:
     secrets:
       ISAAC_HAIL_URL:
         required: true
+      # Legacy fallback only. Callers that grant `id-token: write` authenticate
+      # with a per-job GitHub OIDC token (isaac-o0jb); the static bearer is
+      # used only when no id token can be minted, and goes away with the secret.
       ISAAC_SERVER_AUTH_TOKEN:
-        required: true
+        required: false
 
 jobs:
   hail-on-regression:
@@ -56,6 +59,10 @@ jobs:
       inputs.workflow_head_branch == 'main' &&
       inputs.workflow_conclusion == 'failure'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
     env:
       ISAAC_HAIL_URL: ${{ secrets.ISAAC_HAIL_URL }}
       ISAAC_SERVER_AUTH_TOKEN: ${{ secrets.ISAAC_SERVER_AUTH_TOKEN }}
@@ -153,11 +160,30 @@ jobs:
 
             const payload = {frequencies, params};
 
-            const response = await fetch(process.env.ISAAC_HAIL_URL, {
+            // Prefer a per-job GitHub OIDC token whose audience is the hail URL
+            // itself; zanebot trusts it via an http.auth.identity rule
+            // (isaac-q1iu, isaac-o0jb). Fall back to the static bearer only
+            // while callers are still being migrated.
+            const hailUrl = process.env.ISAAC_HAIL_URL;
+            let bearer = process.env.ISAAC_SERVER_AUTH_TOKEN || '';
+            let authKind = 'static-bearer';
+            try {
+              bearer = await core.getIDToken(hailUrl);
+              authKind = 'oidc';
+            } catch (e) {
+              core.warning(`No OIDC token available (${e.message}); falling back to ISAAC_SERVER_AUTH_TOKEN`);
+            }
+            if (!bearer) {
+              core.setFailed('No credential for Isaac: grant id-token: write or set ISAAC_SERVER_AUTH_TOKEN');
+              return;
+            }
+            core.info(`Authenticating to Isaac with ${authKind}`);
+
+            const response = await fetch(hailUrl, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.ISAAC_SERVER_AUTH_TOKEN}`
+                'Authorization': `Bearer ${bearer}`
               },
               body: JSON.stringify(payload)
             });
