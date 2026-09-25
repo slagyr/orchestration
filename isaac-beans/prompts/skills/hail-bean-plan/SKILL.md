@@ -66,6 +66,24 @@ strands the bean silently. "I'll think more" with no hail is a dead end.
   `session-tags`, `crew`, or other frequency filters: extra filters can select
   ZERO recipients and the hail parks SILENTLY as undeliverable (isaac-exi2
   lost 11 hours to an invented session-tag).
+- **Check readiness before every work-band hail in a bean-gate repo.** From the
+  isaac clone, run `bb bean-gate ready <bean-id>` immediately before sending.
+  Exit 0 permits the hail. On any non-zero exit, **do not hail**: report the
+  command's one-line reason, then correct the bean's planning state before a
+  later dispatch.
+- **No-feature-runner exception.** When the bean's implementation module has no
+  feature runner, it has nothing to baseline. Before its ungated dispatch,
+  append this to the bean body and commit/push it:
+
+  ```markdown
+  ## Ungated
+
+  <module> has no feature runner; dispatched ungated because there is nothing to baseline.
+  ```
+
+  The `## Ungated` note, including the actual reason, is required before the
+  hail. Do not run or require `ready` for this exception; it follows the
+  ungated work → verify path.
 - Hail the **work-band** (name from your data block) with a prompt override
   explaining the adjustment, and reply_to for thread continuity. Use only the
   band key (see targeting rules in hail-bean-verify/SKILL.md; never use band name
