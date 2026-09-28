@@ -1,7 +1,6 @@
 ---
 session-tags:
   - :ci
-reach: :one
 create: :never
 ---
 
