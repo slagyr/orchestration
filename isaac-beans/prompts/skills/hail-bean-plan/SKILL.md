@@ -57,6 +57,22 @@ continuation hails, no "N of 5". Stay in this turn (the cycle budget comes from 
 A turn that ends with only analysis — no note, no hail, no notification —
 strands the bean silently. "I'll think more" with no hail is a dead end.
 
+## Re-baseline
+
+A new `feature-baseline:` line drops every earlier `feature-blob:` for that
+repo. The gate keeps only the blobs written after the latest baseline. When
+you correct one file, repeat every file that is still this bean's contract
+after the new baseline line, in the same update. Leaving the others behind
+makes their `@wip` removals look like edits the bean never froze. The worker
+fails the gate, hands the bean back, and you append another partial baseline.
+That is the thrash.
+
+A blob with no scenario line numbers freezes every `@wip` scenario in the
+file. Pass the `Scenario:` line numbers when another bean shares the file.
+
+When `bb bean-gate verify` already exits 0, hand the bean back to land. Do
+not re-baseline a passing gate.
+
 ## Handoff back to work
 
 - Use the `hail__send` tool with flat snake_case.
