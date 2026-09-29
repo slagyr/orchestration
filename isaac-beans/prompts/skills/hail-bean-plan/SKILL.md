@@ -56,6 +56,9 @@ sent + HOLD). **Do not hail yourself to continue.** No session-direct
 continuation hails, no "N of 5". Stay in this turn (the cycle budget comes from config).
 A turn that ends with only analysis — no note, no hail, no notification —
 strands the bean silently. "I'll think more" with no hail is a dead end.
+A handback is not a completed turn when another scenario in the same file
+still asserts the old value of a field you just changed. Finish that file
+first; the Re-baseline section says how.
 
 ## Re-baseline
 
@@ -72,6 +75,14 @@ file. Pass the `Scenario:` line numbers when another bean shares the file.
 
 When `bb bean-gate verify` already exits 0, hand the bean back to land. Do
 not re-baseline a passing gate.
+
+When a conflict names one scenario whose expected value contradicts the
+bean, that scenario is one sample of the field. Search that feature file
+for every assertion of the field. Update every scenario that still asserts
+the old value, including scenarios the suite already runs. In the bean
+note, name every spec example that asserts the same field so the worker
+moves those in the same pass. Then one re-baseline and one handback. Do
+not hand back while any scenario in that file still asserts the old value.
 
 ## Handoff back to work
 
