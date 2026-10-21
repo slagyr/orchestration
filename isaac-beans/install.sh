@@ -4,7 +4,7 @@
 #
 # This script lives inside isaac-beans/ so the payload is self-contained.
 #
-# Behavior: ONLY copies/overwrites the config/ and prompts/ trees.
+# Behavior: ONLY copies/overwrites the config/ (hail + machines) and prompts/ trees.
 # It will NEVER delete files or directories on the target.
 #
 # Usage (run from the orchestration checkout root):
@@ -22,13 +22,13 @@
 # or any committed file.
 #
 # Target layout (copies the relevant subdirectories from isaac-beans/):
-#   <isaac-root>/config/hail/   <-- from isaac-beans/config/hail/
+#   <isaac-root>/config/hail/     <-- from isaac-beans/config/hail/
+#   <isaac-root>/config/machines/ <-- from isaac-beans/config/machines/
 #   <isaac-root>/prompts/       <-- from isaac-beans/prompts/
 #
 # Default isaac-root on target: ~/.isaac
 #
-# After running, you may need to restart/reload the affected Isaac sessions
-# or daemons on the target machine so the new prompts/skills/bands are picked up.
+# Isaac hot-reloads configuration and prompts. No service restart is needed.
 
 set -euo pipefail
 
@@ -79,7 +79,7 @@ if [[ "$HOST" == "localhost" || "$HOST" == "127.0.0.1" || "$HOST" == "$(hostname
   DEST_BASE="${HOME}/.isaac"
   mkdir -p "${DEST_BASE}/config" "${DEST_BASE}/prompts"
 
-  echo "Copying config/hail ..."
+  echo "Copying config/hail and config/machines ..."
   rsync -av ${DRY_RUN} \
     "${SCRIPT_DIR}/config/" \
     "${DEST_BASE}/config/"
@@ -92,7 +92,7 @@ if [[ "$HOST" == "localhost" || "$HOST" == "127.0.0.1" || "$HOST" == "$(hostname
 else
   echo "Remote install via ssh."
 
-  echo "Copying config/hail ..."
+  echo "Copying config/hail and config/machines ..."
   rsync -av ${DRY_RUN} -e ssh \
     "${SCRIPT_DIR}/config/" \
     "${TARGET}:${ISAAC_ROOT}/config/"
@@ -105,8 +105,4 @@ fi
 
 echo
 echo "Install complete."
-echo "Note: Restart or reload the relevant Isaac sessions/crews on the target"
-echo "      so the updated hail bands, commands, and skills are picked up."
-echo
-echo "Example (on target):"
-echo "  pkill -f isaac || true   # or use your launchctl / process manager"
+echo "Isaac hot-reloads the installed config and prompts; no restart is needed."
