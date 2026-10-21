@@ -1,7 +1,7 @@
 ---
 base: _orchestration-template
 crew: perceptor
-session-tags: [:orchestration :verify]
+session-tags: [":orchestration", ":verify"]
 ---
 
 Load and follow the "hail-bean-verify" skill.
