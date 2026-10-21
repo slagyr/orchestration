@@ -1,7 +1,6 @@
 ---
 base: _orchestration-template
 crew: perceptor
-# Isolate from harden band (same crew; distinct tag for routing).
 session-tags: [:orchestration :verify]
 ---
 
