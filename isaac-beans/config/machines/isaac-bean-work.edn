@@ -1,0 +1,40 @@
+;; One instance per bean. Start it with the title so the work/verify turns
+;; can orient themselves; the bean remains the source of truth:
+;;   isaac foreman start isaac-bean-work <bean-id> --data '{:title "<bean title>"}'
+;;   isaac foreman signal isaac-bean-work <bean-id> dispatch
+;; Foreman includes the machine, instance, state and available events in each turn.
+{:initial :queued
+ :actions
+ {:work   {:type           :turn
+           :frequencies    {:crew "scrapper" :session "bean-{{instance}}" :create :if-missing}
+           :resource-pools ["isaac-worksites"]
+           :output         :event
+           :prompt         "Work bean {{instance}}: {{data.title}}\n\nFollow the foreman-bean-work skill. The bean is the source of truth: read it with `beans show {{instance}}` and keep your notes there."}
+
+  :verify {:type           :turn
+           :frequencies    {:crew "perceptor" :session "verify-{{instance}}" :create :if-missing}
+           :resource-pools ["isaac-worksites"]
+           :output         :event
+           :prompt         "Verify bean {{instance}}: {{data.title}}\n\nFollow the foreman-bean-verify skill. The bean is the source of truth: read it with `beans show {{instance}}` and record your verdict there."}
+
+  :alert  {:type        :turn
+           :frequencies {:crew "prowl" :session "plan-{{instance}}" :create :if-missing}
+           :prompt      "Bean {{instance}} ({{data.title}}) needs attention. Reason, if one was given: {{data.reason}}. Check `isaac foreman status isaac-bean-work {{instance}}` and the bean, then tell Micah what you found."}}
+
+ :transitions
+ [{:start :queued         :event :dispatch            :end :working        :actions [:work]}
+  {:start :working        :event :landed              :end :landed}
+  {:start :working        :event :unverified          :end :verifying      :actions [:verify]}
+  {:start :working        :event :conflict            :end :stalled        :actions [:alert]}
+  {:start :working        :event :foreman/turn-ended  :end :stalled        :actions [:alert]}
+  {:start :working        :event :foreman/turn-failed :end :stalled        :actions [:alert]}
+  {:start :working        :event :foreman/turn-died   :end :stalled        :actions [:alert]}
+  {:start :verifying      :event :verified            :end :landed}
+  {:start :verifying      :event :repair              :end :working        :actions [:work]}
+  {:start :verifying      :event :conflict            :end :verify-stalled :actions [:alert]}
+  {:start :verifying      :event :foreman/turn-ended  :end :verify-stalled :actions [:alert]}
+  {:start :verifying      :event :foreman/turn-failed :end :verify-stalled :actions [:alert]}
+  {:start :verifying      :event :foreman/turn-died   :end :verify-stalled :actions [:alert]}
+  {:start :stalled        :event :dispatch            :end :working        :actions [:work]}
+  {:start :verify-stalled :event :dispatch            :end :verifying      :actions [:verify]}
+  {:start :*              :event :abandon             :end :abandoned}]}
