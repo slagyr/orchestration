@@ -1,0 +1,26 @@
+{:tasks
+ {test-machines {:doc "Run isaac-bean-work machine scenarios in an isolated Isaac root"
+                 :task (let [root (str (babashka.fs/create-temp-dir {:prefix "isaac-bean-work-"}))
+                             config (str root "/config")]
+                         (try
+                           (doseq [dir [config (str config "/crew") (str config "/models")
+                                        (str config "/providers") (str config "/resource-pools")
+                                        (str config "/machines")]]
+                             (babashka.fs/create-dirs dir))
+                           ;; The machine harness loads the real Isaac config before reading scenarios.
+                           ;; Only model metadata is needed; no provider request is made by the tests.
+                           (spit (str config "/isaac.edn")
+                                 "{:defaults {:frequencies {:crew :scrapper} :provider {:stream-idle-timeout-ms 300000}}}\n")
+                           (shell {:out :string} "isaac" "--root" root "modules" "install"
+                                  "isaac.foreman" "isaac.worksite" "isaac.http")
+                           (doseq [crew ["scrapper" "perceptor" "prowl"]]
+                             (spit (str config "/crew/" crew ".edn") "{:model :test}\n"))
+                           (spit (str config "/models/test.edn") "{:model \"test\" :provider :test}\n")
+                           (spit (str config "/providers/test.edn") "{:api \"ollama\" :base-url \"http://127.0.0.1:11434\"}\n")
+                           (spit (str config "/resource-pools/isaac-worksites.edn")
+                                 "{:type :worksite :members [\"/tmp/isaac-bean-work-test\"]}\n")
+                           (babashka.fs/copy "isaac-beans/config/machines/isaac-bean-work.edn"
+                                             (str config "/machines/isaac-bean-work.edn"))
+                           (apply shell "isaac" "--root" root "foreman" "test"
+                                  (map str (babashka.fs/glob (str (babashka.fs/absolutize "isaac-beans/features")) "*.feature")))
+                           (finally (babashka.fs/delete-tree root))))}}}

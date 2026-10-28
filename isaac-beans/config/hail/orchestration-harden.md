@@ -1,8 +1,7 @@
 ---
 base: _orchestration-template
 crew: perceptor
-# Isolate from verify band (same crew; distinct tag for routing).
-session-tags: [:orchestration :harden]
+session-tags: [":orchestration", ":harden"]
 ---
 
 Load and follow the "hail-bean-harden" skill.
